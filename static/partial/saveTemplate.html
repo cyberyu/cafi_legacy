@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h3 class="modal-title">Save Your Search</h3>
+</div>
+<div class="modal-body">
+    <div>
+        <h5>Search Name: <input type="text" ng-model="savedSearch.savedSearchName"></input></h5>
+    </div>                
+</div>
+<div class="modal-footer">
+    <button class="btn btn-compact export_format-button" ng-click="$close(savedSearch.saveAction)">
+        Save My Search 
+        <span class="btn_icon__right cf-icon cf-icon-download"></span>
+    </button></a>
+    <button class="btn btn__link btn__warning btn__close-modal" ng-click="$dismiss('cancelled')">Cancel</button>
+</div>

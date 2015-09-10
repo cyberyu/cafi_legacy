@@ -1,0 +1,16 @@
+{% block "content" %}
+<div id="content">
+<div class="span12">
+<h2>Sign In</h2>
+<form action="{% url "core:login" %}" method="post">
+	{% csrf_token %}
+    Username: <input type="text" name="username" value="" size="50" />
+    <br />
+    Password: <input type="password" name="password" value="" size="50" />
+    <br />
+	<p><input type="submit" value="Sign In"></p>
+	<p>Don't have an account?  You can <a href="{% url "core:register" %}">register for one here.</a> </p>
+</form>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block main_content %}
+{% if doc %}
+<main class="content content__1-3 record_view" role="main">
+    <div class="content_bar"></div>
+    <div class="content_wrapper">
+        <aside class="content_sidebar">
+            <h2>{{ doc.reference_number }}</h2>
+            <div class="record_view-label">Submitted via:</div>
+            <div class="record_view-value">{{ doc.complaint_source }}</div>
+            <div class="record_view-label">Filed against</div>
+            <div class="record_view-value">{{ doc.company_name}}</div>
+            <div class="record_view-label">State:</div>
+            <div class="record_view-value">{{ doc.ccmail_state }}</div>
+            <div class="record_view-label">Zip:</div>
+            <div class="record_view-value">{{ doc.ccmail_zip }}</div>   
+            <div class="record_view-label">Age:</div>
+            <div class="record_view-value">{{ doc.age }}</div> 
+        </aside>
+        <section class="content_main">
+          <div class="record_view-label-secondary">{{ doc.created_time }}</div>
+          <h2>{{ doc.product_level_1 }}: {{ doc.product }}</h2>
+          <h4>{{ doc.category_level_1}}: {{ doc.category }}</h4>
+            <div class="record_view-header-label grid_col-6">Consumer Narrative</div>
+            <div class="mlt-label grid_col-6">
+              <a href="/#/mlt?id={{doc.reference_number}}&field=what_happened">more complaints with similar narrative</a>
+            </div>
+          <div class="record_view-value">{{doc.what_happened}}</div>
+          <div class="record_view-header-label"> Desired Resolution </div>
+          <div class="record_view-value">{{doc.desired_resolution}}</div>
+          <hr>
+          <div class="record_view-label-secondary">Date Sent to Company: {{ doc.date_sent_to_company }}</div>
+          <div class="record_view-header-label grid_col-6"> Company Response </div>
+          <div class="mlt-label grid_col-6">
+            <a href="/#/mlt?id={{doc.reference_number}}&field=company_response">more complaints with similar response</a></div>
+          </div>
+          <div class="record_view-value">{{doc.company_response}}</div>
+          <div class="record_view-header-label"> Explanation of Closure: </div>
+          <div class="record_view-value">{{ doc.comp_explanation_of_closure }}</div>
+          
+
+<!--           {% if doc %}  
+
+          {% else %}
+            no document match
+          {% endif %}  -->      
+        </section>
+    </div>
+</main>
+ 
+{% else %}
+  no document match
+{% endif %}
+{% endblock main_content %}

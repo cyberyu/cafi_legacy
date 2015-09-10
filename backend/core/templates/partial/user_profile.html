@@ -1,0 +1,13 @@
+
+{% block right_panel %}
+<ul>
+  <li> <span class="label"> User name: </span> <span class="value"> {{user.username}}</span> </li>
+  <li> <span class="label"> First name: </span> <span class="value"> {{user.first_name}}</span> </li>
+  <li> <span class="label"> Last name: </span> <span class="value"> {{user.last_name}}</span> </li>
+  <li> <span class="label"> Email: </span> <span class="value"> {{user.email}}</span> </li>
+  {% if user.userprofile %}
+    <li> <span class="label"> Title: </span> <span class="value"> {{user.userprofile.title | default:"N/A"}}</span> </li>
+    <li> <span class="label"> Office phone: </span> <span class="value"> {{user.userprofile.office_phone}}</span> </li>
+  {% endif %}
+</ul>
+{% endblock %}

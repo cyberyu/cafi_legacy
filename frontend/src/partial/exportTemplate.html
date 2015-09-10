@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h3 class="modal-title">Export Complaints</h3>
+</div>
+<div class="modal-body">
+    <div class="grid_col-6">
+        <h5>Results</h5>
+        <select class="export_item-selector" ng-model="exportItemSelector">
+          <option ng-repeat="opt in exportItemSelectorOptions()" ng-selected="{{ opt === exportItemDefault() }}" value="{{opt}}">
+                {{ opt }}
+          </option>
+        </select> 
+    </div>
+    <div class="grid_col-6">
+        <h5>Format</h5>      
+        <select class="export_format-selector" ng-model="exportFormat">
+          <option ng-repeat="opt in exportFormatOptions" ng-selected="{{ opt == 'All Returned Complaints'}}" value="{{opt}}">
+                {{ opt }}
+          </option>
+        </select>                     
+    </div>                
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close(exportItemSelector)">Export</button>
+    <button class="btn__link btn__warning" type="button" ng-click="$dismiss('cancelled')">Cancel</button>
+</div>

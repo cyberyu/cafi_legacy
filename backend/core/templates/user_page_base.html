@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+  <div class="left-panel">
+    <ul>
+      <li>
+        <a href="{% url "core:user_profile" %}"> profile </a>
+      </li>
+      <li>
+        <a href="{% url "core:user_searches" %}"> past searches </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="right-panel">
+    {% block right_panel %}
+      {% include 'partial/user_profile.html' %}
+    {% endblock %}
+  </div>
+{% endblock %}
+

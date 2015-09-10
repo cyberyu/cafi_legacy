@@ -1,0 +1,81 @@
+[
+	{
+	    "fields": {
+	        "username": "john.smith",
+	        "first_name": "john",
+	        "last_name": "smith",
+	        "is_active": true,
+	        "is_superuser": false,
+	        "is_staff": false,
+	        "groups": [
+            	1
+        	],
+	        "user_permissions": [],
+	        "password": "pbkdf2_sha256$12000$1sgYp2FLPw69$Htyn+7tsDWiVXkCyvGwf5obqDUTDuAXKPamdmXYKax4=",
+	        "email": "john.smith@cfpb.gov",
+	        "date_joined": "2015-06-24T17:41:53.131Z"
+	    },
+	    "model": "auth.user",
+	    "pk": 1
+	},
+
+	{
+	    "fields": {
+	        "username": "joe.bob",
+	        "first_name": "joe",
+	        "last_name": "bob",
+	        "is_active": true,
+	        "is_superuser": false,
+	        "is_staff": false,
+	        "groups": [
+            	2
+        	],
+	        "user_permissions": [],
+	        "password": "pbkdf2_sha256$12000$1sgYp2FLPw69$Htyn+7tsDWiVXkCyvGwf5obqDUTDuAXKPamdmXYKax4=",
+	        "email": "joe.bob@cfpb.gov",
+	        "date_joined": "2015-06-24T17:41:53.131Z"
+	    },
+	    "model": "auth.user",
+	    "pk": 2
+	},
+
+	{
+	    "fields": {
+	        "office_phone": "1234567890",
+	        "user": 1,
+	        "title": "Developer"
+	    },
+	    "model": "core.userprofile",
+	    "pk": 1
+	},
+
+	{
+	    "fields": {
+	        "office_phone": "1234567890",
+	        "user": 2,
+	        "title": "Developer"
+	    },
+	    "model": "core.userprofile",
+	    "pk": 2
+	},
+
+	{
+    	"fields": {
+        	"name": "CRDB",
+        	"permissions": []
+    	},
+    	"model": "auth.group",
+    	"pk": 1
+	},
+
+	{
+    	"fields": {
+        	"name": "CCDB",
+        	"permissions": []
+    	},
+    	"model": "auth.group",
+    	"pk": 2
+	}
+]
+
+
