@@ -8,19 +8,8 @@ The CAFI Automation Tool uses ElasticSearch, Django, and a JavaScript/Angular fr
 ### System Requirements
 
 ### Setting Up
-* git clone git@gitlab.com:nkvitamine/cafi.git
-* cd $PROJECT_HOME/cafi
-* virtualenv env 
-* cd $PROJECT_HOME/project
-* pip install -r requirements.txt 
-* cd $PROJECT_HOME/frontend 
-* npm install 
-* grunt build
-* cd $PROJECT_HOME/project/cafi
-* ./manage.py runserver 
 
-visit http://localhost:8000/ 
-
+see instruction [here](https://gitlab.com/nkvitamine/cafi/wikis/how-to-set-up-dev-server)
 
 ### Design
 
@@ -45,7 +34,7 @@ The frontend technology was selected after an evaluation of various JavaScript f
 Further, Angular provides a full end-to-end test suite with Karma and Protractor that are quite easy to use and do not require complex frameworks such as behave. As a result, our entire front-end is written in JavaScript including tests, and the front-end can be ported out of our Django wrapper to be used for other applications if advantageous.
 
 * AngularJS with ElasticSearch.js Angular browser build
-* Bootstrap Framework for CSS styling
+* Foundation Framework for CSS styling
 * Karma / Jasmine / Protractor Test Suite
 * Grunt for build and test management
 * Bower for dependency management
