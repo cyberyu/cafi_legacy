@@ -69,17 +69,16 @@
 
 </head>
 <!-- In case used in Django -->
-{% verbatim %}
 
 <body ng-app="cafiApp" ng-cloak ng-controller="cafiController" >
     <div id="main_content">
        This is a site under construction. Please check back later.  
     </div>
+    {% include "login.html" %}
 
 <script src="static/js/main.js"></script>
 <!-- THE BELOW SCRIPT IS DEV ONLY - TODO: SET DEV FLAG -->
 <script src="http://localhost:35729/livereload.js"></script>
 
 <!-- In case used in Django Inlcude -->
-{% endverbatim %}
 </body>

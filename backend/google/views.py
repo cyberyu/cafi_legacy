@@ -8,10 +8,9 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbid
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.core import serializers
-from cr_search.helpers import is_member, get_index_name_from_request, get_group_from_index_name, get_user_group
+from google.helpers import is_member, get_index_name_from_request, get_group_from_index_name, get_user_group
 from elasticsearch import Elasticsearch
 from elasticsearch import TransportError
-from cr_search.models import SavedSearch
 import json
 import urllib
 import requests
@@ -165,36 +164,3 @@ def document(request, id):
     return render_to_response('item.html', {'doc': doc})
 
 
-def save_search(request):
-    if request.method == 'POST':
-        body = json.loads(request.body)
-        user = request.user or None
-        try:
-            name = body['name']
-            data = body['search']
-            search_term = body['search_term']
-            params = body['params']
-            SavedSearch().create(user, name, data, search_term, params)
-            return HttpResponse("Saved Successfully")
-        except:
-            return HttpResponseBadRequest("Error while saving! Invalid request body.")
-    else:
-        return HttpResponseBadRequest("This endpoint only accepts POST request")
-
-
-def get_saved_search(request):
-    if request.method == 'GET':
-        try:
-            limit = int(request.GET.get('limit'))
-        except:
-            limit = 10
-        user = request.user
-        try:
-            data = serializers.serialize('json',
-                SavedSearch.objects.filter(user=user).order_by('-time')[:limit],
-                fields=('name', 'search_term', 'params', 'time'))
-            return HttpResponse(data, content_type="application/json")
-        except:
-            return HttpResponseBadRequest("Error while getting saved seaches.")
-    else:
-        return HttpResponseBadRequest("This endpoint only accepts GET request")

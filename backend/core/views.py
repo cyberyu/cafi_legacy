@@ -2,13 +2,17 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from core.forms import UserForm, UserProfileForm
+from django.core.context_processors import csrf
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 def main(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('core:register'))
-    return render_to_response('search.html', {'user':request.user})
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('project:project_list'))
+    user_form = UserForm()
+    data = {'user': request.user}
+    data.update(csrf(request))
+    return render_to_response('index.html', data)
 
 def register(request):
 
@@ -49,7 +53,7 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
-            return HttpResponseRedirect(reverse('core:landing_page'))
+            return HttpResponseRedirect(reverse('project:project_list'))
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -93,7 +97,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect(reverse('core:landing_page'))
+                return HttpResponseRedirect(reverse('project:project_list'))
             else:
                 # An inactive account was used - no logging in!
                 return HttpResponse("Your Search account is disabled.")
@@ -107,8 +111,11 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render(request, 'login.html', {})
+        return render(request, 'index.html', {})
 
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('core:landing_page'))
 
 def user_profile(request):
     data = {"user": request.user}

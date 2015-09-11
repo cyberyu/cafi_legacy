@@ -9525,6 +9525,36 @@ p=g("accent-height,accumulate,additive,alphabetic,arabic-form,ascent,baseProfile
 c){g.push("<a ");h.isDefined(b)&&g.push('target="',b,'" ');g.push('href="',a.replace(/"/g,"&quot;"),'">');k(c);g.push("</a>")}if(!c)return c;for(var m,l=c,g=[],n,p;m=l.match(f);)n=m[0],m[2]||m[4]||(n=(m[3]?"http://":"mailto:")+n),p=m.index,k(l.substr(0,p)),e(n,m[0].replace(d,"")),l=l.substring(p+m[0].length);k(l);return a(g.join(""))}}])})(window,window.angular);
 //# sourceMappingURL=angular-sanitize.min.js.map
 
+/*
+ AngularJS v1.4.5
+ (c) 2010-2015 Google, Inc. http://angularjs.org
+ License: MIT
+*/
+(function(I,c,B){'use strict';function D(s,e){e=e||{};c.forEach(e,function(c,k){delete e[k]});for(var k in s)!s.hasOwnProperty(k)||"$"===k.charAt(0)&&"$"===k.charAt(1)||(e[k]=s[k]);return e}var x=c.$$minErr("$resource"),C=/^(\.[a-zA-Z_$@][0-9a-zA-Z_$@]*)+$/;c.module("ngResource",["ng"]).provider("$resource",function(){var s=/^https?:\/\/[^\/]*/,e=this;this.defaults={stripTrailingSlashes:!0,actions:{get:{method:"GET"},save:{method:"POST"},query:{method:"GET",isArray:!0},remove:{method:"DELETE"},"delete":{method:"DELETE"}}};
+this.$get=["$http","$q",function(k,F){function v(c,h){this.template=c;this.defaults=r({},e.defaults,h);this.urlParams={}}function y(l,h,p,f){function d(b,q){var d={};q=r({},h,q);t(q,function(a,q){w(a)&&(a=a());var m;if(a&&a.charAt&&"@"==a.charAt(0)){m=b;var c=a.substr(1);if(null==c||""===c||"hasOwnProperty"===c||!C.test("."+c))throw x("badmember",c);for(var c=c.split("."),g=0,h=c.length;g<h&&m!==B;g++){var e=c[g];m=null!==m?m[e]:B}}else m=a;d[q]=m});return d}function G(b){return b.resource}function g(b){D(b||
+{},this)}var s=new v(l,f);p=r({},e.defaults.actions,p);g.prototype.toJSON=function(){var b=r({},this);delete b.$promise;delete b.$resolved;return b};t(p,function(b,q){var h=/^(POST|PUT|PATCH)$/i.test(b.method);g[q]=function(a,z,m,e){var f={},l,p,A;switch(arguments.length){case 4:A=e,p=m;case 3:case 2:if(w(z)){if(w(a)){p=a;A=z;break}p=z;A=m}else{f=a;l=z;p=m;break}case 1:w(a)?p=a:h?l=a:f=a;break;case 0:break;default:throw x("badargs",arguments.length);}var v=this instanceof g,n=v?l:b.isArray?[]:new g(l),
+u={},y=b.interceptor&&b.interceptor.response||G,C=b.interceptor&&b.interceptor.responseError||B;t(b,function(b,a){"params"!=a&&"isArray"!=a&&"interceptor"!=a&&(u[a]=H(b))});h&&(u.data=l);s.setUrlParams(u,r({},d(l,b.params||{}),f),b.url);f=k(u).then(function(a){var d=a.data,m=n.$promise;if(d){if(c.isArray(d)!==!!b.isArray)throw x("badcfg",q,b.isArray?"array":"object",c.isArray(d)?"array":"object",u.method,u.url);b.isArray?(n.length=0,t(d,function(a){"object"===typeof a?n.push(new g(a)):n.push(a)})):
+(D(d,n),n.$promise=m)}n.$resolved=!0;a.resource=n;return a},function(a){n.$resolved=!0;(A||E)(a);return F.reject(a)});f=f.then(function(a){var b=y(a);(p||E)(b,a.headers);return b},C);return v?f:(n.$promise=f,n.$resolved=!1,n)};g.prototype["$"+q]=function(a,b,d){w(a)&&(d=b,b=a,a={});a=g[q].call(this,a,this,b,d);return a.$promise||a}});g.bind=function(b){return y(l,r({},h,b),p)};return g}var E=c.noop,t=c.forEach,r=c.extend,H=c.copy,w=c.isFunction;v.prototype={setUrlParams:function(l,h,e){var f=this,
+d=e||f.template,k,g,r="",b=f.urlParams={};t(d.split(/\W/),function(c){if("hasOwnProperty"===c)throw x("badname");!/^\d+$/.test(c)&&c&&(new RegExp("(^|[^\\\\]):"+c+"(\\W|$)")).test(d)&&(b[c]=!0)});d=d.replace(/\\:/g,":");d=d.replace(s,function(b){r=b;return""});h=h||{};t(f.urlParams,function(b,e){k=h.hasOwnProperty(e)?h[e]:f.defaults[e];c.isDefined(k)&&null!==k?(g=encodeURIComponent(k).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"%20").replace(/%26/gi,
+"&").replace(/%3D/gi,"=").replace(/%2B/gi,"+"),d=d.replace(new RegExp(":"+e+"(\\W|$)","g"),function(a,b){return g+b})):d=d.replace(new RegExp("(/?):"+e+"(\\W|$)","g"),function(a,b,c){return"/"==c.charAt(0)?c:b+c})});f.defaults.stripTrailingSlashes&&(d=d.replace(/\/+$/,"")||"/");d=d.replace(/\/\.(?=\w+($|\?))/,".");l.url=r+d.replace(/\/\\\./,"/.");t(h,function(b,c){f.urlParams[c]||(l.params=l.params||{},l.params[c]=b)})}};return y}]})})(window,window.angular);
+//# sourceMappingURL=angular-resource.min.js.map
+
+/*
+ AngularJS v1.4.5
+ (c) 2010-2015 Google, Inc. http://angularjs.org
+ License: MIT
+*/
+(function(p,c,C){'use strict';function v(r,h,g){return{restrict:"ECA",terminal:!0,priority:400,transclude:"element",link:function(a,f,b,d,y){function z(){k&&(g.cancel(k),k=null);l&&(l.$destroy(),l=null);m&&(k=g.leave(m),k.then(function(){k=null}),m=null)}function x(){var b=r.current&&r.current.locals;if(c.isDefined(b&&b.$template)){var b=a.$new(),d=r.current;m=y(b,function(b){g.enter(b,null,m||f).then(function(){!c.isDefined(t)||t&&!a.$eval(t)||h()});z()});l=d.scope=b;l.$emit("$viewContentLoaded");
+l.$eval(w)}else z()}var l,m,k,t=b.autoscroll,w=b.onload||"";a.$on("$routeChangeSuccess",x);x()}}}function A(c,h,g){return{restrict:"ECA",priority:-400,link:function(a,f){var b=g.current,d=b.locals;f.html(d.$template);var y=c(f.contents());b.controller&&(d.$scope=a,d=h(b.controller,d),b.controllerAs&&(a[b.controllerAs]=d),f.data("$ngControllerController",d),f.children().data("$ngControllerController",d));y(a)}}}p=c.module("ngRoute",["ng"]).provider("$route",function(){function r(a,f){return c.extend(Object.create(a),
+f)}function h(a,c){var b=c.caseInsensitiveMatch,d={originalPath:a,regexp:a},g=d.keys=[];a=a.replace(/([().])/g,"\\$1").replace(/(\/)?:(\w+)([\?\*])?/g,function(a,c,b,d){a="?"===d?d:null;d="*"===d?d:null;g.push({name:b,optional:!!a});c=c||"";return""+(a?"":c)+"(?:"+(a?c:"")+(d&&"(.+?)"||"([^/]+)")+(a||"")+")"+(a||"")}).replace(/([\/$\*])/g,"\\$1");d.regexp=new RegExp("^"+a+"$",b?"i":"");return d}var g={};this.when=function(a,f){var b=c.copy(f);c.isUndefined(b.reloadOnSearch)&&(b.reloadOnSearch=!0);
+c.isUndefined(b.caseInsensitiveMatch)&&(b.caseInsensitiveMatch=this.caseInsensitiveMatch);g[a]=c.extend(b,a&&h(a,b));if(a){var d="/"==a[a.length-1]?a.substr(0,a.length-1):a+"/";g[d]=c.extend({redirectTo:a},h(d,b))}return this};this.caseInsensitiveMatch=!1;this.otherwise=function(a){"string"===typeof a&&(a={redirectTo:a});this.when(null,a);return this};this.$get=["$rootScope","$location","$routeParams","$q","$injector","$templateRequest","$sce",function(a,f,b,d,h,p,x){function l(b){var e=s.current;
+(v=(n=k())&&e&&n.$$route===e.$$route&&c.equals(n.pathParams,e.pathParams)&&!n.reloadOnSearch&&!w)||!e&&!n||a.$broadcast("$routeChangeStart",n,e).defaultPrevented&&b&&b.preventDefault()}function m(){var u=s.current,e=n;if(v)u.params=e.params,c.copy(u.params,b),a.$broadcast("$routeUpdate",u);else if(e||u)w=!1,(s.current=e)&&e.redirectTo&&(c.isString(e.redirectTo)?f.path(t(e.redirectTo,e.params)).search(e.params).replace():f.url(e.redirectTo(e.pathParams,f.path(),f.search())).replace()),d.when(e).then(function(){if(e){var a=
+c.extend({},e.resolve),b,f;c.forEach(a,function(b,e){a[e]=c.isString(b)?h.get(b):h.invoke(b,null,null,e)});c.isDefined(b=e.template)?c.isFunction(b)&&(b=b(e.params)):c.isDefined(f=e.templateUrl)&&(c.isFunction(f)&&(f=f(e.params)),c.isDefined(f)&&(e.loadedTemplateUrl=x.valueOf(f),b=p(f)));c.isDefined(b)&&(a.$template=b);return d.all(a)}}).then(function(f){e==s.current&&(e&&(e.locals=f,c.copy(e.params,b)),a.$broadcast("$routeChangeSuccess",e,u))},function(b){e==s.current&&a.$broadcast("$routeChangeError",
+e,u,b)})}function k(){var a,b;c.forEach(g,function(d,g){var q;if(q=!b){var h=f.path();q=d.keys;var l={};if(d.regexp)if(h=d.regexp.exec(h)){for(var k=1,m=h.length;k<m;++k){var n=q[k-1],p=h[k];n&&p&&(l[n.name]=p)}q=l}else q=null;else q=null;q=a=q}q&&(b=r(d,{params:c.extend({},f.search(),a),pathParams:a}),b.$$route=d)});return b||g[null]&&r(g[null],{params:{},pathParams:{}})}function t(a,b){var d=[];c.forEach((a||"").split(":"),function(a,c){if(0===c)d.push(a);else{var f=a.match(/(\w+)(?:[?*])?(.*)/),
+g=f[1];d.push(b[g]);d.push(f[2]||"");delete b[g]}});return d.join("")}var w=!1,n,v,s={routes:g,reload:function(){w=!0;a.$evalAsync(function(){l();m()})},updateParams:function(a){if(this.current&&this.current.$$route)a=c.extend({},this.current.params,a),f.path(t(this.current.$$route.originalPath,a)),f.search(a);else throw B("norout");}};a.$on("$locationChangeStart",l);a.$on("$locationChangeSuccess",m);return s}]});var B=c.$$minErr("ngRoute");p.provider("$routeParams",function(){this.$get=function(){return{}}});
+p.directive("ngView",v);p.directive("ngView",A);v.$inject=["$route","$anchorScroll","$animate"];A.$inject=["$compile","$controller","$route"]})(window,window.angular);
+//# sourceMappingURL=angular-route.min.js.map
+
 /*! elasticsearch - v4.1.0 - 2015-05-19
  * http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html
  * Copyright (c) 2015 Elasticsearch BV; Licensed Apache 2.0 */
@@ -16481,335 +16511,54 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
  * Licensed under MIT license
  */
 !function(){"use strict";function a(){return++j}function b(a){return a&&a.window===a}function c(a){return"string"==typeof a}function d(a){if(null==a||b(a))return!1;var d=a.length;return 1===a.nodeType&&d?!0:c(a)||Array.isArray(a)||0===d||"number"==typeof d&&d>0&&d-1 in a}function e(){return Object.create(null)}function f(b,c){var d,e=typeof b;return"function"==e||"object"==e&&null!==b?"function"==typeof(d=b.$$hashKey)?d=b.$$hashKey():void 0===d&&(d=b.$$hashKey=(c||a)()):d=b,e+":"+d}function g(a,b,c){var d,e,f=[],g=[];for(d=0;d<b.length;d++)for(e=0;e<a.length;e++)a[e][c]?a[e][c]===b[d]&&g.push(a[e]):f.push(a[e]);return g=g.concat(f)}function h(a){var b=a[0],c=a[a.length-1],d=[b];do{if(b=b.nextSibling,!b)break;d.push(b)}while(b!==c);return angular.element(d)}function i(a,b){for(;(a=a[b])&&1!==a.nodeType;);return a}var j=0,k=function(a){return a.clone[0]},l=function(a){return a.clone[a.clone.length-1]},m=function(a,b,c,d,e,f,g,h){a[c]=d,e&&(a[e]=f),a.$index=b,a.$first=0===b,a.$last=b===g-1,a.$middle=!(a.$first||a.$last),a.$odd=!(a.$even=0===(1&b)),h&&(a.$group=h)},n=function(a,b){a.data("isolateScope",b)},o=function(a,b){var c,d=a.length;if(0===d)return!1;for(c=0;d>c;c++)if(w(b,a[c]))return!0;return!1},p=function(a,b){var c,d=a.length;if(0===d)return-1;for(c=0;d>c;c++)if(w(b,a[c]))return c;return-1},q=function(a,b,c){var d,e=a,f=typeof c;if(a==b)return null;do if("string"===f){if(d=" "+e.className+" ",1===e.nodeType&&d.replace(/[\t\r\n\f]/g," ").indexOf(c)>=0)return e}else if(e==c)return e;while((e=e.parentNode)&&e!=b&&9!==e.nodeType);return null},r=function(a){var b,c=a.className.replace(/[\t\r\n\f]/g," ").trim();b=c.split(" ");for(var d=0;d<b.length;d++)/\s+/.test(b[d])&&(b.splice(d,1),d--);return b},s=function(a,b){var c=r(a);return-1!==c.indexOf(b)},t=function(a,b){var c,d,e,f=a.children(),g=f.length;if(g>0)for(var h=0;g>h;h++){if(c=f.eq(h),d=!0,e=r(c[0]),e.length>0)for(var i=0;i<b.length;i++)if(-1===e.indexOf(b[i])){d=!1;break}if(d)return c}return[]},u=function(a,b){var c,d,e;if(-1!==a.text().toLowerCase().indexOf(b.toLowerCase()))return!0;for(c=a.children(),e=c.length,d=0;e>d;d++)if(-1!==c.eq(d).text().toLowerCase().indexOf(b.toLowerCase()))return!0;return!1},v=angular.element,w=angular.equals,x=angular.copy,y=angular.extend,z=angular.module("nya.bootstrap.select",[]);z.provider("nyaBsConfig",function(){var a=null,b={"en-us":{defaultNoneSelection:"Nothing selected",noSearchResult:"NO SEARCH RESULT",numberItemSelected:"%d item selected",selectAll:"Select All",deselectAll:"Deselect All"}},c=x(b);this.setLocalizedText=function(a,b){if(!a)throw new Error("localeId must be a string formatted as languageId-countryId");c[a]||(c[a]={}),c[a]=y(c[a],b)},this.useLocale=function(b){a=b},this.$get=["$locale",function(d){var e;return e=a?c[a]:c[d.id],e||(e=b["en-us"]),e}]}),z.controller("nyaBsSelectCtrl",function(){var a=this;a.keyIdentifier=null,a.valueIdentifier=null,a.isMultiple=!1,a.onCollectionChange=function(){},a.setId=function(b){a.id=b||"id#"+Math.floor(1e4*Math.random())}}),z.directive("nyaBsSelect",["$parse","$document","$timeout","nyaBsConfig",function(a,b,c,d){var e="Nothing selected",f='<button class="btn btn-default dropdown-toggle" type="button"><span class="pull-left filter-option"></span>&nbsp;<span class="caret"></span></button>',g='<div class="dropdown-menu open"></div>',h='<div class="bs-searchbox"><input type="text" class="form-control"></div>',j='<ul class="dropdown-menu inner"></ul>',k='<li class="no-search-result"><span>NO SEARCH RESULT</span></li>',l='<div class="bs-actionsbox"><div class="btn-group btn-group-sm btn-block"><button class="actions-btn bs-select-all btn btn-default">SELECT ALL</button><button class="actions-btn bs-deselect-all btn btn-default">DESELECT ALL</button></div></div>';return{restrict:"ECA",require:["ngModel","nyaBsSelect"],controller:"nyaBsSelectCtrl",compile:function(m,n){m.addClass("btn-group");var y,z,A,B,C,D,E,F,G=function(){var a;return a=n.titleTpl?v(n.titleTpl):n.title?document.createTextNode(n.title):L.defaultNoneSelectionTpl?v(L.defaultNoneSelectionTpl):document.createTextNode(L.defaultNoneSelection?L.defaultNoneSelection:e)},H=m.children(),I=v(f),J=v(g),K=v(j),L=d,M="undefined"!=typeof n.multiple;for(B=r(m[0]),B.forEach(function(a){/btn-(?:primary|info|success|warning|danger|inverse)/.test(a)&&(m.removeClass(a),I.removeClass("btn-default"),I.addClass(a)),/btn-(?:lg|sm|xs)/.test(a)&&(m.removeClass(a),I.addClass(a)),"form-control"===a&&I.addClass(a)}),K.append(H),C=H.length,D=0;C>D;D++)E=H.eq(D),(E.hasClass("nya-bs-option")||E.attr("nya-bs-option"))&&(E.find("a").attr("tabindex","0"),F=E.attr("value"),angular.isString(F)&&""!==F&&(E.attr("data-value",F),E.removeAttr("value")));return"true"===n.liveSearch&&(y=v(h),L.noSearchResultTpl?k=k.replace("NO SEARCH RESULT",L.noSearchResultTpl):L.noSearchResult&&(k=k.replace("NO SEARCH RESULT",L.noSearchResult)),z=v(k),J.append(y),K.append(z)),"true"===n.actionsBox&&M&&(L.selectAllTpl?l=l.replace("SELECT ALL",L.selectAllTpl):L.selectAll&&(l=l.replace("SELECT ALL",L.selectAll)),L.deselectAllTpl?l=l.replace("DESELECT ALL",L.deselectAllTpl):L.selectAll&&(l=l.replace("DESELECT ALL",L.deselectAll)),A=v(l),J.append(A)),I.children().eq(0).append(G()),J.append(K),m.append(I),m.append(J),function(d,e,f,g){function h(){var a,b,c=N.children(),d=c.length;for(a=0;d>a;a++)if(b=c.eq(a),b.hasClass("active")&&b.hasClass("nya-bs-option")&&!b.hasClass("not-match"))return b;return null}function j(a){for(var b,c=a.childNodes,d=c.length,e=0;d>e;e++)if(b=c[e],1===b.nodeType&&"a"===b.tagName.toLowerCase()){b.focus();break}}function k(a){var b;b=N.children().eq(a?0:N.children().length-1);for(var c=0;c<N.children().length;c++){var d=N.children().eq(c);if(!d.hasClass("not-match")&&d.hasClass("selected"))return N.children().eq(c)[0]}return!b.hasClass("nya-bs-option")||b.hasClass("disabled")||b.hasClass("not-match")?a?l(b[0],"nextSibling"):l(b[0],"previousSibling"):b[0]}function l(a,b){if(!a||s(a,"nya-bs-option")){for(var c=a;(c=i(c,b))&&c.nodeType;)if(s(c,"nya-bs-option")&&!s(c,"disabled")&&!s(c,"not-match"))return c;return null}}function m(a){if(J&&!H){var b,c,e;if(b=N.find("li"),b.length>0){c=E.$modelValue,e=Array.isArray(c)?x(c):[];for(var f=0;f<b.length;f++){var g=v(b[f]);if(!g.hasClass("disabled")){var h,i;h=r(g),"undefined"!=typeof h&&(i=p(e,h),a&&-1==i?(e.push(h),g.addClass("selected")):a||-1==i||(e.splice(i,1),g.removeClass("selected")))}}E.$setViewValue(e),d.$digest(),z()}}}function n(a){var b,c,f,g=E.$modelValue;b=r(a),"undefined"!=typeof b&&(J?(c=Array.isArray(g)?x(g):[],f=p(c,b),-1===f?(c.push(b),a.addClass("selected")):(c.splice(f,1),a.removeClass("selected"))):(N.children().removeClass("selected"),c=b,a.addClass("selected"))),E.$setViewValue(c),d.$digest(),J||(e.hasClass("open")&&e.triggerHandler("blur"),e.removeClass("open")),z()}function r(a){var b;return D?(b=a.data("isolateScope"),D(b)):F.valueIdentifier||F.keyIdentifier?(b=a.data("isolateScope"),b[F.valueIdentifier]||b[F.keyIdentifier]):a.attr("data-value")}function y(a){var b=a.find("a");return 0===b.children().length||b.children().eq(0).hasClass("check-mark")?b[0].firstChild.cloneNode(!1):b.children().eq(0)[0].cloneNode(!0)}function z(){var a=E.$modelValue;e.triggerHandler("change");var b=K.children().eq(0);return"undefined"==typeof a?(b.empty(),void b.append(G())):void(J&&0===a.length?(b.empty(),b.append(G())):c(function(){var c,d,e,g,h,i,j=N.children(),k=j.length,l=[];if(J&&"count"===f.selectedTextFormat?i=1:J&&f.selectedTextFormat&&(h=f.selectedTextFormat.match(/\s*count\s*>\s*(\d+)\s*/))&&(i=parseInt(h[1],10)),"undefined"!=typeof i&&a.length>i)return b.empty(),void b.append(L.numberItemSelectedTpl?v(L.numberItemSelectedTpl.replace("%d",a.length)):L.numberItemSelected?document.createTextNode(L.numberItemSelected.replace("%d",a.length)):document.createTextNode(a.length+" items selected"));for(e=0;k>e;e++)d=j.eq(e),d.hasClass("nya-bs-option")&&(c=r(d),J?Array.isArray(a)&&o(a,c)&&(g=d.attr("title"),l.push(g?document.createTextNode(g):y(d))):w(a,c)&&(g=d.attr("title"),l.push(g?document.createTextNode(g):y(d))));if(0===l.length)b.empty(),b.append(G());else if(1===l.length)b.empty(),b.append(l[0]);else for(b.empty(),e=0;e<l.length;e++)b.append(l[e]),e<l.length-1&&b.append(document.createTextNode(", "))}))}function A(){var a,b,c=N.find("li"),d=c.length;for(b=0;d>b;b++)if(a=c.eq(b),a.hasClass("nya-bs-option")||a.attr("nya-bs-option")){B=a[0].clientHeight;break}if(/\d+/.test(f.size)){var e=parseInt(f.size,10);N.css("max-height",e*B+"px"),N.css("overflow-y","auto")}}var B,C,D,E=g[0],F=g[1],H=!1,I=a(F.valueExp),J="undefined"!=typeof f.multiple,K=t(e,["dropdown-toggle"]),M=K.next(),N=t(M,["dropdown-menu","inner"]),O=t(M,["bs-searchbox"]),P=t(N,["no-search-result"]),Q=t(M,["bs-actionsbox"]);F.valueExp&&(D=function(a,b){return I(a,b)}),F.setId(e.attr("id")),J&&(F.isMultiple=!0,E.$isEmpty=function(a){return!a||0===a.length}),"undefined"!=typeof f.disabled&&d.$watch(f.disabled,function(a){a?(K.addClass("disabled"),C=K.attr("tabindex"),K.attr("tabindex","-1"),H=!0):(K.removeClass("disabled"),C?K.attr("tabindex",C):K.removeAttr("tabindex"),H=!1)}),F.onCollectionChange=function(a){var b,c,e=[],f=E.$modelValue;if(f){if(Array.isArray(a)&&a.length>0){if(D)for(b=0;b<a.length;b++)e.push(D(d,a[b]));else for(b=0;b<a.length;b++)F.valueIdentifier?e.push(a[b][F.valueIdentifier]):F.keyIdentifier&&e.push(a[b][F.keyIdentifier]);if(J){for(c=f.length,b=0;b<f.length;b++)o(e,f[b])||(f.splice(b,1),b--);c!==f.length&&(f=x(f))}else o(e,f)||(f=e[0])}E.$setViewValue(f),z()}},N.on("click",function(a){if(!H&&!v(a.target).hasClass("dropdown-header")){var b,c=q(a.target,N[0],"nya-bs-option");if(null!==c){if(b=v(c),b.hasClass("disabled"))return;n(b)}}});var R=function(a){null===q(a.target,e.parent()[0],e[0])&&(e.hasClass("open")&&e.triggerHandler("blur"),e.removeClass("open"))};b.on("click",R),K.on("blur",function(){e.hasClass("open")||e.triggerHandler("blur")}),K.on("click",function(){var a;e.toggleClass("open"),e.hasClass("open")&&"undefined"==typeof B&&A(),"true"===f.liveSearch&&e.hasClass("open")?(O.children().eq(0)[0].focus(),a=k(!0),a&&(N.children().removeClass("active"),v(a).addClass("active"))):e.hasClass("open")&&(a=k(!0),a&&j(a))}),"true"===f.actionsBox&&J&&(Q.find("button").eq(0).on("click",function(){m(!0)}),Q.find("button").eq(1).on("click",function(){m(!1)})),"true"===f.liveSearch&&O.children().on("input",function(){var a,b,c,d=O.children().val(),e=0,f=N.children(),g=f.length;if(d){for(a=0;g>a;a++)b=f.eq(a),b.hasClass("nya-bs-option")&&(u(b.find("a"),d)?(b.removeClass("not-match"),e++):b.addClass("not-match"));0===e?P.addClass("show"):P.removeClass("show")}else{for(a=0;g>a;a++)b=f.eq(a),b.hasClass("nya-bs-option")&&b.removeClass("not-match");P.removeClass("show")}c=k(!0),c&&(f.removeClass("active"),v(c).addClass("active"))}),E.$render=function(){var a,b,c=E.$modelValue,d=N.children(),e=d.length;if("undefined"==typeof c)for(a=0;e>a;a++)d.eq(a).hasClass("nya-bs-option")&&d.eq(a).removeClass("selected");else for(a=0;e>a;a++)d.eq(a).hasClass("nya-bs-option")&&(b=r(d.eq(a)),J?o(c,b)?d.eq(a).addClass("selected"):d.eq(a).removeClass("selected"):w(c,b)?d.eq(a).addClass("selected"):d.eq(a).removeClass("selected"));z()},e.on("keydown",function(a){var b=a.keyCode;if(27===b||13===b||38===b||40===b){if(a.preventDefault(),H)return void a.stopPropagation();var c,d,g,i,m=q(a.target,e[0],K[0]);"true"===f.liveSearch?d=q(a.target,e[0],O[0]):c=q(a.target,e[0],M[0]),m?13!==b&&38!==b&&40!==b||e.hasClass("open")||(a.stopPropagation(),e.addClass("open"),"undefined"==typeof B&&A(),"true"===f.liveSearch?(O.children().eq(0)[0].focus(),i=k(!0),i&&(N.children().removeClass("active"),v(i).addClass("active"))):(i=k(!0),i&&j(i))):c?27===b?(K[0].focus(),e.hasClass("open")&&e.triggerHandler("blur"),e.removeClass("open"),a.stopPropagation()):38===b?(a.stopPropagation(),i=l(a.target.parentNode,"previousSibling"),i?j(i):(i=k(!1),i&&j(i))):40===b?(a.stopPropagation(),i=l(a.target.parentNode,"nextSibling"),i?j(i):(i=k(!0),i&&j(i))):13===b&&(a.stopPropagation(),g=v(a.target.parentNode),g.hasClass("nya-bs-option")&&(n(g),J||K[0].focus())):d&&(27===b?(K[0].focus(),e.removeClass("open"),a.stopPropagation()):38===b?(a.stopPropagation(),g=h(),g&&(i=l(g[0],"previousSibling"),i?(g.removeClass("active"),v(i).addClass("active")):(i=k(!1),i&&(g.removeClass("active"),v(i).addClass("active"))))):40===b?(a.stopPropagation(),g=h(),g&&(i=l(g[0],"nextSibling"),i?(g.removeClass("active"),v(i).addClass("active")):(i=k(!0),i&&(g.removeClass("active"),v(i).addClass("active"))))):13===b&&(g=h(),g&&(n(g),J||K[0].focus())))}}),d.$on("$destroy",function(){N.off(),K.off(),O.off(),b.off("click",R)})}}}}]),z.directive("nyaBsOption",["$parse",function(a){var b=/^\s*(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\s\S]+?)(?:\s+group\s+by\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/;return{restrict:"A",transclude:"element",priority:1e3,terminal:!0,require:["^nyaBsSelect","^ngModel"],compile:function(c,i){var j=i.nyaBsOption,p=document.createComment(" end nyaBsOption: "+j+" "),q=j.match(b);if(!q)throw new Error("invalid expression");var r,s,t,u,x,y=i.value,z=y?a(y):null,A=q[3]||q[1],B=q[2],C=q[4],D=q[5]?a(q[5]):null,E=q[6],F={$id:f},G={};return E?u=a(E):(r=function(a,b){return f(b)},s=function(a){return a}),function(a,b,c,f,i){function j(a){var c,f,j,u,y,z,C,D,F,G,I,K,L,M,N,O=b[0],P=e(),Q=[];if(x&&(K=[]),d(a))z=a,y=t||r;else{y=t||s,z=[];for(var R in a)a.hasOwnProperty(R)&&"$"!=R.charAt(0)&&z.push(R);z.sort()}for(C=z.length,D=new Array(C),c=0;C>c;c++)if(f=a===z?c:z[c],j=a[f],u=y(f,j,c),N={},B&&(N[B]=f),N[A]=j,Q.push(N),x&&(G=x(f,j),-1===K.indexOf(G)&&G&&K.push(G)),J[u])F=J[u],delete J[u],x&&(F.group=G),F.key=f,F.value=j,P[u]=F,D[c]=F;else{if(P[u])throw D.forEach(function(a){a&&a.scope&&(J[a.id]=a)}),new Error("Duplicates in a select are not allowed. Use 'track by' expression to specify unique keys.");D[c]={id:u,scope:void 0,clone:void 0,key:f,value:j},P[u]=!0,G&&(D[c].group=G)}K&&K.length>0&&(D=g(D,K,"group"));for(var S in J)F=J[S],M=h(F.clone),M.removeData("isolateScope"),M.remove(),F.scope.$destroy();for(c=0;C>c;c++)F=D[c],F.scope?(I=O,k(F)!=I&&v(O).after(F.clone),O=l(F),m(F.scope,c,A,F.value,B,F.key,C,F.group)):i(function(a,b){n(a,b),F.scope=b;var d=p.cloneNode(!1);a[a.length++]=d,v(O).after(a),a.addClass("nya-bs-option"),j=q?q(F.key,F.value):F.value||F.key,E.isMultiple?Array.isArray(H.$modelValue)&&o(H.$modelValue,j)&&a.addClass("selected"):w(j,H.$modelValue)&&a.addClass("selected"),O=d,F.clone=a,P[F.id]=F,m(F.scope,c,A,F.value,B,F.key,C,F.group)}),K&&(L&&L===F.group?F.clone.removeClass("first-in-group"):F.clone.addClass("first-in-group"),L=F.group,F.clone.addClass("group-item"));J=P,E.onCollectionChange(Q)}var q,E=f[0],H=f[1],I={};u&&(t=function(b,c,d){return B&&(F[B]=b),F[A]=c,F.$index=d,u(a,F)}),D&&(x=function(b,c){return B&&(G[B]=b),G[A]=c,D(a,G)}),B&&(E.keyIdentifier=B),A&&(E.valueIdentifier=A),z&&(E.valueExp=y,q=function(b,c){return B&&(I[B]=b),I[A]=c,z(a,I)});var J=e();"true"===c.deepWatch?a.$watch(C,j,!0):a.$watchCollection(C,j)}}}}])}();
+
+
+
+
 'use strict';
 
-
-var cafiApp = angular.module('cafiApp', ['elasticsearch', 'ngSanitize', 'ui.bootstrap', 'nya.bootstrap.select']);
+var cafiApp = angular.module('cafiApp', [
+	// 'elasticsearch',
+	'ngSanitize',
+	'ngResource',
+	'ngRoute',
+	// 'ui.bootstrap',
+	// 'nya.bootstrap.select',
+	// 'projectControllers',
+	// 'projectServices'
+]);
 
 cafiApp.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 }]);
 
-cafiApp.constant('PikadayConfig', {});
-
-
-
-cafiApp.controller('cafiController', ["$scope", "$location", "$modal", "$log", "client", function ($scope, $location, $modal, $log, client) {
-
-}]);
-
-
-SearchApp.directive('chartFilter', function () {
-  // define constants and helpers used for the directive
-  var margin = {top: 0, right: 8, bottom: 0, left: 8},
-      height = 40 - margin.top - margin.bottom;
-
-  formatForQuery = d3.time.format('%Y-%m-%d');
-  formatDate = d3.time.format('%m/%d/%y');
-
-  function getChartWidth () {
-    return angular.element('.search_graph-filter').innerWidth()-30;
-  }
-
-  return {
-    restrict: 'EA',
-    scope: true,
-    link: function (scope, element, attrs) {
-
-      // On resize, re-render. This could be done with scope.$appy() but resize does
-      // not change the scope on the chart so re-rendering without running the digest
-      // cycle should be more performant across the DOM
-      window.onresize = function() {
-        scope.render();
-      };
-
-      // Render a new chart each time scope.chartData changes - this includes initial load
-      // which was not covered by the previous watch on chartData alone
-      scope.$watch('chartData', function(newVal, oldVal){
-        setTimeout(function(){
-          scope.render();
-        }, 10);
+cafiApp.config(['$routeProvider',
+  function($routeProvider) {
+	$routeProvider.when('/projects', {
+        templateUrl: 'partials/project-list.html',
+        controller: 'ProjectListCtrl'
+      }).otherwise({
+        redirectTo: '/projects'
       });
+  }]);
 
-      scope.render = function () {
-        var x = d3.time.scale().range([0, getChartWidth()]);
 
-        var y = d3.scale.linear().range([height, 0]);
+// var projectServices = angular.module('projectServices', ['ngResource']);
 
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient('bottom')
-            .outerTickSize(0)
-            .ticks(4);
+cafiApp.factory('Project', ['$resource', function($resource) {
+    return $resource('/projects/:projectId.json', null,
+    {
+      'query': {method:'GET', params:{projectId:''}, isArray:true}
+    });
+}]);
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient('left')
-            .outerTickSize(0);
 
-        // the line for histogram data
-        var line = d3.svg.line()
-            .x(function(d) { return x(d.key); })
-            .y(function(d) { return y(d.doc_count); })
-          .interpolate('basis');
 
-        // the shaded area under the line
-        var area = d3.svg.area()
-            .x(function(d) { return x(d.key); })
-            .y0(height)
-            .y1(function(d) { return y(d.doc_count); })
-          .interpolate('basis');
 
-        var chartTarget = '#date_chart';
-
-        d3.select(chartTarget).selectAll("svg").remove();
-        var svg = d3.select(chartTarget).append('svg')
-            .attr('class', 'd3-chart-filter')
-            .attr('width', getChartWidth() + margin.right + margin.left )
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-
-        // the histogram data
-        var dd = scope.chartData;
-
-        var xmin = d3.min(dd, function (d) {
-          return d.key;
-        });
-        var xmax = d3.max(dd, function (d) {
-          return d.key;
-        });
-        var ymin = d3.min(dd, function (d) {
-          return d.doc_count;
-        });
-        var ymax = d3.max(dd, function (d) {
-          return d.doc_count;
-        });
-
-        x.domain([xmin, xmax]);
-        y.domain([ymin, ymax]);
-
-        svg.append('path')
-            .datum(dd)
-            .attr('class', 'area')
-            .attr('d', area);
-
-        svg.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0,' + (height + 0) + ')')
-            .call(xAxis);
-
-        ////// brush stuff ////////
-
-        // minimum and largest date
-        var startValue = dd[0].key;
-        var endValue = dd[dd.length - 1].key;
-        var brushFrom = startValue;
-        var brushTo = endValue;
-
-        var timeScale = d3.time.scale()
-            .domain([startValue, endValue])
-            .range([0, getChartWidth()]);
-
-        if (scope.dateRange.from) {
-          brushFrom = Date.parse(scope.dateRange.from);
-        }
-
-        if (scope.dateRange.to) {
-          brushTo = Date.parse(scope.dateRange.to);
-        }
-
-        var brush = d3.svg.brush()
-            .x(timeScale)
-            .extent([brushFrom, brushTo])
-            .on('brushstart', brushstart)
-            .on('brush', brushmove)
-            .on('brushend', brushend);
-
-        var gBrush = svg.append('g')
-            .attr('class', 'brush')
-            .attr('id', 'brush')
-            .call(brush);
-
-        gBrush.selectAll('rect')
-            .attr('height', height);
-
-        gBrush.selectAll(".resize")
-            .append("path")
-            .attr("d", resizePath);
-
-        function brushed () {
-          var extent0 = brush.extent(),
-              extent1;
-
-          // if dragging, preserve the width of the extent
-          if (d3.event.mode === 'move') {
-            var d0 = d3.time.day.round(extent0[0]),
-                d1 = d3.time.day.offset(d0, Math.round((extent0[1] - extent0[0]) / 864e5));
-            extent1 = [d0, d1];
-          }
-          // otherwise, if resizing, round both dates
-          else {
-            extent1 = extent0.map(d3.time.day.round);
-
-            // if empty when rounded, use floor & ceil instead
-            if (extent1[0] >= extent1[1]) {
-              extent1[0] = d3.time.day.floor(extent0[0]);
-              extent1[1] = d3.time.day.ceil(extent0[1]);
-            }
-          }
-
-          d3.select('brush').call(brush.extent(extent1));
-
-          // Brush uses different format from ES filters, so generating them here
-          start_date_filter = formatForQuery(extent1[0]);
-          end_date_filter = formatForQuery(extent1[1]);
-
-          //start and end date values for brush
-          start_date = formatDate(extent1[0]);
-          end_date = formatDate(extent1[1]);
-
-          return [start_date_filter, end_date_filter];
-        }
-
-        brushstart();
-        brushmove();
-
-        function brushmove () {
-          var ext = brush.extent();
-        }
-        function brushstart () {
-
-        }
-        function brushend () {
-          var ext = brush.extent();
-          var newExtent = brushed();
-          setNewBrushFromChart( newExtent );
-        }
-
-        function resizePath(d) {
-          // Style the brush resize handles. No idea what these vals do.
-          var e = +(d == "e"),
-              x = e ? 1 : -1,
-              y = height / 4;
-          return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
-        }
-
-        function setNewBrushFromChart ( newExtent ) {
-          scope.dateRange.from = newExtent[0];
-          scope.dateRange.to = newExtent[1];
-          scope.$apply();
-          scope.sendQuery(true);
-        }
-      };
-
-    },
-        template: '<div id="date_chart"></div>'
-  };
-});
-
-SearchApp.directive('dateInput', ["PikadayConfig", function (PikadayConfig) {
-  // Constants Go Here.
-  PikadayConfig = PikadayConfig || {};
-
-  function formatDateView(dateIn) {
-    return moment(dateIn).utc().format('L');
+cafiApp.controller('projectListCtrl', ['$scope', '$routeParams', 'Project',
+  function($scope, $routeParams, Project) {
+    $scope.projects = Project.query();
+    $scope.orderProp = 'created_at';
   }
-  function formatDateModel(dateIn) {
-    return moment(dateIn).utc().format('YYYY-MM-DD');
-  }
-
-  return {
-    scope: {
-      'date': '=ngModel',
-      'max': '=',
-      'min': '='
-    },
-    require: 'ngModel',
-    link: function(scope, element, attrs, ngModelController) {
-
-      var options = {
-          field: element[0],
-          format: 'YYYY-MM-DD'
-      };
-      angular.extend(options, PikadayConfig, attrs.pikaday ? scope.$parent.$eval(attrs.pikaday) : {});
-
-      var onSelect = options.onSelect;
-      var onOpen = options.onOpen;
-
-      options.onSelect = function(date) {
-          scope.date = date;
-          scope.$apply( formatDateView(scope.date) );
-
-          if (angular.isFunction(onSelect)) {
-              onSelect();
-          }
-      };
-
-      options.onOpen = function(date){
-        picker.setDate(scope.date, false);
-        picker.setMaxDate(moment(scope.max).toDate());
-        picker.setMinDate(moment(scope.min).toDate());
-
-        if (angular.isFunction(onOpen)){
-          onOpen();
-        }
-      };
-
-      var picker = new Pikaday(options);
-
-      scope.$on('$destroy', function() {
-          picker.destroy();
-      });
-
-      ngModelController.$parsers.push(function(data) {
-        //convert data from view format to model format
-        if(data){
-          return formatDateModel(data); //converted  
-        }
-        
-      });   
-      ngModelController.$formatters.push(function(data) {
-        //convert data from model format to view format
-        if( data ){
-          return formatDateView(data); //converted
-        }
-      });
-    }
-  };
-}]);
-
-
-
-// Service
-//
-// esFactory() creates a configured client instance. Turn that instance
-// into a service so that it can be required by other parts of the application
-
-// IE doesn't support Origin so we shim it below
-if (!window.location.origin) {
-  window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
-}
-
-var esLocation = window.location.origin;
-
-SearchApp.service('client', ["esFactory", function (esFactory) {
-  return esFactory({
-    host: esLocation,
-    apiVersion: '1.5',
-    log: 'trace'
-  });
-}]);
-
-var esExportLocation = window.location.origin + '/_export';
-
-SearchApp.service('exportService', ["$http", function ($http) {
-	return {
-		exportData: function( reqBody ){
-			return $http.post( esExportLocation, reqBody ).then(function(result) {
-           				return result;
-					});
-		}
-	};
-}]);
-
+]);

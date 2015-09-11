@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'rest_framework',
     'django_nose',
     'engagement',
@@ -47,12 +48,13 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'django.core.context_processors.request',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.middleware.LoginRequiredMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'core.middleware.LoginRequiredMiddleware',
 )
 
 LOGIN_URL = '/login/'
@@ -69,7 +71,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=cr_search, request_logger',
+    '--cover-package=google, request_logger',
 ]
 
 ROOT_URLCONF = 'settings.urls'
@@ -100,6 +102,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
+# APPEND_SLASH = True
 
 
 VALID_DOMAINS = ['']

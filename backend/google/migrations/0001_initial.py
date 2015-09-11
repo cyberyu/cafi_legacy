@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('string', models.CharField(max_length=255)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('engagement', models.ForeignKey(to='engagement.Engagement')),
+                ('project', models.ForeignKey(to='engagement.Project')),
             ],
             options={
             },
