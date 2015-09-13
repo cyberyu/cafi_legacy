@@ -3,6 +3,7 @@
 <!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html ng-app="cafiApp">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -22,27 +23,24 @@
         docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2');
     </script>
 </head>
-
-<body ng-app="cafiApp" ng-controller="projectListCtrl">
-  {% verbatim %}
+<body>
   <div class="wrapper">
-     <table class="table table-hover">
-      <thead>
-        <tr>
-          <th> Project </th> 
-          <th> Client </th>
-        </tr>
-      </thead>
-      <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
-        <td> {{project.name}}</td>
-        <td> {{project.client}}</td>
-      </tr>
-     </table>
-    <!-- <div ng-view class="view-frame"></div> -->
+    <div ng-view class="view-frame"></div>
   </div>
-  {% endverbatim %}
 
-<script src="/static/js/main.js"></script>
+<script src="/static/vendor/jquery/dist/jquery.js"></script>
+<script src="/static/vendor/angular/angular.min.js"></script>
+<script src="/static/vendor/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="/static/vendor/angular-resource/angular-resource.min.js"></script>
+<script src="/static/vendor/angular-route/angular-route.min.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/project-service.js"></script>
+<script src="/static/js/app-controller.js"></script>
+</body>
+
+    <!-- <div ng-view class="view-frame"></div> -->
+
+<!-- <script src="/static/js/main.js"></script> -->
 <!-- THE BELOW SCRIPT IS DEV ONLY - TODO: SET DEV FLAG -->
 <!-- <script src="http://localhost:35729/livereload.js"></script> -->
-</body>
+</html>

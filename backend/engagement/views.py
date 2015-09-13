@@ -8,7 +8,7 @@ from serializers import ProjectSerializer
 
 
 def home(request):
-	return render_to_response('project_list.html')
+	return render_to_response('home.html')
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()

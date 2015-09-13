@@ -1,0 +1,14 @@
+<div>
+   <table class="table table-hover">
+    <thead>
+      <tr>
+        <th> Project </th> 
+        <th> Client </th>
+      </tr>
+    </thead>
+    <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
+      <td> {{project.name}}</td>
+      <td> {{project.client}}</td>
+    </tr>
+   </table>
+ </div>
