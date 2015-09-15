@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-<html>
+<html ng-app="cafiApp">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -25,68 +25,36 @@
 </head>
 
 <body>
-<div id="wrapper">
-  <div id="header" class="col-md-12">
-    <div class="col-md-11">
-      <form id="login-form" class="form-inline pull-right" action="{% url "core:login" %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-          <label class="sr-only" for="exampleInputEmail3">Email address</label>
-          <input type="text" class="form-control input-sm" name="username" placeholder="User Name">
-        </div>
-        <div class="form-group">
-          <label class="sr-only" for="exampleInputPassword3">Password</label>
-          <input type="password" class="form-control input-sm" name="password" placeholder="Password">
-        </div>
-        <button class="btn btn-xs btn-default" type="submit"> Log In</button>
-      </form>
-    </div>
-    <div class="col-md-1">
-    </div>
-  </div>
-
-  <div id="main_content">
-    <div id="left-panel" class="col-md-7">
-      <div class="vcenter-child">
-        <h1 class="text-center">Research Made Easy ! </h1>
+  {% verbatim %}
+  <div class="wrapper">
+    <div id="header" class="col-md-12" ng-controller="loginCtrl">
+      <div class="col-md-11">
+        <form ng-show="is_login" id="login-form" class="pull-right">
+          Welcome, {{ username }}.  <a href="/logout/">logout</a>
+        </form>
+        <form ng-show="!is_login" id="login-form" class="form-inline pull-right text-right" ng-submit="login()">
+          <!-- {% csrf_token %} -->
+          <div class="form-group">
+            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+            <input type="text" class="form-control input-sm" name="username" placeholder="User Name" ng-model="loginForm.username">
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="exampleInputPassword3">Password</label>
+            <input type="password" class="form-control input-sm" name="password" placeholder="Password", ng-model="loginForm.password">
+          </div>
+          <button class="btn btn-xs btn-default" type="submit">Log In</button>
+        </form>
+      </div>
+      <div class="col-md-1">
       </div>
     </div>
 
-    <div id="right-panel" class="col-md-4">
-        <form id="registration-form" action="{% url "core:register" %}" enctype="multipart/form-data" method="post">
-          {% csrf_token %}
-          <div class="col-md-10 pull-left">
-            <h3 class="text-center"> Registration </h3>
-          </div>
-          <div class="form-group col-md-9 pull-right">
-            <input class="form-control" type="text" name="username" placeholder="User Name">
-          </div>
-          <div class="form-group col-md-9 pull-right">
-           <input class="form-control" type="text" name="email" placeholder="Email"> 
-         </div>
-         <div class="form-group col-md-9 pull-right">
-           <input class="form-control" type="text" name="first_name" placeholder="First Name"> 
-         </div>
-         <div class="form-group col-md-9 pull-right">
-           <input class="form-control" type="text" name="last_name" placeholder="Last Name"> 
-         </div>
-         <div class="form-group col-md-9 pull-right">
-           <input class="form-control" type="password" name="password" placeholder="New Password"> 
-         </div>
-         <div class="col-md-9 pull-right">
-          <button class="btn btn-sm btn-block btn-default" type="submit" value="Submit"> Sign up</button>
-        </div>
-      </form>
-    <div class="col-md-1">
+    <div ng-view class="view-frame"></div>
+
+    <div id="footer">
     </div>
-
   </div>
-  </div>
-
-  <div id="footer">
-  </div>
-</div>
-</div>
+  {% endverbatim %}
 
 <script src="/static/vendor/jquery/dist/jquery.js"></script>
 <script src="/static/vendor/angular/angular.min.js"></script>

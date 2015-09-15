@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     'django_nose',
     'engagement',
     'google',
@@ -114,6 +116,10 @@ ES_TYPE = 'YOUR-ES-TYPE-HERE'
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
     )
 }
+
 from settings.local import *

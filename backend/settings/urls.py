@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     url(r'^', include('core.urls', namespace="core")),
     url(r'^', include('engagement.urls', namespace="project")),
     url(r'^', include('google.urls', namespace="google")),
-    
+    # url(r'^auth/', include('djoser.urls')),
 )
 
 if settings.DEBUG:
