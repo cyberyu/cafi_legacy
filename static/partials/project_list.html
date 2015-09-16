@@ -1,13 +1,13 @@
 <div id="main_content">
     <table class="table table-hover">
         <thead>
-          <tr>
-              <th> Project </th>
-              <th> Client </th>
-              <th> Created At</th>
-              <th> ID </th>
-              <th> Action </th>
-          </tr>
+        <tr>
+            <th> Project</th>
+            <th> Client</th>
+            <th> Created At</th>
+            <th> ID</th>
+            <th> Action</th>
+        </tr>
         </thead>
         <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
             <td> {{project.name}}</td>
