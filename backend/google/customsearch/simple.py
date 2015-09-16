@@ -43,7 +43,7 @@ def main():
       num=10,
       start=11,
       dateRestrict='y1',
-      #lr='lang_zh-CN',
+      lr='lang_ar',
       #searchType='image',
     ).execute()
   pprint.pprint(res)
