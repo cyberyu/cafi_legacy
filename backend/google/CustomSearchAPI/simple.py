@@ -32,8 +32,7 @@ def main():
   # Build a service object for interacting with the API. Visit
   # the Google APIs Console <http://code.google.com/apis/console>
   # to get an API key for your own application.
-  service = build("CustomSearchAPI", "v1",
-            developerKey="AIzaSyDkxRofVDMMrci34b9yFCePgJz2YAoDmAA")
+  service = build("CustomSearchAPI", "v1", developerKey="AIzaSyDkxRofVDMMrci34b9yFCePgJz2YAoDmAA")
 
 
   #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
