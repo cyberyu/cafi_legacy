@@ -1,14 +1,21 @@
 <div id="main_content">
-   <table class="table table-hover">
-    <thead>
-      <tr>
-        <th> Project </th> 
-        <th> Client </th>
-      </tr>
-    </thead>
-    <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
-      <td> {{project.name}}</td>
-      <td> {{project.client}}</td>
-    </tr>
-   </table>
- </div>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+              <th> Project </th>
+              <th> Client </th>
+              <th> Created At</th>
+              <th> ID </th>
+              <th> Action </th>
+          </tr>
+        </thead>
+        <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
+            <td> {{project.name}}</td>
+            <td> {{project.client}}</td>
+            <td> {{project.created_at}}</td>
+            <td> {{project.id}}</td>
+            <td><a class="btn-sm btn-danger" ng-click="deleteProject(project)">Delete</a></td>
+        </tr>
+    </table>
+    <a class="btn btn-primary btn-sm" href="#/projects/new">Add New Project</a>
+</div>

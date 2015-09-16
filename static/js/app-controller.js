@@ -1,10 +1,22 @@
 
-cafiApp.controller('ProjectListCtrl', ['$scope', '$routeParams', 'Project',
-  function($scope, $routeParams, Project) {
-    $scope.projects = Project.query();
-    $scope.orderProp = 'created_at';
-  }
-]);
+angular.module('projectControllers',[]).controller('ProjectListCtrl',function($scope,$window,$routeParams,popupService, Project) {
+	  $scope.projects = Project.query();
+	  $scope.orderProp = 'created_at';
+	  $scope.deleteProject=function(project){
+		  if(popupService.showPopup('Really delete this?')){
+			  project.$delete(function(){
+				  $window.location.href='';
+			  });
+		  }
+	  }
+  }).controller('ProjectCreateCtrl',function($scope,$location,Project){
+	$scope.project=new Project();
+	$scope.addProject=function(){
+		$scope.project.$save(function(){
+			$location.path('/projects');
+		});
+	}
+});
 
 
 cafiApp.controller('loginCtrl', function($scope, $routeParams, $http, $location) {
