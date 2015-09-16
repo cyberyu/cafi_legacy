@@ -7,7 +7,7 @@ GoogleScraper.setup_logger()
 results = GoogleScraper.scrape('Wage Threft McDonald', num_results_per_page=10, num_pages=3, offset=0, searchtype='normal')
 
 for page in results:
-        for link_title, link_snippet, link_url, *rest in page['results']:
+        for link_title, link_snippet, link_url in page['results']:
             # You can access all parts of the search results like that
             # link_url.scheme => URL scheme specifier (Ex: 'http')
             # link_url.netloc => Network location part (Ex: 'www.python.org')
