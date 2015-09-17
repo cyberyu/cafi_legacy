@@ -1,14 +1,65 @@
 <div id="main_content">
-   <table class="table table-hover">
-    <thead>
-      <tr>
-        <th> Project </th> 
-        <th> Client </th>
-      </tr>
-    </thead>
-    <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
-      <td> {{project.name}}</td>
-      <td> {{project.client}}</td>
-    </tr>
-   </table>
- </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th> Project</th>
+            <th> Client</th>
+            <th> Created At</th>
+            <th> ID</th>
+            <th> Action</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
+            <td> {{project.name}}</td>
+            <td> {{project.client}}</td>
+            <td> {{project.created_at}}</td>
+            <td> {{project.id}}</td>
+            <td><a class="btn-sm btn-primary" ng-click="setEditBoolTrue(project)">Edit</a><a class="btn-sm btn-danger" ng-click="deleteProject(project)">Delete</a></td>
+        </tr>
+    </table>
+    <a class="btn btn-primary btn-sm" ng-click="setAddBoolTrue()">Add New Project</a>
+    <form class="form-horizontal" role="form" ng-submit="addProject()" ng-show="addBool">
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Project Name</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="project.name" class="form-control" id="title" placeholder="Project Name Here"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="client" class="col-sm-2 control-label">Client Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" ng-model="project.client" class="form-control" id="client" placeholder="Who is the client"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" value="Save"/>
+                <a class="btn btn-primary btn-danger" ng-click="setAddBoolFalse()">Cancel</a>
+            </div>
+        </div>
+    </form>
+    <form class="form-horizontal" role="form" ng-submit="updateProject(projectToEdit)" ng-show="editBool">
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Project Name</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="projectToEdit.name" class="form-control" id="title" placeholder="{{projectToEdit.name}}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="client" class="col-sm-2 control-label">Client Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" ng-model="projectToEdit.client" class="form-control" id="client" placeholder="{{projectToEdit.client}}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" value="Save"/>
+                <a class="btn btn-primary btn-danger" ng-click="setEditBoolFalse()">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
