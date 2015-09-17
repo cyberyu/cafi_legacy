@@ -21,9 +21,6 @@ cafiApp.config(['$routeProvider',
         $routeProvider.when('/projects', {
             controller: 'ProjectListCtrl',
             templateUrl: '/static/partials/project_list.html'
-        }).when('/projects/new', {
-            controller: 'ProjectCreateCtrl',
-            templateUrl: '/static/partials/project_add.html'
         }).when('/', {
             controller: 'loginCtrl',
             templateUrl: '/static/partials/register.html'

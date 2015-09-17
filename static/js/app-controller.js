@@ -1,6 +1,8 @@
-angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope, $window, $routeParams, popupService, Project) {
+angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope, $window, $location, $routeParams, popupService, Project) {
     $scope.projects = Project.query();
     $scope.orderProp = 'created_at';
+    $scope.addBool = false;
+    $scope.editBool = false;
     $scope.deleteProject = function (project) {
         if (popupService.showPopup('Really delete this?')) {
             project.$delete(function () {
@@ -8,14 +10,37 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
             });
         }
     }
-}).controller('ProjectCreateCtrl', function ($scope, $location, Project) {
+    $scope.setAddBoolTrue = function () {
+        $scope.addBool = true;
+        $scope.editBool = false;
+    }
+    $scope.setEditBoolTrue = function (project) {
+        $scope.projectToEdit = Project.get({ projectId: project.id}, function() {
+            $scope.editBool = true;
+            $scope.addBool = false;
+        });
+    }
+    $scope.setAddBoolFalse= function () {
+        $scope.addBool = false;
+    }
+    $scope.setEditBoolFalse= function () {
+        $scope.editBool = false;
+    }
     $scope.project = new Project();
     $scope.addProject = function () {
         $scope.project.$save(function () {
-            $location.path('/projects');
+            $scope.projects = Project.query();
+            $scope.addBool = false;
         });
     }
-});
+    $scope.updateProject=function(){
+        $scope.projectToEdit.$update(function(){
+            $scope.projects = Project.query();
+            $scope.editBool = false;
+        });
+    };
+
+})
 
 
 cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location) {
