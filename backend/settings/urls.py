@@ -5,12 +5,16 @@ from django.conf import settings
 from rest_framework import routers
 from google.views import SearchViewSet, SearchResultViewSet
 from engagement.views import ProjectViewSet
+from risk.views import RiskViewSet, CompanyViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'projects', ProjectViewSet)
 router.register(r'gsearch', SearchViewSet)
 router.register(r'gdocs', SearchResultViewSet)
+router.register(r'risks', RiskViewSet)
+router.register(r'companies', CompanyViewSet)
+
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

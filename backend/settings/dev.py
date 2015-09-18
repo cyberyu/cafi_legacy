@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django_nose',
     'engagement',
     'google',
+    'risk',
     'core',
     # 'tag_store'  # for future use with cr_complaint_analytics_core
 )

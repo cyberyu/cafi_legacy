@@ -1,32 +1,35 @@
-import json
-from django.conf import settings
 
-def get_user_group(user):
-    try:
-        return user.groups.get().name
-    except:
-        return None
+from googleapiclient.discovery import build
 
-def get_group_from_index_name(index_name):
-    for group, name in settings.ES_INDEX.iteritems():
-        if name == index_name:
-            return group
-
-def is_member(user, group_name):
-    if group_name == 'CCDB':
-        return True;
-    return user.groups.filter(name=group_name).exists()
+from models import Search, SearchResult
 
 
-def get_index_name_from_request(request):
-    try:
-        if request.method == 'POST':
-            index_name = request.data['params']['index_name']
-        else:
-            index_name = json.loads(request.GET.get('params'))['index_name']
-    except:
-        if get_user_group(request.user):
-            index_name = settings.ES_INDEX[get_user_group(request.user)]
-        else:
-            index_name = settings.ES_INDEX['CCDB'] #default index
-    return index_name
+service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
+collection = service.cse()
+
+def do_search(search, string):
+    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+    search_engine_id = '012608441591405123751:clhx3wq8jxk'
+
+    start_val = 0
+    request = collection.list(
+        q=string,
+        # num=10, #this is the maximum & default anyway
+        # start=start_val,
+        cx=search_engine_id
+    )
+    response = request.execute()
+
+    for i, doc in enumerate(response['items']):
+        obj = SearchResult()
+        obj.search = search
+        obj.title = doc.get('title')
+        obj.snippet = doc.get('snippet')
+        obj.url = doc.get('link')
+        obj.rank = start_val + i
+        obj.save()
+
+
+if __name__ == '__main__':
+    do_search(1, 'olympics')
+
