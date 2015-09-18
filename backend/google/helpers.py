@@ -1,8 +1,12 @@
-
 from googleapiclient.discovery import build
 
-from models import Search, SearchResult
+if __name__ == '__main__':
+    import os, sys
+    PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../backend')
+    sys.path.append(PROJECT_DIR)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.dev")
 
+from google.models import Search, SearchResult
 
 service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
 collection = service.cse()
@@ -31,5 +35,14 @@ def do_search(search, string):
 
 
 if __name__ == '__main__':
-    do_search(1, 'olympics')
+    from engagement.models import Project
+    from google.models import Search, SearchResult
+    from django.core.wsgi import get_wsgi_application
+    get_wsgi_application()
+
+    project = Project(client="xx", name="bbbb")
+    project.save()
+    search = Search(project=project, string='olympic')
+    search.save()
+    do_search(search, 'olympics')
 
