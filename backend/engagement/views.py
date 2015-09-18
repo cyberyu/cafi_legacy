@@ -1,6 +1,3 @@
-from django.shortcuts import render
-from django.shortcuts import render, render_to_response
-
 from rest_framework import viewsets
 
 from models import Project

@@ -3,16 +3,26 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from engagement.models import Project
 
-# Create your models here.
+
 class Search(models.Model):
-    project = models.ForeignKey(Project) 
+    project = models.ForeignKey(Project, related_name="searches") 
     string = models.CharField(max_length=255) # search string
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __unicode__(self):
+      return self.string
+
 
 class SearchResult(models.Model):
-    search = models.ForeignKey(Search)
+    search = models.ForeignKey(Search, related_name="documents")
     title = models.CharField(max_length=255)
-    snippet = models.TextField()
-    url = models.URLField()
+    url = models.URLField(blank=False)
+    snippet = models.TextField(blank=True)
+
+    text = models.TextField(blank=True)
+    doc_type = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+       return self.title
 
