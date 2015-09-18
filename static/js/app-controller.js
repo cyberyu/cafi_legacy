@@ -1,45 +1,49 @@
 angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope, $window, $location, $routeParams, popupService, Project) {
-    $scope.projects = Project.query();
-    $scope.orderProp = 'created_at';
-    $scope.addBool = false;
-    $scope.editBool = false;
+    $scope.displayMode = "list";
+    $scope.currentProject = null;
+    $scope.listProjects = function () {
+        $scope.projects = Project.query();
+    }
     $scope.deleteProject = function (project) {
-        if (popupService.showPopup('Really delete this?')) {
-            project.$delete(function () {
-                $window.location.href = '';
+        if (popupService.showPopup('Really delete this project?')) {
+            project.$delete().then(function () {
+                $scope.projects.splice($scope.projects.indexOf(project), 1);
             });
         }
     }
-    $scope.setAddBoolTrue = function () {
-        $scope.addBool = true;
-        $scope.editBool = false;
-    }
-    $scope.setEditBoolTrue = function (project) {
-        $scope.projectToEdit = Project.get({ projectId: project.id}, function() {
-            $scope.editBool = true;
-            $scope.addBool = false;
+    $scope.createProject = function (project) {
+        new Project(project).$save().then(function(newProject) {
+            $scope.projects.push(newProject);
+            $scope.displayMode = "list";
         });
     }
-    $scope.setAddBoolFalse= function () {
-        $scope.addBool = false;
+    $scope.saveEdit = function (newProject) {
+        if (angular.isDefined(newProject.id)) {
+            $scope.updateProject(newProject);
+        } else {
+            $scope.createProject(newProject);
+        }
     }
-    $scope.setEditBoolFalse= function () {
-        $scope.editBool = false;
+    $scope.editOrCreateProject = function (project) {
+        $scope.currentProject =
+            project ? angular.copy(project) : {};
+        $scope.displayMode = "edit";
     }
-    $scope.project = new Project();
-    $scope.addProject = function () {
-        $scope.project.$save(function () {
-            $scope.projects = Project.query();
-            $scope.addBool = false;
-        });
+    $scope.updateProject = function (project) {
+            project.$update(function(){
+                for (var i = 0; i < $scope.projects.length; i++) {
+                    if ($scope.projects[i].id == project.id) {
+                        $scope.projects[i] = project;
+                        break;
+                    } }
+                $scope.displayMode = "list";
+            });
     }
-    $scope.updateProject=function(){
-        $scope.projectToEdit.$update(function(){
-            $scope.projects = Project.query();
-            $scope.editBool = false;
-        });
-    };
-
+    $scope.cancelEdit = function () {
+        $scope.currentProject = {};
+        $scope.displayMode = "list";
+    }
+    $scope.listProjects();
 })
 
 
