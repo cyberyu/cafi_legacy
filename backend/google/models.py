@@ -18,7 +18,7 @@ class SearchResult(models.Model):
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False)
     snippet = models.TextField(blank=True)
-    rank = models.IntegerField(blank=True)  # rank of the google search result
+    rank = models.IntegerField(blank=True, null=True)  # rank of the google search result
 
     text = models.TextField(blank=True)
     doc_type = models.CharField(blank=True, max_length=20)
