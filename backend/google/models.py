@@ -14,13 +14,13 @@ class Search(models.Model):
 
 
 class SearchResult(models.Model):
-    search = models.ForeignKey(Search, related_name="documents")
+    search = models.ForeignKey(Search, related_name="results")
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False)
     snippet = models.TextField(blank=True)
 
     text = models.TextField(blank=True)
-    doc_type = models.CharField(max_length=20)
+    doc_type = models.CharField(blank=True, max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
