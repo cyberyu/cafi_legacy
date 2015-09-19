@@ -31,7 +31,7 @@ def do_search(search, string):
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
-        obj.text = """The thing in question was the product of Ahmed’s love of invention. He made the clock out of a metal briefcase-style box, a digital display, wires and a circuit board. It was bigger and bulkier than a typical bedside clock, with cords, screws and electrical components. He said he took it to school on Monday to show an engineering teacher, who said it was nice but then told him he should not show the invention to other teachers. Later, Ahmed’s clock beeped during an English class, and after he revealed the device to the teacher, school officials notified the police, and Ahmed was interrogated by officers. “She thought it was a threat to her,” Ahmed told reporters Wednesday. “So it was really sad that she took a wrong impression of it."""
+        obj.text = "The thing in question was the product of Ahmed's love of invention. He made the clock out of a metal briefcase-style box, a digital display, wires and a circuit board. It was bigger and bulkier than a typical bedside clock, with cords, screws and electrical components. He said he took it to school on Monday to show an engineering teacher, who said it was nice but then told him he should not show the invention to other teachers. Later, Ahmed's clock beeped during an English class, and after he revealed the device to the teacher, school officials notified the police, and Ahmed was interrogated by officers. She thought it was a threat to her, Ahmed told reporters Wednesday. So it was really sad that she took a wrong impression of it."
         obj.save()
 
 
