@@ -24,6 +24,9 @@ cafiApp.config(['$routeProvider',
         }).when('/', {
             controller: 'loginCtrl',
             templateUrl: '/static/partials/register.html'
+        }).when('/projects/:id', {
+            controller: 'ProjectBoardCtrl',
+            templateUrl: '/static/partials/project_board.html'
         }).otherwise({
             redirectTo: '/projects'
         });
