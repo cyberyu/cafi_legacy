@@ -140,44 +140,43 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.displayMode = "edit";
     };
     $scope.batchSearch = function (newSearches) {
-        var asyncLoop = function(o){
-            var i=-1;
-
-            var loop = function(){
-                i++;
-                if(i==o.length){o.callback(); return;}
-                o.functionToLoop(loop, i);
-            }
-            loop();//init
-        }
-        asyncLoop({
-            length : newSearches.length,
-            functionToLoop : function(loop, i){
-                if(newSearches[i].use) {
-                    var oneSearch = {};
-                    oneSearch.project = $scope.currentProject.id;
-                    oneSearch.string = newSearches[i].string;
-                    loop();
-                    new Search(oneSearch).$save().then(function () {
-                    });
-                }
-            },
-            callback : function(){
-                //$scope.boolGdocs = true;
-                //$scope.gdocs = Gdoc.query();
-            }
-        });
-
-        //for(var i=0; i< newSearches.length; i++){
-        //    if(newSearches[i].use){
-        //        var oneSearch = {};
-        //        oneSearch.project = $scope.currentProject.id;
-        //        oneSearch.string = newSearches[i].string;
-        //        new Search(oneSearch).$save().then(function() {
-        //        });
-        //        setTimeout(function(){}, 3000);
+        //var asyncLoop = function(o){
+        //    var i=-1;
+        //
+        //    var loop = function(){
+        //        i++;
+        //        if(i==o.length){o.callback(); return;}
+        //        o.functionToLoop(loop, i);
         //    }
+        //    loop();//init
         //}
+        //asyncLoop({
+        //    length : newSearches.length,
+        //    functionToLoop : function(loop, i){
+        //        if(newSearches[i].use) {
+        //            var oneSearch = {};
+        //            oneSearch.project = $scope.currentProject.id;
+        //            oneSearch.string = newSearches[i].string;
+        //            loop();
+        //            new Search(oneSearch).$save().then(function () {
+        //            });
+        //        }
+        //    },
+        //    callback : function(){
+        //        //$scope.boolGdocs = true;
+        //        //$scope.gdocs = Gdoc.query();
+        //    }
+        //});
+
+        for(var i=0; i< newSearches.length; i++){
+            if(newSearches[i].use){
+                var oneSearch = {};
+                oneSearch.project = $scope.currentProject.id;
+                oneSearch.string = newSearches[i].string;
+                new Search(oneSearch).$save().then(function() {
+                });
+            }
+        }
     };
 });
 
