@@ -1,40 +1,80 @@
 <div id="main_content">
-    Welcome to {{currentProject.name}} project for {{currentProject.client}} client!
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Search String</th>
-            <!--<th>Created At</th>-->
-            <!--<th>ID</th>-->
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tr ng-repeat="search in searches">
-            <td>{{search.string}}</td>
-            <!--<td>{{search.createdAt}}</td>-->
-            <!--<td>{{search.id}}</td>-->
-            <td>
-                <!--<a class="btn-sm btn-primary" ng-click="editOrCreateSearch(search)">Edit</a>-->
-                <a class="btn-sm btn-danger" ng-click="deleteSearch(search)">Delete</a>
-            </td>
-        </tr>
-    </table>
-    <a class="btn btn-primary btn-sm" ng-click="editOrCreateSearch()">Add New Search</a>
-    <a class="btn btn-primary btn-sm" ng-click="showGdocs()">Show/Hide Search Results</a>
-    <form class="form-horizontal" role="form" ng-submit="saveEdit(currentSearch)" ng-show="displayMode == 'edit'">
-        <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Search String</label>
-            <div class="col-sm-10">
-                <input type="text" ng-model="currentSearch.string" class="form-control" id="string" placeholder="Search String Here"/>
-            </div>
+    <div class="col-md-12">
+        Welcome to {{currentProject.name}} project for {{currentProject.client}} client!
+    </div>
+    <div class="col-md-12" ng-show="displayMode == 'list'">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Search Name</th>
+                <th>Search Company</th>
+                <th>Search String</th>
+                <!--<th>Created At</th>-->
+                <!--<th>ID</th>-->
+                <th>Search?</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="search in newSearches">
+                <td>{{search.searchName}}</td>
+                <td>{{search.companyName}}</td>
+                <td>{{search.string}}</td>
+                <!--<td>{{search.createdAt}}</td>-->
+                <!--<td>{{search.id}}</td>-->
+                <td>
+                    <input type="checkbox" ng-model="search.use">
+                    <!--<a class="btn-sm btn-primary" ng-click="editOrCreateSearch(search)">Edit</a>-->
+                    <!--<a class="btn-sm btn-danger" ng-click="deleteSearch(search)">Delete</a>-->
+                </td>
+            </tr>
+        </table>
+        <a class="btn btn-primary btn-sm" ng-click="batchSearch(newSearches)">Google them!</a>
+        <a class="btn btn-danger btn-sm" ng-click="cancelGenearateSearch()">Cancel</a>
+    </div>
+    <!--<a class="btn btn-primary btn-sm" ng-click="editOrCreateSearch()">Add New Search</a>-->
+    <!--<a class="btn btn-primary btn-sm" ng-click="showGdocs()">Show/Hide Search Results</a>-->
+
+    <div ng-show="displayMode == 'edit'">
+        <div class="col-md-6">
+            <select size="5" multiple ng-multiple="true" ng-model="selectedSearchNames" ng-options="c.name for c in availableSearchNames">
+            </select>
+            <select size="5" multiple ng-multiple="true" ng-model="selectedCompanyNames" ng-options="c for c in companyNames">
+            </select>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input type="submit" class="btn btn-primary" value="Save"/>
-                <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
+        <form class="form-horizontal" role="form" ng-submit="addCompany(companyName)">
+            <div class="form-group col-md-4">
+                <label >Add a company</label>
+                <input type="text" ng-model="companyName" class="form-control" placeholder="Company Name"/>
             </div>
+            <div class="form-group col-md-offset-8 col-md-4">
+                <div>
+                    <input type="submit" class="btn-sm btn-primary" value="Save"/>
+                </div>
+            </div>
+        </form>
+        <!--<div class="col-md-6">-->
+            <!--{{selectedSearchNames}}-->
+            <!--{{selectedCompanyNames}}-->
+        <div class="col-md-6">
+            <a class="btn-sm btn-primary" ng-click="generateSearches()">Generate Searches</a>
         </div>
-    </form>
+        <!--</div>-->
+        <!--<form class="form-horizontal" role="form" ng-submit="saveEdit(currentSearch)">-->
+            <!--<div class="form-group">-->
+                <!--<label for="name" class="col-sm-2 control-label">Search String</label>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" ng-model="currentSearch.string" class="form-control" id="string" placeholder="Search String Here"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-offset-2 col-sm-10">-->
+                    <!--<input type="submit" class="btn btn-primary" value="Save"/>-->
+                    <!--<a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
+    </div>
+
+
     <table class="table table-hover" ng-show="boolGdocs">
         <thead>
         <tr>
@@ -43,12 +83,15 @@
             <!--<th>ID</th>-->
             <th>Snippet</th>
             <th>Link</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tr ng-repeat="gdoc in gdocs">
-            <td>{{gdoc.title}}</td>
-            <td>{{gdoc.snippet}}</td>
-            <td><a href="{{gdoc.url}}">{{gdoc.url}}</a></td>
+            <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.title}}</td>
+            <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.snippet}}</td>
+            <td ng-show="textsToShow.indexOf(gdoc.id)<0"><a href="{{gdoc.url}}">{{gdoc.url}}</a></td>
+            <td colspan="3" ng-show="textsToShow.indexOf(gdoc.id)>=0">{{gdoc.text}}</td>
+            <td><a class="btn-sm btn-primary" ng-click="showText(gdoc)">Show/Hide</a><a class="btn-sm btn-danger" ng-click="deleteGdoc(gdoc)">Delete</a></td>
         </tr>
     </table>
 </div>

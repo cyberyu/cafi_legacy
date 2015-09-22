@@ -47,3 +47,7 @@ html,body {
     width: 50%;
     margin: -15% 0 0 -25%;
 }
+
+select {
+    margin-top: 10px;
+}

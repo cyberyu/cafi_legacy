@@ -30,7 +30,7 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
         }
     });
 }).factory('Gdoc', function ($resource) {
-    return $resource('/api/gdocs/:gocId', {searchId: '@id'}, {
+    return $resource('/api/gdocs/:gocId', {gocId: '@id'}, {
         query: {
             method: 'GET',
             isArray: true,
