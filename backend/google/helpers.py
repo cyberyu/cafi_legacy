@@ -1,4 +1,50 @@
+
 from googleapiclient.discovery import build
+#import redis
+#import json
+#import time
+#import requests
+import urllib
+from bs4 import BeautifulSoup
+#from alchemyapi import AlchemyAPI
+from google.models import Search, SearchResult
+
+
+def extract_html_single(url_string):
+    html = urllib.urlopen(url_string).read()
+    return html
+
+
+#print extract_html_single('https://en.wikipedia.org/wiki/Layoff')
+
+def extract_text_single(html_string):
+    soup = BeautifulSoup(html_string)
+    for script in soup(["script","style"]):
+        script.extract()
+    text = soup.get_text()
+    lines = (line.strip() for line in text.splitlines())
+    # break multi-headlines into a line each
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    # drop blank lines
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    return text
+
+#
+# def extract_text_AlchenyAPI_single(url_string):
+#     alchemyapi = AlchemyAPI()
+#     response1 = alchemyapi.text('url', url_string)
+#     if response1['status'] == 'OK':
+#         try:
+#             #print (unicode(response1['text']))
+#             return unicode(response1['text'])
+#         except:
+#
+#             pass
+#
+#     else:
+#         return None
+#
+#
 
 if __name__ == '__main__':
     import os, sys
@@ -6,7 +52,7 @@ if __name__ == '__main__':
     sys.path.append(PROJECT_DIR)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.dev")
 
-from google.models import Search, SearchResult
+
 
 service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
 collection = service.cse()
@@ -31,7 +77,8 @@ def do_search(search, string):
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
-        obj.text = "The thing in question was the product of Ahmed's love of invention. He made the clock out of a metal briefcase-style box, a digital display, wires and a circuit board. It was bigger and bulkier than a typical bedside clock, with cords, screws and electrical components. He said he took it to school on Monday to show an engineering teacher, who said it was nice but then told him he should not show the invention to other teachers. Later, Ahmed's clock beeped during an English class, and after he revealed the device to the teacher, school officials notified the police, and Ahmed was interrogated by officers. She thought it was a threat to her, Ahmed told reporters Wednesday. So it was really sad that she took a wrong impression of it."
+        obj.text = extract_text_single(extract_html_single(obj.url))
+        #obj.text = extract_text_AlchenyAPI_single(obj.rul)
         obj.save()
 
 
