@@ -126,7 +126,7 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
                 oneSearch.use = false;
                 oneSearch.searchName = $scope.selectedSearchNames[i].name;
                 oneSearch.companyName = $scope.selectedCompanyNames[j];
-                oneSearch.string = $scope.selectedSearchNames[i].string + "=" + $scope.selectedCompanyNames[j];
+                oneSearch.string = $scope.selectedSearchNames[i].string + "&" + $scope.selectedCompanyNames[j];
                 oneSearch.project = $scope.currentProject.id;
                 $scope.newSearches.push(oneSearch);
                 $scope.displayMode = "list";
@@ -153,16 +153,18 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         asyncLoop({
             length : newSearches.length,
             functionToLoop : function(loop, i){
-                var oneSearch = {};
-                oneSearch.project = $scope.currentProject.id;
-                oneSearch.string = newSearches[i].string;
-                loop();
-                new Search(oneSearch).$save().then(function() {
-                });
+                if(newSearches[i].use) {
+                    var oneSearch = {};
+                    oneSearch.project = $scope.currentProject.id;
+                    oneSearch.string = newSearches[i].string;
+                    loop();
+                    new Search(oneSearch).$save().then(function () {
+                    });
+                }
             },
             callback : function(){
-                $scope.boolGdocs = true;
-                $scope.gdocs = Gdoc.query();
+                //$scope.boolGdocs = true;
+                //$scope.gdocs = Gdoc.query();
             }
         });
 

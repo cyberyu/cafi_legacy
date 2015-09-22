@@ -2,6 +2,31 @@
     <div class="col-md-12">
         Welcome to {{currentProject.name}} project for {{currentProject.client}} client!
     </div>
+    <div class="col-md-12" ng-show="searches.length>0">
+        You have the following searches right now.
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Search String</th>
+                <!--<th>Created At</th>-->
+                <!--<th>ID</th>-->
+                <th>Search?</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="search in searches">
+                <td>{{search.string}}</td>
+                <!--<td>{{search.createdAt}}</td>-->
+                <!--<td>{{search.id}}</td>-->
+                <td>
+                    <!--<input type="checkbox" ng-model="search.use">-->
+                    <!--<a class="btn-sm btn-primary" ng-click="editOrCreateSearch(search)">Edit</a>-->
+                    <a class="btn-sm btn-danger" ng-click="deleteSearch(search)">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
     <div class="col-md-12" ng-show="displayMode == 'list'">
         <table class="table table-hover">
             <thead>
@@ -28,6 +53,7 @@
             </tr>
         </table>
         <a class="btn btn-primary btn-sm" ng-click="batchSearch(newSearches)">Google them!</a>
+        <a class="btn btn-primary btn-sm" ng-click="showGdocs()">Show/Hide Search Results</a>
         <a class="btn btn-danger btn-sm" ng-click="cancelGenearateSearch()">Cancel</a>
     </div>
     <!--<a class="btn btn-primary btn-sm" ng-click="editOrCreateSearch()">Add New Search</a>-->
@@ -55,7 +81,7 @@
             <!--{{selectedSearchNames}}-->
             <!--{{selectedCompanyNames}}-->
         <div class="col-md-6">
-            <a class="btn-sm btn-primary" ng-click="generateSearches()">Generate Searches</a>
+            <a class="btn-sm btn-primary" ng-click="generateSearches()">Generate New Searches</a>
         </div>
         <!--</div>-->
         <!--<form class="form-horizontal" role="form" ng-submit="saveEdit(currentSearch)">-->
