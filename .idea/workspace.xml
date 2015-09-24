@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef04fc12-e673-4078-b2dc-d6669390a603" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/google/migrations/0007_auto_20150924_0405.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/google/alchemyapi_python" afterPath="$PROJECT_DIR$/backend/google/alchemyapi_python" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/google/helpers.py" afterPath="$PROJECT_DIR$/backend/google/helpers.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/settings/local.py" afterPath="$PROJECT_DIR$/backend/settings/local.py" />
