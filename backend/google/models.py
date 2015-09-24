@@ -6,7 +6,7 @@ from engagement.models import Project
 
 class Search(models.Model):
     project = models.ForeignKey(Project, related_name="searches") 
-    string = models.CharField(max_length=255) # search string
+    string = models.CharField(max_length=1024) # search string
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

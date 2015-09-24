@@ -5,11 +5,10 @@ var cafiApp = angular.module('cafiApp', [
     'ngSanitize',
     'ngResource',
     'ngRoute',
-    // 'ui.bootstrap',
+    'ui.bootstrap',
     // 'nya.bootstrap.select',
     'projectControllers',
-    'projectServices'
-]);
+    'projectServices']);
 
 cafiApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';

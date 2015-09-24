@@ -44,11 +44,22 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.displayMode = "list";
     };
     $scope.listProjects();
-}).controller('ProjectBoardCtrl', function($scope, $routeParams, popupService, Project, Search, Gdoc){
+}).controller('ProjectBoardCtrl', function($scope, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc){
     $scope.currentProject = Project.get({id:$routeParams.id});
-    $scope.displayMode = "edit";
     $scope.currentSearch = null;
     $scope.newSearches = [];
+    $scope.progressBool = false;
+    $scope.editSearchNameBool = false;
+    $scope.newSearchName = {};
+    $scope.editCompanyBool = false;
+    $scope.newCompany = {};
+    $scope.editVariationBool = false;
+    $scope.newVariation = {};
+    $scope.showSearchListBool = false;
+    $scope.availableSearchNames = [{name:"Business relationships", string:'("joint venture" | "jv" | "mou" | "memorandum of understanding" | "strategic alliance" | "teaming agreement" |  "strategic partner*" | "partner" | "supplier" | "provider" | "agreement" | "contract" | "component" | "subcontract*" | "receive" | "win*")'},
+        {name:"Supplier relationships", string:'("provider" | "supply" | "supplier" | "vendor" | "contract" | "fund" | "donate" | "commit" | "engineer")'}];
+    $scope.companyNames = [{name:"IBM", variations:["IBM Global Business Service", "IBM Research", "IBM Global Technology Service", "IBM India"]},
+        {name:"Microsoft", variations:["Microsoft Research", "Microsoft India"]}];
     $scope.listSearches = function () {
         $scope.searches = Search.query();
     };
@@ -109,75 +120,102 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
             $scope.gdocs.splice($scope.gdocs.indexOf(gdoc), 1);
         });
     };
-    $scope.listSearches();
-    $scope.availableSearchNames = [{name:"Business relationships", string:'("joint venture" | "jv" | "mou" | "memorandum of understanding" | "strategic alliance" | "teaming agreement" |  "strategic partner*" | "partner" | "supplier" | "provider" | "agreement" | "contract" | "component" | "subcontract*" | "receive" | "win*")'},
-        {name:"Supplier relationships", string:'("provider" | "supply" | "supplier" | "vendor" | "contract" | "fund" | "donate" | "commit" | "engineer")'}]
-    $scope.companyNames = ["IBM", "Google", "Microsoft"]
-    $scope.addCompany = function (newCompany) {
-        if ($scope.companyNames.indexOf(newCompany) < 0) {
-            $scope.companyNames.push(newCompany);
-        }
-    };
 
     $scope.generateSearches= function () {
+        $scope.newSearches =[];
         for(var i = 0; i < $scope.selectedSearchNames.length; i++){
             for(var j = 0; j < $scope.selectedCompanyNames.length; j++){
-                var oneSearch = {};
-                oneSearch.use = false;
-                oneSearch.searchName = $scope.selectedSearchNames[i].name;
-                oneSearch.companyName = $scope.selectedCompanyNames[j];
-                oneSearch.string = $scope.selectedSearchNames[i].string + "&" + $scope.selectedCompanyNames[j];
-                oneSearch.project = $scope.currentProject.id;
-                $scope.newSearches.push(oneSearch);
-                $scope.displayMode = "list";
+                for(var k = 0; k <$scope.selectedCompanyNames[j].variations.length; k++){
+                    var oneSearch = {};
+                    oneSearch.use = true;
+                    oneSearch.searchName = $scope.selectedSearchNames[i].name;
+                    oneSearch.companyName = $scope.selectedCompanyNames[j].variations[k];
+                    oneSearch.string = $scope.selectedSearchNames[i].string + '&"' + oneSearch.companyName+'"';
+                    oneSearch.project = $scope.currentProject.id;
+                    $scope.newSearches.push(oneSearch);
+                }
             }
         }
-    };
+        $scope.showSearchListBool = true;
 
+    };
     $scope.cancelGenearateSearch = function () {
         $scope.listSearches();
         $scope.newSearches =[];
-        $scope.displayMode = "edit";
-    };
-    $scope.batchSearch = function (newSearches) {
-        //var asyncLoop = function(o){
-        //    var i=-1;
-        //
-        //    var loop = function(){
-        //        i++;
-        //        if(i==o.length){o.callback(); return;}
-        //        o.functionToLoop(loop, i);
-        //    }
-        //    loop();//init
-        //}
-        //asyncLoop({
-        //    length : newSearches.length,
-        //    functionToLoop : function(loop, i){
-        //        if(newSearches[i].use) {
-        //            var oneSearch = {};
-        //            oneSearch.project = $scope.currentProject.id;
-        //            oneSearch.string = newSearches[i].string;
-        //            loop();
-        //            new Search(oneSearch).$save().then(function () {
-        //            });
-        //        }
-        //    },
-        //    callback : function(){
-        //        //$scope.boolGdocs = true;
-        //        //$scope.gdocs = Gdoc.query();
-        //    }
-        //});
+        $scope.showSearchListBool = false;
 
+    };
+    $scope.searchedStrings = [];
+    $scope.batchSearch = function (newSearches) {
+        var timeInt = 2000;
+        $scope.progressBool = true;
+        var toSearches = [];
         for(var i=0; i< newSearches.length; i++){
             if(newSearches[i].use){
-                var oneSearch = {};
-                oneSearch.project = $scope.currentProject.id;
-                oneSearch.string = newSearches[i].string;
-                new Search(oneSearch).$save().then(function() {
-                });
+                toSearches.push(newSearches[i]);
             }
         }
+        $interval(function() {
+            if (toSearches.length >0) {
+                var item = toSearches.pop();
+                var oneSearch = {
+                project: $scope.currentProject.id,
+                string: item.string};
+                $http.post('/api/gsearch',oneSearch)
+                    .success(function(data) {
+                    });
+                $scope.searchedStrings.push(oneSearch);
+            } else {
+                $interval.cancel();
+            }
+        }, timeInt);
+        $timeout(function(){
+            $scope.boolGdocs = true;
+            $scope.gdocs = Gdoc.query();
+        }, timeInt*toSearches.length);
     };
+    $scope.addCompany = function () {
+        $scope.editCompanyBool = true;
+    };
+    $scope.saveEditCompany = function (newCompany) {
+        $scope.companyNames.push(newCompany);
+        $scope.editCompanyBool = false;
+        $scope.newCompany = {};
+    };
+    $scope.deleteCompanies = function(selected){
+        for(var i =0; i <selected.length; i++){
+            $scope.companyNames.pop(selected[i]);
+        }
+    };
+    $scope.addSearchName = function(){
+        $scope.editSearchNameBool = true;
+    };
+    $scope.saveEditSearchName = function(newSearchName){
+        $scope.availableSearchNames.push(newSearchName);
+        $scope.editSearchNameBool = false;
+        $scope.newSearchName = {};
+    };
+    $scope.deleteSearchNames = function(selected){
+        for(var i =0; i <selected.length; i++){
+            $scope.availableSearchNames.pop(selected[i]);
+        }
+    };
+    $scope.addVariation = function(){
+        $scope.editVariationBool = true;
+    };
+    $scope.deleteVariations = function(selected){
+        for(var i =0; i <selected.length; i++){
+            $scope.companyNames[$scope.companyNames.indexOf($scope.selectedCompanyNames[0])].variations.pop(selected[i]);
+        }
+    };
+    $scope.saveEditVariation = function(newVariation){
+        $scope.companyNames[$scope.companyNames.indexOf($scope.selectedCompanyNames[0])].
+            variations.push(newVariation.name);
+        $scope.editVariationBool = false;
+        $scope.newVariation = {};
+    };
+    $scope.listSearches();
+    $scope.gdocs = Gdoc.query();
 });
 
 cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location) {
