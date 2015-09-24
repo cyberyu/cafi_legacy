@@ -112,9 +112,9 @@
         <a class="btn-lg btn-primary" ng-click="generateSearches()">Generate Searches</a>
     </div>
 </div>
-<div class="row" ng-show="progressBool && (searchedStrings.length/(newSearches.length+0.000001))<0.999">
+<div class="row" ng-show="progressBool && calculateProgress(searchedStrings, newSearches)<1">
     <div class="col-md-12">
-        <progressbar animate="false" value="searchedStrings.length/(newSearches.length+0.000001)*100" type="success" max="100"><b>{{searchedStrings.length/(newSearches.length+0.000001)*100|number:0}}%</b></progressbar>
+        <progressbar animate="false" value="calculateProgress(searchedStrings, newSearches)*100" type="success" max="100"><b>{{calculateProgress(searchedStrings, newSearches)*100|number:0}}%</b></progressbar>
     </div>
 </div>
 <div class="row" ng-show="boolGdocs && gdocs.length>0">

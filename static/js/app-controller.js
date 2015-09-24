@@ -214,6 +214,19 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.editVariationBool = false;
         $scope.newVariation = {};
     };
+    $scope.calculateProgress = function(searchedStrings, newSearches){
+        var toSearches = [];
+        for(var i=0; i< newSearches.length; i++){
+            if(newSearches[i].use){
+                toSearches.push(newSearches[i]);
+            }
+        }
+        var result = 0;
+        if(toSearches.length>0){
+            result = searchedStrings.length/toSearches.length;
+        }
+        return result
+    };
     $scope.listSearches();
     $scope.gdocs = Gdoc.query();
 });
