@@ -10,4 +10,3 @@ djoser==0.3.1
 djangorestframework-camel-case
 google-api-python-client
 beautifulsoup4
-

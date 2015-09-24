@@ -22,7 +22,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-STATIC_URL = '/home/shyu/PycharmProjects/newcaf_2/static/'
-STATIC_PATH = '/home/shyu/PycharmProjects/newcaf_2/static/'
-STATIC_ROOT = '/home/shyu/PycharmProjects/newcaf_2/static/'
+STATIC_URL = '/Users/yangm/cafi/project/static/' 
+STATIC_PATH = '/Users/yangm/cafi/project/static/'
+STATIC_ROOT = '/Users/yangm/cafi/project/static/'
 
