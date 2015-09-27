@@ -5,6 +5,8 @@ var cafiApp = angular.module('cafiApp', [
     'ngSanitize',
     'ngResource',
     'ngRoute',
+    'ngCsvImport',
+    'ngCsv',
     'ui.bootstrap',
     // 'nya.bootstrap.select',
     'projectControllers',

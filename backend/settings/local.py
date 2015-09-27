@@ -22,7 +22,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-STATIC_URL = '/Users/yangm/cafi/project/static/' 
-STATIC_PATH = '/Users/yangm/cafi/project/static/'
-STATIC_ROOT = '/Users/yangm/cafi/project/static/'
+STATIC_URL = '/Users/pengfeiz/Projects/cafi/static/' 
+STATIC_PATH = '/Users/pengfeiz/Projects/cafi/static/'
+STATIC_ROOT = '/Users/pengfeiz/Projects/cafi/static/'
 

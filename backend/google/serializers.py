@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Search, SearchResult
+from models import Search, SearchResult, GeoSearch, GeoSearchResult
 
 
 class SearchSerializer(serializers.ModelSerializer):
@@ -11,4 +11,13 @@ class SearchResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchResult
 
+
+class GeoSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeoSearch
+
+
+class GeoSearchResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeoSearchResult
  

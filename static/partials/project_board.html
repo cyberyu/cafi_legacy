@@ -142,3 +142,99 @@
 </div>
 
 
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Customized GeoSearch</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Address List
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Entity Name</th>
+                        <th>Address</th>
+                        <!--<th>Created At</th>-->
+                        <!--<th>ID</th>-->
+                        <th>Action</th>
+                        <th ng-show="geoResultsBool">Latitude</th>
+                        <th ng-show="geoResultsBool">Longitude</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="address in addresses">
+                        <td>{{address.name}}</td>
+                        <td>{{address.address}}</td>
+                        <!--<td>{{project.createdAt}}</td>-->
+                        <!--<td>{{project.id}}</td>-->
+                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)"><i class="fa fa-pencil"></i></a>
+                            <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)"><i class="fa fa-minus"></i></a></td>
+                        <td ng-show="geoResultsBool">{{address.lat}}</td>
+                        <td ng-show="geoResultsBool">{{address.lng}}</td>
+                    </tr>
+                </table>
+                <a ng-click="editOrCreateAddress()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
+                <a ng-click="uploadAddress()" class="btn btn-default btn-circle"><i class="fa fa-upload"></i></a>
+                <a ng-show="geoResultsBool" ng-csv="addresses" filename="addresses.csv" csv-header="['ID', 'Entity Name', 'Address', 'Latitude', 'Longitude' ]" class="btn btn-default btn-circle"><i class="fa fa-download"></i></a>
+                <ng-csv-import
+                        class="import"
+                        content="csv.content"
+                        header="csv.header"
+                        header-visible="csv.headerVisible"
+                        separator="csv.separator"
+                        separator-visible="csv.separatorVisible"
+                        result="csv.result"
+                        encoding="csv.encoding"
+                        encoding-visible="csv.encodingVisible">
+                </ng-csv-import>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4" ng-show="addAddressBool">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-horizontal" role="form" ng-submit="saveAddressEdit(currentAddress)">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Entity name</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="currentAddress.name" class="form-control" id="title" placeholder="Entity name here"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="client" class="col-sm-2 control-label">Address</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="currentAddress.address" class="form-control" id="client" placeholder="Address here"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <input type="submit" class="btn btn-primary" value="Save"/>
+                            <a class="btn btn-primary btn-danger" ng-click="cancelAddressEdit()">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="progressBool && calculateProgressAddress(addresses)<1">
+    <div class="col-md-12">
+        <progressbar animate="false" value="calculateProgressAddress(addresses)" type="success" max="1"><b>{{calculateProgressAddress(addresses)*100|number:0}}%</b></progressbar>
+    </div>
+</div>
+
+<div class="row" >
+    <div class="col-lg-2">
+        <a class="btn btn-danger btn-lg" href="/#/projects">Back to Projects</a>
+    </div>
+    <div class="col-lg-offset-8 col-lg-2">
+        <a class="btn-lg btn-primary" ng-click="batchGeoSearch()">Geo Searches</a>
+    </div>
+</div>

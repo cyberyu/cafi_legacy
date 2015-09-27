@@ -27,3 +27,19 @@ class SearchResult(models.Model):
     def __unicode__(self):
        return self.title
 
+class GeoSearch(models.Model):
+    project = models.ForeignKey(Project, related_name="geosearches") 
+    string = models.CharField(max_length=1024) # search string
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+      return self.string
+
+class GeoSearchResult(models.Model):
+    search = models.ForeignKey(GeoSearch, related_name="georesults")
+    lat = models.CharField(max_length=255)
+    lng = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+       return self.lat

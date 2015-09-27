@@ -28,7 +28,9 @@
     "jasmine-object-matchers": "~0.1.0",
     "angular-bootstrap": "~0.13.4",
     "nya-bootstrap-select": "~2.1.0",
-    "startbootstrap-sb-admin-2": "~1.0.7"
+    "startbootstrap-sb-admin-2": "~1.0.7",
+    "angular-csv-import": "latest",
+    "ng-csv": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0",

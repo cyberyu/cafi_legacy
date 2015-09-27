@@ -1,4 +1,5 @@
 angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope, $window, $location, $routeParams, popupService, Project) {
+
     $scope.displayMode = "list";
     $scope.currentProject = null;
     $scope.listProjects = function () {
@@ -44,7 +45,7 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.displayMode = "list";
     };
     $scope.listProjects();
-}).controller('ProjectBoardCtrl', function($scope, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc){
+}).controller('ProjectBoardCtrl', function($scope, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
     $scope.currentProject = Project.get({id:$routeParams.id});
     $scope.currentSearch = null;
     $scope.newSearches = [];
@@ -56,6 +57,24 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
     $scope.editVariationBool = false;
     $scope.newVariation = {};
     $scope.showSearchListBool = false;
+    $scope.addresses=[];
+    $scope.currentAddress = {};
+    $scope.uploadAddressBool = false;
+    $scope.searchedStrings = [];
+    $scope.searchedGeoStrings = [];
+    $scope.geoResults = [];
+    $scope.counter = 0;
+    $scope.csv = {
+        content: null,
+        header: true,
+        headerVisible: false,
+        separator: ',',
+        separatorVisible: false,
+        result: null,
+        encoding: 'ISO-8859-1',
+        encodingVisible: false
+    };
+
     $scope.availableSearchNames = [{name:"Business relationships", string:'("joint venture" | "jv" | "mou" | "memorandum of understanding" | "strategic alliance" | "teaming agreement" |  "strategic partner*" | "partner" | "supplier" | "provider" | "agreement" | "contract" | "component" | "subcontract*" | "receive" | "win*")'},
         {name:"Supplier relationships", string:'("provider" | "supply" | "supplier" | "vendor" | "contract" | "fund" | "donate" | "commit" | "engineer")'}];
     $scope.companyNames = [{name:"IBM", variations:["IBM Global Business Service", "IBM Research", "IBM Global Technology Service", "IBM India"]},
@@ -145,7 +164,6 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.showSearchListBool = false;
 
     };
-    $scope.searchedStrings = [];
     $scope.batchSearch = function (newSearches) {
         var timeInt = 2000;
         $scope.progressBool = true;
@@ -227,6 +245,123 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         }
         return result
     };
+    $scope.editOrCreateAddress = function (address) {
+        $scope.currentAddress =
+            address ? angular.copy(address) : {};
+        $scope.addAddressBool = true;
+    };
+    $scope.cancelAddressEdit = function () {
+        $scope.currentAddress = {};
+        $scope.addAddressBool = false;
+    };
+    $scope.saveAddressEdit = function (newAddress) {
+        if (angular.isDefined(newAddress.id)) {
+            $scope.updateAddress(newAddress);
+        } else {
+            $scope.createAddress(newAddress);
+        }
+    };
+    $scope.createAddress = function (newAddress) {
+        //new Project(project).$save().then(function(newProject) {
+        //    $scope.projects.push(newProject);
+        //    $scope.displayMode = "list";
+        //});
+        newAddress.id = $scope.addresses.length+1;
+        $scope.addresses.push(newAddress);
+        $scope.addAddressBool = false;
+    };
+    $scope.updateAddress = function (newAddress) {
+        //project.$update(function(){
+        //    for (var i = 0; i < $scope.projects.length; i++) {
+        //        if ($scope.projects[i].id == project.id) {
+        //            $scope.projects[i] = project;
+        //            break;
+        //        } }
+        //    $scope.displayMode = "list";
+        //});
+        for (var i = 0; i < $scope.addresses.length; i++) {
+            if ($scope.addresses[i].id == newAddress.id) {
+                $scope.addresses[i] = newAddress;
+                break;
+            } }
+        $scope.addAddressBool = false;
+    };
+    $scope.deleteAddress = function (address) {
+        //if (popupService.showPopup('Really delete this project?')) {
+        //    project.$delete().then(function () {
+        //        $scope.projects.splice($scope.projects.indexOf(project), 1);
+        //    });
+        //}
+        $scope.addresses.splice($scope.addresses.indexOf(address), 1);
+
+    };
+    $scope.uploadAddress = function(){
+        String.prototype.replaceAll = function(str1, str2, ignore)
+        {
+            return this.replace(new RegExp(str1.replace(/([\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, function(c){return "\\" + c;}), "g"+(ignore?"i":"")), str2);
+        };
+        for(var i = 0;i < $scope.csv.result.length; i ++){
+            var newAdd = {id: $scope.addresses.length+1,
+                name: $scope.csv.result[i]['"name"'].replaceAll('"',''),
+                address: $scope.csv.result[i]['"address"'].replaceAll('"','')
+            }
+            $scope.addresses.push(newAdd);
+        }
+    };
+
+    $scope.batchGeoSearch = function () {
+        var timeInt = 100;
+        $scope.progressBool = true;
+        var toSearches = [];
+        for(var i=0;i < $scope.addresses.length; i++){
+            toSearches.push($scope.addresses[i]);
+        }
+        $interval(function() {
+            if (toSearches.length >0) {
+                var item = toSearches.pop();
+                var oneSearch = {
+                    project: $scope.currentProject.id,
+                    string: item.address};
+                $http.post('/api/geosearch',oneSearch)
+                    .success(function(data) {
+                        $scope.searchedGeoStrings.push(data);
+                        $scope.addresses[$scope.addresses.indexOf(item)].id = data.id;
+                    });
+            } else {
+                $interval.cancel();
+            }
+        }, timeInt);
+        $interval(function() {
+            if ($scope.counter < $scope.addresses.length) {
+                $scope.counter++
+            } else {
+                $interval.cancel();
+            }
+        }, 10*timeInt);
+        $timeout(function(){
+            $scope.geoResultsBool = true;
+            $scope.geoResults = GeoSearchResult.query(function(){
+                for(var j=0; j < $scope.addresses.length; j++){
+                    for(var i=0; i < $scope.geoResults.length; i++){
+                        if($scope.geoResults[i].search == $scope.addresses[j].id){
+                            $scope.addresses[j].lat = $scope.geoResults[i].lat;
+                            $scope.addresses[j].lng = $scope.geoResults[i].lng;
+                        }
+                    }
+                }
+            });
+            $scope.counter = 0;
+        }, 10*timeInt*toSearches.length);
+    };
+
+    $scope.calculateProgressAddress = function(addresses){
+        var result = 0;
+        if(addresses.length>0){
+            result = $scope.counter/addresses.length;
+        }
+        return result
+    };
+
     $scope.listSearches();
     $scope.gdocs = Gdoc.query();
 });
