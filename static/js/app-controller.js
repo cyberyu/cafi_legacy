@@ -74,7 +74,7 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         encoding: 'ISO-8859-1',
         encodingVisible: false
     };
-
+    $scope.gsearchOptions = {};
     $scope.availableSearchNames = [{name:"Business relationships", string:'("joint venture" | "jv" | "mou" | "memorandum of understanding" | "strategic alliance" | "teaming agreement" |  "strategic partner*" | "partner" | "supplier" | "provider" | "agreement" | "contract" | "component" | "subcontract*" | "receive" | "win*")'},
         {name:"Supplier relationships", string:'("provider" | "supply" | "supplier" | "vendor" | "contract" | "fund" | "donate" | "commit" | "engineer")'}];
     $scope.companyNames = [{name:"IBM", variations:["IBM Global Business Service", "IBM Research", "IBM Global Technology Service", "IBM India"]},
@@ -142,14 +142,14 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
 
     $scope.generateSearches= function () {
         $scope.newSearches =[];
-        for(var i = 0; i < $scope.selectedSearchNames.length; i++){
-            for(var j = 0; j < $scope.selectedCompanyNames.length; j++){
-                for(var k = 0; k <$scope.selectedCompanyNames[j].variations.length; k++){
+        for(var i = 0; i < $scope.gsearchOptions.selectedSearchNames.length; i++){
+            for(var j = 0; j < $scope.gsearchOptions.selectedCompanyNames.length; j++){
+                for(var k = 0; k <$scope.gsearchOptions.selectedCompanyNames[j].variations.length; k++){
                     var oneSearch = {};
                     oneSearch.use = true;
-                    oneSearch.searchName = $scope.selectedSearchNames[i].name;
-                    oneSearch.companyName = $scope.selectedCompanyNames[j].variations[k];
-                    oneSearch.string = $scope.selectedSearchNames[i].string + '&"' + oneSearch.companyName+'"';
+                    oneSearch.searchName = $scope.gsearchOptions.selectedSearchNames[i].name;
+                    oneSearch.companyName = $scope.gsearchOptions.selectedCompanyNames[j].variations[k];
+                    oneSearch.string = $scope.gsearchOptions.selectedSearchNames[i].string + '&"' + oneSearch.companyName+'"';
                     oneSearch.project = $scope.currentProject.id;
                     $scope.newSearches.push(oneSearch);
                 }
@@ -223,11 +223,11 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
     };
     $scope.deleteVariations = function(selected){
         for(var i =0; i <selected.length; i++){
-            $scope.companyNames[$scope.companyNames.indexOf($scope.selectedCompanyNames[0])].variations.pop(selected[i]);
+            $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].variations.pop(selected[i]);
         }
     };
     $scope.saveEditVariation = function(newVariation){
-        $scope.companyNames[$scope.companyNames.indexOf($scope.selectedCompanyNames[0])].
+        $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
             variations.push(newVariation.name);
         $scope.editVariationBool = false;
         $scope.newVariation = {};
