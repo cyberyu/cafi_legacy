@@ -30,7 +30,27 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
         }
     });
 }).factory('Gdoc', function ($resource) {
-    return $resource('/api/gdocs/:gocId', {searchId: '@id'}, {
+    return $resource('/api/gdocs/:gocId', {gocId: '@id'}, {
+        query: {
+            method: 'GET',
+            isArray: true,
+            transformResponse: function(data) {
+                return angular.fromJson(data).results;
+            }
+        }
+    });
+}).factory('GeoSearch', function ($resource) {
+    return $resource('/api/geosearch/:gsearchId', {gocId: '@id'}, {
+        query: {
+            method: 'GET',
+            isArray: true,
+            transformResponse: function(data) {
+                return angular.fromJson(data).results;
+            }
+        }
+    });
+}).factory('GeoSearchResult', function ($resource) {
+    return $resource('/api/geosearchresult/:geosearchresultId', {gocId: '@id'}, {
         query: {
             method: 'GET',
             isArray: true,

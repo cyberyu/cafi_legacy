@@ -5,11 +5,13 @@ var cafiApp = angular.module('cafiApp', [
     'ngSanitize',
     'ngResource',
     'ngRoute',
-    // 'ui.bootstrap',
+    'ngCsvImport',
+    'ngCsv',
+    'ui.bootstrap',
+    'uiGmapgoogle-maps',
     // 'nya.bootstrap.select',
     'projectControllers',
-    'projectServices'
-]);
+    'projectServices']);
 
 cafiApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -30,4 +32,8 @@ cafiApp.config(['$routeProvider',
         }).otherwise({
             redirectTo: '/projects'
         });
-    }]);
+    }]).config(function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+        libraries: 'weather,geometry,visualization'
+    });
+});

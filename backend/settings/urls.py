@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from rest_framework import routers
-from google.views import SearchViewSet, SearchResultViewSet
+from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, GeoSearchResultViewSet
 from engagement.views import ProjectViewSet
 from risk.views import RiskViewSet, CompanyViewSet
 
@@ -14,6 +14,8 @@ router.register(r'gsearch', SearchViewSet)
 router.register(r'gdocs', SearchResultViewSet)
 router.register(r'risks', RiskViewSet)
 router.register(r'companies', CompanyViewSet)
+router.register(r'geosearch', GeoSearchViewSet)
+router.register(r'geosearchresult', GeoSearchResultViewSet)
 
 
 urlpatterns = patterns('',

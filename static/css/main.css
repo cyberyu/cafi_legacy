@@ -1,5 +1,11 @@
 @import "../vendor/bootstrap/dist/css/bootstrap.css";
 
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.angular-google-map-container {
+    width: 100%;
+    height: 400px;
+}
+
 html,body {
     height:100%;
 }
@@ -46,4 +52,18 @@ html,body {
     /*height: 30%;*/
     width: 50%;
     margin: -15% 0 0 -25%;
+}
+
+select {
+    margin-top: 10px;
+}
+.row {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
