@@ -30,7 +30,8 @@
     "nya-bootstrap-select": "~2.1.0",
     "startbootstrap-sb-admin-2": "~1.0.7",
     "angular-csv-import": "latest",
-    "ng-csv": "latest"
+    "ng-csv": "latest",
+    "angular-google-maps": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0",

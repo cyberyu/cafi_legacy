@@ -8,6 +8,7 @@ var cafiApp = angular.module('cafiApp', [
     'ngCsvImport',
     'ngCsv',
     'ui.bootstrap',
+    'uiGmapgoogle-maps',
     // 'nya.bootstrap.select',
     'projectControllers',
     'projectServices']);
@@ -31,4 +32,8 @@ cafiApp.config(['$routeProvider',
         }).otherwise({
             redirectTo: '/projects'
         });
-    }]);
+    }]).config(function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+        libraries: 'weather,geometry,visualization'
+    });
+});

@@ -1,4 +1,5 @@
-angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope, $window, $location, $routeParams, popupService, Project) {
+angular.module('projectControllers', []).controller('ProjectListCtrl', function ($scope,uiGmapGoogleMapApi,$timeout, $window, $location, $routeParams, popupService, Project) {
+
 
     $scope.displayMode = "list";
     $scope.currentProject = null;
@@ -45,7 +46,16 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.displayMode = "list";
     };
     $scope.listProjects();
-}).controller('ProjectBoardCtrl', function($scope, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+}).controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+    $scope.mapData = {};
+
+
+    uiGmapGoogleMapApi.then(function(maps) {
+        $scope.mapData.map = {center: {latitude: 40.1451, longitude: -99.6680 }, zoom: 4 };
+        $scope.mapData.markers = [];
+
+    });
+
     $scope.currentProject = Project.get({id:$routeParams.id});
     $scope.currentSearch = null;
     $scope.newSearches = [];
@@ -349,7 +359,16 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
                         }
                     }
                 }
+                for(var j=0; j < $scope.addresses.length; j++){
+                    var newMarker = {
+                        id: $scope.addresses[j].id,
+                        latitude: $scope.addresses[j].lat,
+                        longitude: $scope.addresses[j].lng
+                    };
+                    $scope.mapData.markers.push(newMarker);
+                }
             });
+
             $scope.counter = 0;
         }, 10*timeInt*toSearches.length);
     };
@@ -361,7 +380,9 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         }
         return result
     };
-
+    $scope.centerMap = function(address){
+        $scope.mapData.map = {center: {latitude: address.lat, longitude: address.lng }, zoom: 12 };
+    };
     $scope.listSearches();
     $scope.gdocs = Gdoc.query();
 });
