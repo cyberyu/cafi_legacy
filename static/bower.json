@@ -25,17 +25,14 @@
     "d3": "~3.5.6",
     "moment": "~2.10.3",
     "pikaday": "~1.3.3",
-    "jasmine-object-matchers": "~0.1.0",
     "angular-bootstrap": "latest",
     "nya-bootstrap-select": "~2.1.0",
     "startbootstrap-sb-admin-2": "~1.0.7",
     "angular-csv-import": "latest",
     "ng-csv": "latest",
-    "lodash": "3.8.0",
     "angular-google-maps": "latest"
   },
   "resolutions": {
-    "angular": "~1.4.0",
-    "lodash": "~3.9.3"
+    "angular": "~1.4.0"
   }
 }
