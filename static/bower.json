@@ -31,6 +31,7 @@
     "startbootstrap-sb-admin-2": "~1.0.7",
     "angular-csv-import": "latest",
     "ng-csv": "latest",
+    "lodash": "3.8.0",
     "angular-google-maps": "latest"
   },
   "resolutions": {
