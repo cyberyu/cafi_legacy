@@ -59,6 +59,7 @@ target/
 
 # Local Settings
 local_settings.py
+backend/settings/local.py
 
 #pycharm
 .idea
