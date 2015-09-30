@@ -13,3 +13,4 @@ pyparsing
 BeautifulSoup
 googlemaps
 ipython
+django-filter
