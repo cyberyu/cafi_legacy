@@ -13,3 +13,6 @@ pyparsing
 BeautifulSoup
 googlemaps
 ipython
+tika
+textract
+xlrd
