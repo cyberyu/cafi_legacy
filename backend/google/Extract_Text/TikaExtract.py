@@ -16,7 +16,7 @@ class DocumentConvertor :
     def document_to_text(self,url):
 
         if url[-4:] == ".doc" or "f=doc" in url:
-            return self.tikaParser(url)
+            return self.tikaParser(url) # Might create new functions later is requirement arises
         elif url[-4:] == ".pdf" or "f=pdf" in url:
             return self.tikaParser(url)
         elif url[-4:] == ".ppt" or "f=ppt" in url:
@@ -26,9 +26,9 @@ class DocumentConvertor :
         elif url[-5:] == ".pptx" or "f=pptx" in url:
             return self.tikaParser(url)
         elif url[-4:] == ".xls" or "f=xls" in url:
-            return self.tikaParser(url)
+            return self.tikaParserExcel(url) # Converts the file to .csv if it returns none from tika
         elif url[-5:] == ".xlsx" or "f=xlsx" in url:
-            return self.tikaParser(url)
+            return self.tikaParserExcel(url) # Converts the file to .csv if it returns none from tika
         elif url[-4:] == ".csv" or "f=csv" in url:
             return self.tikaParser(url)
         else:
@@ -36,6 +36,10 @@ class DocumentConvertor :
 
 
     def tikaParser(self,url):
+        parsed = parser.from_file(url)
+        return parsed["content"]
+
+    def tikaParserExcel(self,url):
         parsed = parser.from_file(url)
 
         if parsed["content"] == None:
