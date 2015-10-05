@@ -11,7 +11,7 @@ import sys
 class DocumentConvertor :
     def __init__(self,url):
         self.url = url
-        self.parsed_text = self.document_to_text(url)
+        self.parsed_json = self.document_to_text(url)
 
     def document_to_text(self,url):
 
@@ -34,10 +34,11 @@ class DocumentConvertor :
         else:
             return "Unknown File Format"
 
+    #using tika as service check readme for updates
 
     def tikaParser(self,url):
-        parsed = parser.from_file(url)
-        return parsed["content"]
+        parsed = parser.from_file(url,'http://localhost:1234/tika') # address of the local host created by tika jar
+        return parsed
 
     def tikaParserExcel(self,url):
         parsed = parser.from_file(url)
@@ -45,10 +46,10 @@ class DocumentConvertor :
         if parsed["content"] == None:
             # Open the url provided as an argument to the function and read the content
             if str(url).startswith('http://') or str(url).startswith('https://'):
-
+                base = "./data/"
                 f = requests.get(url, stream=True)
                 file_path= os.path.basename(url)
-                xls_file = ''.join([file_path.split('.')[0],'.xls'])
+                xls_file = base + ''.join([file_path.split('.')[0],'.xls'])
                 if f.status_code == 200:
                     with open(xls_file, 'wb') as r:
                         for chunk in f.iter_content():
@@ -58,18 +59,18 @@ class DocumentConvertor :
                 xls_file = url
 
             csv_file = xc.csv_from_excel(xls_file)
-            parsed1 = parser.from_file(csv_file)
+            parsed1 = parser.from_file(csv_file,'http://localhost:1234/tika')
             os.remove(csv_file)
             os.remove(xls_file)
-            return parsed1["content"]
+            return parsed1
         else:
-            return parsed["content"]
+            return parsed
 
 if __name__ == "__main__":
-    #Options:
+    #Testcases:
     #url= "http://www.shareholder.com/visitors/activeedgardoc.cfm?f=xls&companyid=AAPL&id=10916067"
     #url="/Users/tanmoy/Downloads/CAFI/APPLE_8-A12B.xls"  #Can accept both file path and url
     url_or_path = raw_input("Enter path or url to extract text content: ")
     query1 = DocumentConvertor(url_or_path)
-    print query1.parsed_text
+    print unicode(query1.parsed_json['content'])
 
