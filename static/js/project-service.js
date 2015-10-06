@@ -3,16 +3,16 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
         update: {method: 'PUT'},
         get: {
             method: 'GET',
-            transformResponse: function(data) {
-                return angular.fromJson(data).results[0];
-            }
+            //transformResponse: function(data) {
+            //    return angular.fromJson(data).results[0];
+            //}
         },
         query: {
             method: 'GET',
             isArray: true,
-            transformResponse: function(data) {
-                return angular.fromJson(data).results;
-            }
+            //transformResponse: function(data) {
+            //    return angular.fromJson(data).results;
+            //}
         }
     });
 }).service('popupService', function ($window) {
