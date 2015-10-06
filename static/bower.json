@@ -30,7 +30,8 @@
     "startbootstrap-sb-admin-2": "~1.0.7",
     "angular-csv-import": "latest",
     "ng-csv": "latest",
-    "angular-google-maps": "latest"
+    "angular-google-maps": "latest",
+    "angular-smart-table": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"

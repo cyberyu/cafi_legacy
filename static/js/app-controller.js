@@ -46,10 +46,8 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         $scope.displayMode = "list";
     };
     $scope.listProjects();
-}).controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+}).controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMapApi, $routeParams,$filter, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
     $scope.mapData = {};
-
-
     uiGmapGoogleMapApi.then(function(maps) {
         $scope.mapData.map = {center: {latitude: 40.1451, longitude: -99.6680 }, zoom: 4 };
         $scope.mapData.markers = [];
@@ -246,8 +244,13 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
         }
     };
     $scope.saveEditVariation = function(newVariation){
-        $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
-            variations.push(newVariation.name);
+        if($scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].hasOwnProperty('variations')){
+            $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
+                variations.push(newVariation.name);
+        }else{
+            $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
+                variations = [newVariation.name];
+        }
         $scope.editVariationBool = false;
         $scope.newVariation = {};
     };
@@ -381,7 +384,6 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
             $scope.counter = 0;
         }, 10*timeInt*toSearches.length);
     };
-
     $scope.calculateProgressAddress = function(addresses){
         var result = 0;
         if(addresses.length>0){
@@ -394,6 +396,8 @@ angular.module('projectControllers', []).controller('ProjectListCtrl', function 
     };
     $scope.listSearches();
     $scope.gdocs = Gdoc.query();
+    $scope.displayedGdocs = [].concat($scope.gdocs);
+
 });
 
 cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location) {

@@ -184,7 +184,7 @@
             </div>
         </div>
 
-        <div class="row" ng-show="showSearchListBool">
+        <div class="row" ng-show="showSearchListBool && !boolGdocs">
             <div class="col-md-12" >
                 <table class="table table-hover">
                     <thead>
@@ -234,27 +234,52 @@
             </div>
         </div>
         <div class="row" ng-show="boolGdocs && gdocs.length>0">
-            <div class="col-lg-12">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Title</th>
-                        <!--<th>Created At</th>-->
-                        <!--<th>ID</th>-->
-                        <th>Snippet</th>
-                        <th>Link</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="gdoc in gdocs">
-                        <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.title}}</td>
-                        <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.snippet}}</td>
-                        <td ng-show="textsToShow.indexOf(gdoc.id)<0"><a href="{{gdoc.url}}">{{gdoc.url}}</a></td>
-                        <td colspan="3" ng-show="textsToShow.indexOf(gdoc.id)>=0">{{gdoc.text}}</td>
-                        <td><a class="btn-sm btn-primary" ng-click="showText(gdoc)">Show/Hide</a><a class="btn-sm btn-danger" ng-click="deleteGdoc(gdoc)">Delete</a></td>
-                    </tr>
-                </table>
-            </div>
+            <form>
+                <label for="predicate">Items per page:</label>
+                <input class="input-sm form-control" name="items" id="items" type="number" ng-model="itemsByPage">
+            </form>
+            <table st-table="displayedGdocs" st-safe-src="gdocs" class="table table-striped">
+                <thead>
+                <tr>
+                    <th st-sort="title">Title</th>
+                    <!--<th>Created At</th>-->
+                    <!--<th>ID</th>-->
+                    <th st-sort="snippet">Snippet</th>
+                    <th st-sort="link">Link</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="title" placeholder="search for title" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="snippet" placeholder="search for snippet" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="link" placeholder="search for link" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="gdoc in displayedGdocs">
+                    <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.title}}</td>
+                    <td ng-show="textsToShow.indexOf(gdoc.id)<0">{{gdoc.snippet}}</td>
+                    <td ng-show="textsToShow.indexOf(gdoc.id)<0"><a href="{{gdoc.url}}">{{gdoc.url}}</a></td>
+                    <td colspan="3" ng-show="textsToShow.indexOf(gdoc.id)>=0">{{gdoc.text}}</td>
+                    <td><a class="btn-sm btn-primary" ng-click="showText(gdoc)">Show/Hide</a><a class="btn-sm btn-danger" ng-click="deleteGdoc(gdoc)">Delete</a></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
         </div>
     </tab>
 

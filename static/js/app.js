@@ -9,6 +9,7 @@ var cafiApp = angular.module('cafiApp', [
     'ngCsv',
     'ui.bootstrap',
     'uiGmapgoogle-maps',
+    'smart-table',
     // 'nya.bootstrap.select',
     'projectControllers',
     'projectServices']);
