@@ -65,11 +65,11 @@ def do_search(search, string):
 def do_geo_search(search, string):
     query = GeocodingTest()
     results = query.simple_geocode(string)
-    result = results[0]["geometry"]["location"];
+    result = results[0]["geometry"]["location"]
     obj = GeoSearchResult()
     obj.search = search
-    obj.lat = result.get('lat');
-    obj.lng = result.get('lng');
+    obj.lat = result.get('lat')
+    obj.lng = result.get('lng')
     obj.save()
 
 
