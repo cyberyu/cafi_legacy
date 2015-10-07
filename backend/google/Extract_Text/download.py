@@ -7,6 +7,7 @@ import unicodedata
 import mechanize
 from urlparse import urlsplit
 import cookielib
+import hashlib
 
 #==========================================
 browser = mechanize.Browser()   #Reference taken from Shi Yu' code and discussion
@@ -103,23 +104,8 @@ def download(url, target_dir=".", target_fname=None):
 
         dl = True
         if path.exists(filepath):
-            if clen > 0:
-                fs = path.getsize(filepath)
-                delta = clen - fs
-                # all we know is that the current filesize may be shorter than it should be and the content length may be incorrect
-                # overwrite the file if the reported content length is bigger than what we have already by at least k bytes (arbitrary)
-                # Still not fullproof as the fundamental problem is that the contentlength cannot be trusted
-
-                if delta > 2:
-                    print '    - "%s" seems incomplete, downloading again' % fname
-                else:
-                    print '    - "%s" already exists, skipping' % fname
-                    dl = False
-            else:
-                # missing or invalid content length, assume all is ok...
-                dl = False
-
-            return filepath
+            fname = path.splitext(fname)[0] + hashlib.md5(filepath).hexdigest()+ext
+            filepath = path.join(target_dir,fname)
 
         try:
            if dl:
