@@ -50,16 +50,20 @@ class CheckLink :
     def check(self, url):
         r = self.get_headers(url)
 
-        if "text/html" in r['Content-Type']: # checking if the response content-type is html
-            print "Parsed by Alchemy.. "
-            response1 = alchemyapi.text('url', url)
-            #print json.dumps(response1,indent=1)
-            if response1['status'] == 'OK':
-                return unicode(response1['text'].strip())
-            else :
-                return ""
-        else:
-            print "Parsed by Tika.. "
+        try:
+            if "text/html" in r['Content-Type']: # checking if the response content-type is html
+                #print "Parsed by Alchemy.. "
+                response1 = alchemyapi.text('url', url)
+                #print json.dumps(response1,indent=1)
+                if response1['status'] == 'OK':
+                    return unicode(response1['text'].strip())
+                else :
+                    return ""
+            else:
+                #print "Parsed by Tika.. "
+                query1 = TE.DocumentConvertor(url) # using tika as a http service
+                return unicode(query1.parsed_json['content'].strip())
+        except Exception:
             query1 = TE.DocumentConvertor(url) # using tika as a http service
             return unicode(query1.parsed_json['content'].strip())
 
