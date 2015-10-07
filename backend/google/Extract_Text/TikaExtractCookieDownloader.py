@@ -53,7 +53,7 @@ class DocumentConvertor:
 
         if filepath[-4:] == ".doc" or filepath[-4:] == ".pdf" or filepath[-4:]=="ppt" or filepath[-5:] == "docx" or filepath[-5:]=="pptx":
             return self.tikaParser(filepath) # Might create new functions later is requirement arises
-        elif filepath[-5:] == ".xlsx" or filepath[-4:] == ".csv":
+        elif filepath[-5:] == ".xlsx" :
             return self.tikaParser(filepath)
         elif filepath[-4:] == ".xls" :
             return self.tikaParserExcel(filepath) # Converts the file to .csv if it returns none from tika
