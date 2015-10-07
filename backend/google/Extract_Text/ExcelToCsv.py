@@ -6,8 +6,8 @@ import os
 import sys
 
 
-def csv_from_excel(excel_file):
-    base = "./data/"
+def csv_from_excel(excel_file,target_path):
+    base = target_path
     workbook = xlrd.open_workbook(excel_file)
     all_worksheets = workbook.sheet_names()
     file_name = os.path.basename(excel_file)
