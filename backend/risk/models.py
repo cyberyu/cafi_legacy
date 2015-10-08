@@ -1,4 +1,5 @@
-from django.db import models 
+from django.db import models
+
 
 class Company(models.Model):
     name = models.CharField(max_length=200)
@@ -7,6 +8,7 @@ class Company(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class Risk(models.Model):
     name = models.CharField(max_length=100)

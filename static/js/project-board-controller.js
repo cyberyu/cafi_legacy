@@ -44,12 +44,10 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMa
 
   $http.get('/api/risks').then(function(response){
     $scope.availableSearchNames = response.data;
-    console.log($scope.availableSearchNames)
   });
 
   $http.get('/api/companies').then(function(response){
     $scope.companyNames = response.data;
-    console.log($scope.companyNames)
   });
 
   $scope.listSearches = function () {
