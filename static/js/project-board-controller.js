@@ -41,19 +41,17 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMa
     encodingVisible: false
   };
   $scope.gsearchOptions = {};
-  $scope.availableSearchNames = [
-    {name:"Business relationships", string:'("joint venture" | "jv" | "mou" | "memorandum of understanding" | "strategic alliance" | "teaming agreement" |  "strategic partner*" | "partner" | "supplier" | "provider" | "agreement" | "contract" | "component" | "subcontract*" | "receive" | "win*")'},
-    {name:"Supplier relationships", string:'("provider" | "supply" | "supplier" | "vendor" | "contract" | "fund" | "donate" | "commit" | "engineer")'},
-    {name:"General Aerospace Components", string:'("antenna" | "convertere" | "control" | "telemetry" | "tank" | "link" | "COTS"  | "radar" | "Aft" | "data link")'},
-    {name:"Conflict Minerals by name", string:'("tin" | "Cassiterite" | "Tantalum" | "Coltan" | "Columbite-Tantalite" | "Niobium" | "Tungsten"  | "Wolframite" | "Gold")'},
-    {name:"Labor Disputes", string:'(strike | "labor dispute"  | violation | lawsuit | "safety violation" | employee | compliant | fine | court | arrest*)'},
-    {name:"Bankruptcy", string:'("chapter 7" | "chapter 11" | "chapter 13"  | bankruptcy | debt | court |  filing | bailout)'},
-    {name:"Legal Issues", string:'(lawsuit* | court* | violation | illegal | regulation* | defendant | plaitiff | failure | "cyber-attack" | espionage | suspect* | penalty | fine | ruling)'},
-    {name:"Executive due deligence", string:'(arrest* | illegal | court | lawsuit | accused | alleged* | suspected | crime | jail | prison | foreign | conference | abroad | education)'},
-    {name:"Business Partnerships", string:'(partnership* | "JV" | "joint venture" | "MoU" | "memorandum of understanding" | supply* | supplier | contract | agreement)'},
-    {name:"General risks", string:'(crime | sabotage | protest | strike | attack | default | bankrupt | illegal | criminal | lawsuit | espionage | failure)'}];
-  $scope.companyNames = [{name:"IBM", variations:["IBM Global Business Service", "IBM Research", "IBM Global Technology Service", "IBM India"]},
-    {name:"Microsoft", variations:["Microsoft Research", "Microsoft India"]}];
+
+  $http.get('/api/risks').then(function(response){
+    $scope.availableSearchNames = response.data;
+    console.log($scope.availableSearchNames)
+  });
+
+  $http.get('/api/companies').then(function(response){
+    $scope.companyNames = response.data;
+    console.log($scope.companyNames)
+  });
+
   $scope.listSearches = function () {
     $scope.searches = Search.query();
   };
