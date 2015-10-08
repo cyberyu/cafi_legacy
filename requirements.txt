@@ -14,5 +14,6 @@ BeautifulSoup
 googlemaps
 ipython
 tika
-textract
 xlrd
+django-filter
+mechanize
