@@ -10,8 +10,10 @@ import sys
 import mechanize
 import cookielib
 import download as dow
+#import google.settings.local import TIKA_SERVICE_URL
 
-TIKA_SERVICE = 'http://localhost:1234/tika' #Have to change it to settings/local.py
+
+TIKA_SERVICE = 'http://localhost:1234/tika'  #ADD url in  settings/local.py
 
 target_path="./data/"   #Change target path to the folder where files will be stored
 
@@ -42,9 +44,9 @@ class DocumentConvertor:
 
     def __init__(self,url):
         self.url = url
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
         self.parsed_json = self.document_to_text(url)
-        target_path="./data/"
-
 
 
     def document_to_text(self,url):
