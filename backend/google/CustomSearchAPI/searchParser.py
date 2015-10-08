@@ -20,6 +20,8 @@ class SearchQueryParser:
         self._parser = self.parser()
         self.parsed = []
         self.genString = "" #generating string back from Data Structure
+        self.keywords =[]
+        #self.hello
 
     def parser(self):
         """
@@ -68,28 +70,44 @@ class SearchQueryParser:
             opAnd + Suppress(Keyword("|", caseless=True)) + opOr
         ).setResultsName("|") | opAnd)
 
+
         return opOr.parseString
 
     def generateAnd(self, argument):
         x = self.generate(argument[0])
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
         self.genString += " & "
         y = self.generate(argument[1])
+        if len(argument[1])==1:
+            self.keywords.extend(argument[1])
+
         #x.intersection(y)
 
     def generateOr(self, argument):
 
         x = self.generate(argument[0])
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
         self.genString += " |"
         y = self.generate(argument[1])
+        if len(argument[1])==1:
+            self.keywords.extend(argument[1])
+
         #x.union(y)
 
     def generateNot(self, argument):
         self.genString += "Not "
         self.generate(argument[0])
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
+
 
     def generateParenthesis(self, argument):
         self.genString += "("
         x = self.generate(argument[0])
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
         self.genString += ")"
         #x
 
@@ -105,17 +123,25 @@ class SearchQueryParser:
             search_terms.append(item[0])
             if len(r) == 0:
                 r = self.generate(item)
+
             else:
                 r = r.intersection(self.generate(item))
 
         self.genString += "\""
+
         #' '.join(search_terms)
 
     def generateWord(self, argument):
         self.genString += " "+argument[0]
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
+
 
     def generateWordWildcard(self, argument):
         self.genString += " "+ argument[0]+'* '
+        if len(argument[0])==1:
+            self.keywords.extend(argument[0])
+
 
     def generate(self, argument):
         return self._methods[argument.getName()](argument)
@@ -123,7 +149,6 @@ class SearchQueryParser:
     def Parse(self, query):
         self.genString=""
         self.parsed = self._parser(query)[0]
-        print self.parsed
         self.generate(self._parser(query)[0])
         return self.parsed,self.genString
 
@@ -133,12 +158,14 @@ class ParserTest(SearchQueryParser):
     def Test(self):
 
         query = SearchQueryParser()
-        item = "(lawsuit* | court* | violation | illegal | regulation* | defandant)"
+        item = "(lawsuit* | court* | violation & greed failure | illegal | regulation* | defandant)"
         print "Input Query:"+item
         ParsedList,reGengString = query.Parse(item)
         print "Parsed List:",
         print ParsedList #Parsed List from query
         print "ReGenerated String:"+reGengString #regenerated string from the parsed list
+        print "Keywords:",
+        print query.keywords
         '''
         ##Use of pickle to serialize a complex list
         pickle.dump(query, file('parsedList.pickle','w'))
