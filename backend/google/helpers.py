@@ -2,6 +2,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.alchemyapi_python.alchemyapi import AlchemyAPI
 from google.models import Search, SearchResult, GeoSearch, GeoSearchResult
+from google.Extract_Text.checkAlchemy_Tika import CheckLink
 import json
 
 
@@ -58,18 +59,19 @@ def do_search(search, string):
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
-        obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
+        #obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
+        obj.text = CheckLink(doc.get('link')).parsed_text
         obj.save()
 
 
 def do_geo_search(search, string):
     query = GeocodingTest()
     results = query.simple_geocode(string)
-    result = results[0]["geometry"]["location"];
+    result = results[0]["geometry"]["location"]
     obj = GeoSearchResult()
     obj.search = search
-    obj.lat = result.get('lat');
-    obj.lng = result.get('lng');
+    obj.lat = result.get('lat')
+    obj.lng = result.get('lng')
     obj.save()
 
 
