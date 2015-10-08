@@ -20,12 +20,13 @@ class SearchResult(models.Model):
     snippet = models.TextField(blank=True)
     rank = models.IntegerField(blank=True, null=True)  # rank of the google search result
 
-    text = models.TextField(blank=True)
+    text = models.TextField(blank=True, null=True)
     doc_type = models.CharField(blank=True, max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
        return self.title
+
 
 class GeoSearch(models.Model):
     project = models.ForeignKey(Project, related_name="geosearches") 
@@ -34,6 +35,7 @@ class GeoSearch(models.Model):
 
     def __unicode__(self):
       return self.string
+
 
 class GeoSearchResult(models.Model):
     search = models.ForeignKey(GeoSearch, related_name="georesults")
