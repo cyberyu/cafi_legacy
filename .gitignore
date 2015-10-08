@@ -27,6 +27,7 @@ var/
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+*.pyc
 
 # Installer logs
 pip-log.txt
@@ -58,6 +59,7 @@ target/
 
 # Local Settings
 local_settings.py
+backend/settings/local.py
 
 #pycharm
 .idea
