@@ -122,6 +122,7 @@ class SearchQueryParser:
                 r = r.intersection(self.generate(item))
 
         self.genString += "\""
+        self.keywords .extend([" ".join(search_terms)])
         return self.GetQuotes(' '.join(search_terms), r)
         #' '.join(search_terms)
 
@@ -167,8 +168,7 @@ class ParserTest():
     def Test(self):
 
         query = SearchQueryParser()
-        item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"| illegal | regulation* | defandant)"
-        #item ='" help me please "'
+        item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"|\"teaming agreement\"|\"memorandom of understanding\"| illegal | regulation* | defandant)"
         print "Input Query:"+item
         ParsedList,reGengString = query.Parse(item)
         print "Parsed List:",
