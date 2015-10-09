@@ -13,4 +13,7 @@ pyparsing
 BeautifulSoup
 googlemaps
 ipython
+tika
+xlrd
 django-filter
+mechanize
