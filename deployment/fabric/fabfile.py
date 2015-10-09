@@ -3,7 +3,7 @@ __author__ = 'pengfeiz'
 
 import boto, urllib2
 from boto.ec2 import connect_to_region
-from fabric.api import env, run, cd, settings, sudo,local
+from fabric.api import env, run, cd, settings, sudo,local, put
 from fabric.contrib.files import exists, sed
 from fabric.api import parallel
 import os
@@ -11,7 +11,7 @@ import csv
 
 REGION = "us-east-1"
 WEB_ROOT = "/var/www"
-REPO_URL = 'git@gitlab.com:nkvitamine/cafi.git'
+REPO_URL = 'git@github.com:afei8824/auto.git'
 
 # Server user, normally AWS Ubuntu instances have default user "ubuntu"
 env.user = "ubuntu"
@@ -24,7 +24,7 @@ def update_node_env():
     sudo('apt-get install -y nodejs-legacy')
     sudo('apt-get install -y npm')
     sudo('npm install npm -g')
-    sudo('npm install -g express bower grunt-cli gulp')
+    sudo('npm install -g bower')
 
 
 @parallel
@@ -74,17 +74,15 @@ def apt_install(name):
 
 
 @parallel
-def update_code(source_folder="/home/ubuntu/cafi"):
+def update_code(source_folder="/home/ubuntu/cafi", branch="develop"):
     sudo('rm -rf %s' % (source_folder,))
-    if exists(source_folder + '/.git'):
-        run('cd %s && git fetch' % (source_folder,))
-    else:
-        run('git clone %s %s' % (REPO_URL, source_folder))
+    run('git clone -b %s %s %s' % (branch, REPO_URL, source_folder))
 
 
 @parallel
 def update_virtualenv(source_folder="/home/ubuntu/cafi"):
     virtualenv_folder = source_folder + '/../virtualenv'
+    sudo('rm -rf %s' % (virtualenv_folder,))
     if not exists(virtualenv_folder + '/bin/pip'):
         run('virtualenv %s' % (virtualenv_folder,))
     run('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_folder, source_folder))
@@ -98,6 +96,7 @@ def update_angular(source_folder="/home/ubuntu/cafi"):
 @parallel
 def update_settings(source_folder="/home/ubuntu/cafi"):
     settings_path = source_folder + '/backend/settings/local.py'
+    put('./local.py', settings_path)
     sed(settings_path, "Users/yangm/cafi/project", "home/ubuntu/cafi")
 
 
@@ -108,11 +107,14 @@ def update_database(source_folder="/home/ubuntu/cafi"):
 
 @parallel
 def start_django(source_folder="/home/ubuntu/cafi"):
-    with settings(warn_only=True):
-        run('pkill runserver')
+    kill_port(8080)
     run('nohup %s/../virtualenv/bin/python %s/backend/manage.py '
         'runserver 0.0.0.0:8080 >&/home/ubuntu/log < /home/ubuntu/log &' % (source_folder, source_folder), pty=False)
 
+@parallel
+def kill_port(port=8080):
+    with settings(warn_only=True):
+        run('sudo kill $(lsof -t -i:%s) ' % (port, ))
 
 @parallel
 def deploy(source_folder="/home/ubuntu/cafi"):
