@@ -2,6 +2,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.alchemyapi_python.alchemyapi import AlchemyAPI
 from google.models import Search, SearchResult, GeoSearch, GeoSearchResult
+from google.Extract_Text.checkAlchemy_Tika import CheckLink
 import json
 
 
@@ -58,7 +59,8 @@ def do_search(search, string):
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
-        obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
+        #obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
+        obj.text = CheckLink(doc.get('link')).parsed_text
         obj.save()
 
 

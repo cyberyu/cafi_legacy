@@ -13,5 +13,8 @@ pyparsing
 BeautifulSoup
 googlemaps
 ipython
+tika
+xlrd
 django-filter
 jsonfield==1.0.3
+mechanize
