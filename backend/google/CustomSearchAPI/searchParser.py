@@ -21,7 +21,6 @@ class SearchQueryParser:
         self.parsed = []
         self.genString = "" #generating string back from Data Structure
         self.keywords =[]
-        #self.hello
 
     def parser(self):
         """
@@ -70,7 +69,6 @@ class SearchQueryParser:
             opAnd + Suppress(Keyword("|", caseless=True)) + opOr
         ).setResultsName("|") | opAnd)
 
-
         return opOr.parseString
 
     def generateAnd(self, argument):
@@ -81,8 +79,7 @@ class SearchQueryParser:
         y = self.generate(argument[1])
         if len(argument[1])==1:
             self.keywords.extend(argument[1])
-
-        #x.intersection(y)
+        return x.intersection(y)
 
     def generateOr(self, argument):
 
@@ -93,15 +90,13 @@ class SearchQueryParser:
         y = self.generate(argument[1])
         if len(argument[1])==1:
             self.keywords.extend(argument[1])
-
-        #x.union(y)
+        return x.union(y)
 
     def generateNot(self, argument):
         self.genString += "Not "
-        self.generate(argument[0])
         if len(argument[0])==1:
             self.keywords.extend(argument[0])
-
+        return self.GetNot(self.generate(argument[0]))
 
     def generateParenthesis(self, argument):
         self.genString += "("
@@ -109,7 +104,7 @@ class SearchQueryParser:
         if len(argument[0])==1:
             self.keywords.extend(argument[0])
         self.genString += ")"
-        #x
+        return x
 
     def generateQuotes(self, argument):
         """generate quoted strings
@@ -123,28 +118,39 @@ class SearchQueryParser:
             search_terms.append(item[0])
             if len(r) == 0:
                 r = self.generate(item)
-
             else:
                 r = r.intersection(self.generate(item))
 
         self.genString += "\""
-
+        return self.GetQuotes(' '.join(search_terms), r)
         #' '.join(search_terms)
 
     def generateWord(self, argument):
         self.genString += " "+argument[0]
         if len(argument[0])==1:
             self.keywords.extend(argument[0])
-
+        return self.GetWord(argument[0])
 
     def generateWordWildcard(self, argument):
         self.genString += " "+ argument[0]+'* '
         if len(argument[0])==1:
             self.keywords.extend(argument[0])
-
+        return self.GetWordWildcard(argument[0])
 
     def generate(self, argument):
         return self._methods[argument.getName()](argument)
+
+    def GetWord(self, word):
+        return Set()
+
+    def GetWordWildcard(self, word):
+        return Set()
+
+    def GetQuotes(self, search_string, tmp_result):
+        return Set()
+
+    def GetNot(self, not_set):
+        return Set().difference(not_set)
 
     def Parse(self, query):
         self.genString=""
@@ -152,13 +158,17 @@ class SearchQueryParser:
         self.generate(self._parser(query)[0])
         return self.parsed,self.genString
 
-class ParserTest(SearchQueryParser):
+class ParserTest():
     """Tests the parser with some search queries
     """
+    def __init__(self):
+        self.Test()
+
     def Test(self):
 
         query = SearchQueryParser()
-        item = "(lawsuit* | court* | violation & greed failure | illegal | regulation* | defandant)"
+        item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"| illegal | regulation* | defandant)"
+        #item ='" help me please "'
         print "Input Query:"+item
         ParsedList,reGengString = query.Parse(item)
         print "Parsed List:",
@@ -177,7 +187,7 @@ class ParserTest(SearchQueryParser):
         '''
 
 if __name__=='__main__':
-    ParserTest().Test()
+    ParserTest()
     print 'Completed'
 
 
