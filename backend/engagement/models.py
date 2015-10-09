@@ -5,7 +5,7 @@ from risk.models import Company
 class Project(models.Model):
     name = models.CharField(max_length=255) 
     client = models.CharField(max_length=100)
-    companies = models.ManyToManyField(Company)
+    companies = models.ManyToManyField(Company, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
