@@ -14,3 +14,4 @@ BeautifulSoup
 googlemaps
 ipython
 django-filter
+jsonfield==1.0.3
