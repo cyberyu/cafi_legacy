@@ -1,10 +1,12 @@
 from django.db import models
+from jsonfield import JSONField
 
 
 class Company(models.Model):
     name = models.CharField(max_length=200)
-    address = models.TextField()
-    zipcode = models.CharField(max_length=20)
+    address = models.TextField(blank=True)
+    zipcode = models.CharField(max_length=20, blank=True)
+    variations = JSONField(blank=True)
 
     def __unicode__(self):
         return self.name
