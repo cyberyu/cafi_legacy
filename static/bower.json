@@ -32,7 +32,9 @@
     "ng-csv": "latest",
     "angular-google-maps": "latest",
     "angular-smart-table": "latest",
-    "ng-file-upload": "9.0.9"
+    "ng-file-upload": "9.0.9",
+    "ng-mfb": "latest",
+    "ionicons": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"

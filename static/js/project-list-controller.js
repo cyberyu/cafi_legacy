@@ -1,4 +1,4 @@
-projectControllers.controller('ProjectListCtrl', function ($scope,uiGmapGoogleMapApi,$timeout, $window, $location, $routeParams, popupService, Project) {
+projectControllers.controller('ProjectListCtrl', function ($scope,$rootScope,uiGmapGoogleMapApi,$timeout, $window, $location, $routeParams, popupService, Project) {
 
 
   $scope.displayMode = "list";
