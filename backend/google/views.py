@@ -1,10 +1,12 @@
 from rest_framework import viewsets
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework import status
 
-from models import Search, SearchResult,GeoSearch,GeoSearchResult
-from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, GeoSearchResultSerializer
-from helpers import do_search, do_geo_search
+from models import Search, SearchResult,GeoSearch
+from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
+from tasks import do_search, do_geo_search
 
 
 class ResultsSetPagination(PageNumberPagination):
@@ -21,9 +23,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        print serializer.data
         search_obj = serializer.save()
-        print "doing search"
         do_search(search_obj, serializer.data.get('string'))
 
 
@@ -45,14 +45,12 @@ class SearchResultViewSet(viewsets.ModelViewSet):
 class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
+    pagination_class = ResultsSetPagination
+
     def perform_create(self, serializer):
-        search_obj = serializer.save()
-        print search_obj
+        geosearch = serializer.save()
+        print geosearch
         print "doing geo search"
-        do_geo_search(search_obj, serializer.data.get('string'))
+        do_geo_search.delay(geosearch.id, geosearch.address)
 
-
-class GeoSearchResultViewSet(viewsets.ModelViewSet):
-    queryset = GeoSearchResult.objects.all()
-    serializer_class = GeoSearchResultSerializer
 

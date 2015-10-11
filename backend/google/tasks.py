@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+from celery import shared_task
+
 import googlemaps
 from googleapiclient.discovery import build
 from google.alchemyapi_python.alchemyapi import AlchemyAPI
-from google.models import Search, SearchResult, GeoSearch, GeoSearchResult
+from google.models import Search, SearchResult, GeoSearch
 from google.Extract_Text.checkAlchemy_Tika import CheckLink
-import json
 
 
 class GeocodingTest():
@@ -25,9 +27,7 @@ def extract_text_AlchemyAPI_single(url_string):
             #print (unicode(response1['text']))
             return unicode(response1['text'])
         except:
-
             pass
-
     else:
         return None
 
@@ -64,16 +64,15 @@ def do_search(search, string):
         obj.save()
 
 
-def do_geo_search(search, string):
+@shared_task
+def do_geo_search(id, address):
     query = GeocodingTest()
-    results = query.simple_geocode(string)
+    results = query.simple_geocode(address)
     result = results[0]["geometry"]["location"]
-    obj = GeoSearchResult()
-    obj.search = search
+    obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
     obj.lat = result.get('lat')
     obj.lng = result.get('lng')
     obj.save()
-
 
 
 if __name__ == '__main__':
