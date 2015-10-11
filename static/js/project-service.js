@@ -3,13 +3,14 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
         update: {method: 'PUT'},
         get: {
             method: 'GET',
+            isArray: true
             //transformResponse: function(data) {
             //    return angular.fromJson(data).results[0];
             //}
         },
         query: {
             method: 'GET',
-            isArray: true,
+            isArray: true
             //transformResponse: function(data) {
             //    return angular.fromJson(data).results;
             //}
@@ -31,6 +32,13 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
     });
 }).factory('Gdoc', function ($resource) {
     return $resource('/api/gdocs/:gocId', {gocId: '@id'}, {
+        get: {
+            method: 'GET',
+            isArray: true,
+            transformResponse: function(data) {
+                return angular.fromJson(data).results;
+            }
+        },
         query: {
             method: 'GET',
             isArray: true,
