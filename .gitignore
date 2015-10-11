@@ -70,3 +70,4 @@ src/static/js/annotated/
 static/admin/
 static/rest_framework/
 coverage/
+migrations/
