@@ -2,17 +2,26 @@
  * Created by yangm on 10/6/15.
  */
 
-projectControllers.controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+
+  $scope.openModal = function(data) {
+    $rootScope.$emit('openModal', data);
+  };
+
+
   $scope.mapData = {};
-
-
   uiGmapGoogleMapApi.then(function(maps) {
     $scope.mapData.map = {center: {latitude: 40.1451, longitude: -99.6680 }, zoom: 4 };
     $scope.mapData.markers = [];
 
   });
-
   $scope.currentProject = Project.get({id:$routeParams.id});
+
+  $http.get('/api/gsearch').then(function(response){
+    $scope.displaySearch = response.data.results[0];
+    $scope.displaySearchDocs = Gdoc.get({search:$scope.displaySearch.id});
+  });
+
   $scope.currentSearch = null;
   $scope.newSearches = [];
   $scope.progressBool = false;
@@ -41,6 +50,10 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMa
     encodingVisible: false
   };
   $scope.gsearchOptions = {};
+  $scope.setDisplaySearch = function(search){
+    $scope.displaySearchDocs = Gdoc.get({search:search.id});
+    $scope.displaySearch = search;
+  };
 
   $http.get('/api/risks').then(function(response){
     $scope.availableSearchNames = response.data;
@@ -346,5 +359,11 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,uiGmapGoogleMa
   };
   $scope.listSearches();
   $scope.gdocs = Gdoc.query();
+}).controller('modal', function($scope,$rootScope){
+  $scope.modalClass = 'closed';
+  $rootScope.$on('openModal', function(event, data) {
+    $scope.data = data;
+    $scope.modalClass = 'open';
+  });
 });
 

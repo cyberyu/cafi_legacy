@@ -31,7 +31,9 @@
     "angular-csv-import": "latest",
     "ng-csv": "latest",
     "angular-google-maps": "latest",
-    "angular-smart-table": "latest"
+    "angular-smart-table": "latest",
+    "ng-mfb": "latest",
+    "ionicons": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"
