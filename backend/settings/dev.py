@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'djoser',
     'django_nose',
+    'djcelery',
     'engagement',
     'google',
     'risk',
