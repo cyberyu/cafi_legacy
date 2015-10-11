@@ -18,3 +18,4 @@ xlrd
 django-filter
 jsonfield==1.0.3
 mechanize
+django-grappelli==2.6.5
