@@ -86,10 +86,13 @@
     </div>
   </div>
   <a class="col-lg-10 ">
-    <div ng-if="submitDisabled" class="alert alert-info">
-      Your file has been uploaded and being processing, click refresh button to check the status.
+    <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
+      {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
     </div>
-    <button class="btn-sm btn-primary" ng-disabled="submitDisabled" ng-click="submitGeoSearch()">Submit job</button>
+    <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
+      Seems like you haven't uploaded a valid csv file yet.
+    </div>
+    <button class="btn-sm btn-primary" ng-click="submitGeoSearch()">Submit job</button>
     <button class="btn-sm btn-primary" ng-click="geoRefresh()">Refresh</button>
     <a href="/api/geosearch/{{project_id}}/download"><button class="btn-sm btn-primary">download</button></a>
   </div>

@@ -63,14 +63,17 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     def batch(self, request, *args, **kwargs):
         project_id = self.kwargs['pk']
         proj = Project.objects.get(pk=project_id)
+        count = 0
 
         for item in request.data:
             item.update({"project": project_id})
             serializer = self.get_serializer(data=item)
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+            if serializer.validated_data.get('address') and (not serializer.validated_data.get('lat')):
+                self.perform_create(serializer)
+                count += 1
         headers = self.get_success_headers(serializer.data)
-        return Response({"msg": "success"}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({"count": count}, status=status.HTTP_201_CREATED, headers=headers)
 
     @detail_route(methods=['GET'])
     def download(self, request, *args, **kwargs):

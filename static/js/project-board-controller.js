@@ -329,6 +329,8 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.submitGeoSearch = function(){
     $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(response){
       $scope.submitDisabled = true;
+      $scope.numberSubmitted = response.data.count > 0 ? response.data.count : 0 ;
+      console.log($scope.numberSubmitted);
     });
   };
 
