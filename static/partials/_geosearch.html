@@ -30,7 +30,7 @@
             <th>Action</th>
           </tr>
           </thead>
-          <tr ng-repeat="address in addresses">
+          <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
             <td>{{address.name}}</td>
             <td>{{address.address}}</td>
             <td>{{address.lat}}</td>

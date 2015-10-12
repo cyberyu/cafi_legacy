@@ -19,7 +19,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
       file.upload.then(function (response) {
         $timeout(function () {
           //file.result = response.data;
-          $scope.addresses = response.data.items;
+          $scope.addresses = $scope.addresses.concat(response.data.items);
         });
       }, function (response) {
         if (response.status > 0)
@@ -288,6 +288,14 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     $scope.addresses.splice($scope.addresses.indexOf(address), 1);
     if(address.id) {
       $http.delete('/api/geosearch/' + address.id);
+    }
+  };
+
+  $scope.getAddressClass = function(address){
+    if (address.lat && address.lng){
+      return ""
+    } else {
+      return "warning"
     }
   };
 
