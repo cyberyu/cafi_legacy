@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from google.alchemyapi_python.alchemyapi import AlchemyAPI
 from google.models import Search, SearchResult, GeoSearch
 from google.Extract_Text.checkAlchemy_Tika import CheckLink
+from google.keywords.texthilight import Highlighter
 
 
 class GeocodingTest():
@@ -51,6 +52,11 @@ def do_search(search, string):
         cx=search_engine_id
     )
     response = request.execute()
+    highlighter = Highlighter()
+    istring = string
+    newqstr = istring[:istring.rfind("&")]
+    newqstr = newqstr.replace('\"','')
+    hiqueryStr= newqstr
 
     for i, doc in enumerate(response['items']):
         obj = SearchResult()

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Search, SearchResult, GeoSearch, GeoSearchResult
+from google.models import Search, SearchResult, GeoSearch, GeoSearchResult
 from google.keywords.texthilight import Highlighter
 
 

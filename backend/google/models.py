@@ -40,3 +40,12 @@ class GeoSearch(models.Model):
     def __unicode__(self):
       return self.address
 
+
+class GeoSearchResult(models.Model):
+    search = models.ForeignKey(GeoSearch, related_name="georesults")
+    lat = models.CharField(max_length=255)
+    lng = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+       return self.lat
