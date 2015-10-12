@@ -19,13 +19,7 @@ from gensim.parsing.preprocessing import STOPWORDS
 from checkAlchemy_Tika import CheckLink #Refer to the code Input Url and Output Noisy Text
 
 """
-1. Convert to lower case
-2. Take out special characters
-3. Take out stop words
-4. Stem the text
-5. Remove punctuation
-6. Remove extra space
-7. Handle input and output
+Some functions are written for later review cases. 
 """
 
 class CleanText:
@@ -47,6 +41,7 @@ class CleanText:
         exp = re.compile("[^\S\r\n]")  # Remove multiple spaces except newlines
         exp.sub("",text)
         text =  re.sub('\n+','\n',text)
+        text = re.sub(r'(\W)(?=\1)', '', text)
         return text
 
     def remove_special_chars(self, text):
@@ -57,6 +52,7 @@ class CleanText:
         schars = ''.join([a for a in string.punctuation if a not in ".,?"])
 
         text = re.sub('[%s]' % re.escape(schars), '', text)
+        text = re.sub(r'&#x([a-fA-F\d]+);',lambda m: unichr(int(m.group(1),base=16)),text)
         return text
 
     def split_words(self, text, stopwords =STOPWORDS):
@@ -69,9 +65,11 @@ class CleanText:
     def split_wordsBasic(self, text, stopwords =STOPWORDS):
         """Break text into a list of single words. Ignore any token that falls into the 'stopwords' set
         """
-        return [self.remove_punctuation(word).decode('unicode_escape').encode('ascii','ignore')
+        x = [word.strip()
                 for word in text.split(' ')
-                if word.lower() not in STOPWORDS and len(set(self.remove_punctuation(word)))>3]
+                if word.lower() not in STOPWORDS]
+        print x
+        return x
 
     def remove_punctuation(self, text):
         """Replace punctuation mark with space
@@ -115,26 +113,24 @@ class CleanText:
         :param text
         :return: text
         """
-        text =  gensim.utils.to_unicode(text,encoding='utf8').encode('utf8').strip()
+        text =  text.encode("ascii","ignore").strip()
         text = self.remove_extra_space(text)
         text = self.remove_special_chars(text)
-        #text = u' '.join(self.split_words(text))
-        sentenceList, st_index = self.split_sentences(text)
-        #print sentenceList
-        sentenceList = [' '.join(self.split_wordsBasic(sentence,STOPWORDS)) for sentence in sentenceList
-                        if len(' '.join(self.split_wordsBasic(sentence,STOPWORDS)))> 2]
-        #print sentenceList
+
+        sentenceList = text.split('\n')
+        sentenceList = [sentence.strip() for sentence in sentenceList
+                        if len(set(sentence))>4]
         text = '\n'.join(sentenceList)
-        #text = re.sub('\n+','\n',text)
-        #print text
+        text = re.sub('\n+','\n',text)
         return text
 
 
 
 if __name__ == "__main__":
 
-    #url = "https://en.wikipedia.org/wiki/Apple_Inc."
-    url ="http://idebate.org/sites/live/files/CV-Template_DPM.pdf"
+    url = "https://en.wikipedia.org/wiki/Apple_Inc."
+    #url ="http://idebate.org/sites/live/files/CV-Template_DPM.pdf"
+    #url = "http://stackoverflow.com/questions/15418561/convert-a-word-to-a-list-of-chars"
     text = CheckLink(url).parsed_text
     clean_Text = CleanText(text).clean_text
     print clean_Text
