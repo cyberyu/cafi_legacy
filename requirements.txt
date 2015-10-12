@@ -23,4 +23,7 @@ celery==3.1.15
 django-celery==3.1.17
 redis==2.10.3
 regex
+nltk
+gensim
+
 
