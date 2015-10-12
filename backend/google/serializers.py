@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Search, SearchResult, GeoSearch, GeoSearchResult
+from models import Search, SearchResult, GeoSearch
 from google.keywords.texthilight import Highlighter
 
 
@@ -37,9 +37,4 @@ class GeoSearchSerializer(serializers.ModelSerializer):
         model = GeoSearch
 
 
-class GeoSearchResultSerializer(serializers.ModelSerializer):
-
-
-    class Meta:
-        model = GeoSearchResult
 
