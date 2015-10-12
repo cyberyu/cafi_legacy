@@ -11,6 +11,7 @@ from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
 from tasks import do_search, do_geo_search
 from engagement.models import Project
+from celery import chain
 
 
 class ResultsSetPagination(PageNumberPagination):
@@ -69,7 +70,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
             item.update({"project": project_id})
             serializer = self.get_serializer(data=item)
             serializer.is_valid(raise_exception=True)
-            if serializer.validated_data.get('address') and (not serializer.validated_data.get('lat')):
+            if serializer.validated_data.get('address').strip() and (not serializer.validated_data.get('lat')):
                 self.perform_create(serializer)
                 count += 1
         headers = self.get_success_headers(serializer.data)
@@ -81,7 +82,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         project_id = self.kwargs['pk']
         items = GeoSearch.objects.filter(project__id=project_id)
 
-        qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng')
+        qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng', 'status')
         return render_to_csv_response(qs)
 
 

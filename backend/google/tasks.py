@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 from celery import shared_task
+import random
+import time
 
 import googlemaps
 from googleapiclient.discovery import build
@@ -8,6 +10,18 @@ from google.models import Search, SearchResult, GeoSearch
 from google.Extract_Text.checkAlchemy_Tika import CheckLink
 from google.keywords.texthilight import Highlighter
 
+from django.conf import settings
+
+cache = settings.CACHE
+def get_lock(key):
+    while cache.get(key):
+        time.sleep(0.2)
+    return False
+
+def set_lock(key):
+    t = random.random()+0.5
+    print "wait a moment %s" % t
+    cache.set(key, 1, t)
 
 class GeocodingTest():
     def __init__(self):
@@ -70,15 +84,24 @@ def do_search(search, string):
         obj.save()
 
 
-@shared_task
+@shared_task(default_retry_delay = 20, max_retries = 3)
 def do_geo_search(id, address):
-    query = GeocodingTest()
-    results = query.simple_geocode(address)
-    result = results[0]["geometry"]["location"]
-    obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
-    obj.lat = result.get('lat')
-    obj.lng = result.get('lng')
-    obj.save()
+    try:
+        query = GeocodingTest()
+        if get_lock('geo_lock')==False:
+            obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
+            results = query.simple_geocode(address)
+            if results:
+                result = results[0]["geometry"]["location"]
+                obj.lat = result.get('lat')
+                obj.lng = result.get('lng')
+                obj.status = 'good'
+            else:
+                obj.status = 'bad'
+            obj.save()
+            set_lock('geo_lock')
+    except Exception, exc:
+        raise do_geo_search.retry(exc=exc)
 
 
 if __name__ == '__main__':

@@ -294,6 +294,8 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.getAddressClass = function(address){
     if (address.lat && address.lng){
       return ""
+    } else if (address.status=='bad') {
+      return "danger"
     } else {
       return "warning"
     }
