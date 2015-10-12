@@ -60,6 +60,10 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         print "doing geo search"
         do_geo_search.delay(geosearch.id, geosearch.address)
 
+    def perform_update(self, serializer):
+        geosearch = serializer.save()
+        do_geo_search.delay(geosearch.id, geosearch.address)
+
     @detail_route(methods=['POST'])
     def batch(self, request, *args, **kwargs):
         project_id = self.kwargs['pk']
