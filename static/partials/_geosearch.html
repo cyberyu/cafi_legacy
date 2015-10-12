@@ -59,7 +59,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-4" ng-show="addAddressBool">
+  <div class="col-lg-4 pull-right" ng-show="addAddressBool">
     <div class="panel panel-default">
       <div class="panel-body">
         <form class="form-horizontal" role="form" ng-submit="saveAddressEdit(currentAddress)">
@@ -92,9 +92,11 @@
     <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
       Seems like you haven't uploaded a valid csv file yet.
     </div>
-    <button class="btn-sm btn-primary" ng-click="submitGeoSearch()">Submit job</button>
-    <button class="btn-sm btn-primary" ng-click="geoRefresh()">Refresh</button>
-    <a href="/api/geosearch/{{project_id}}/download"><button class="btn-sm btn-primary">download</button></a>
+    <div class="col-sm-3 pull-right">
+      <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
+      <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
+      <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+    </div>
   </div>
 </div>
 
