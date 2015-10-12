@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from rest_framework import routers
-from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet
+from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
 from engagement.views import ProjectViewSet
 from risk.views import RiskViewSet, CompanyViewSet
 
@@ -21,7 +21,8 @@ urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('core.urls', namespace="core")),
-    url(r'api/', include(router.urls)),
+    url(r'^api/', include(router.urls)),
+    url(r'^api/upload', 'google.views.upload', name="upload"),
     url(r'^', include('engagement.urls', namespace="project")),
     # url(r'^auth/', include('djoser.urls')),
 )
