@@ -39,11 +39,10 @@ class CleanText:
         return text
 
     def remove_special_chars(self, text):
-        """remove all special characters except the period (.)
-           comma (,) and question mark (?)
-           for instance, ">", "~", ", $, |, etc.
+        """remove some special characters except the relevant onces
+
         """
-        schars = ''.join([a for a in string.punctuation if a not in ".,?$\"\'></"])
+        schars = ''.join([a for a in string.punctuation if a not in ".,?$\"\'></~"])
 
         text = re.sub('[%s]' % re.escape(schars), '', text)
         text = re.sub(r'&#x([a-fA-F\d]+);',lambda m: unichr(int(m.group(1),base=16)),text)
@@ -57,12 +56,13 @@ class CleanText:
                 for word in gensim.utils.tokenize(text, lower=True)
                 if word not in STOPWORDS and len(word)>3]
     '''
-
+    '''
     def remove_punctuation(self, text): #To remove punctions though was not needed
         """Replace punctuation mark with space
         """
         text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
         return text
+    '''
 
 
     def process_text(self, text): # main function, calls the rest
@@ -72,7 +72,6 @@ class CleanText:
         :return: text
         """
         text = unicode(text)
-        print text
         text =  text.encode("ascii","ignore").strip()
         text = self.remove_extra_space(text)
         text = self.remove_special_chars(text)
