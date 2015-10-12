@@ -272,7 +272,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
   $scope.createAddress = function (newAddress) {
-    newAddress.id = $scope.addresses.length+1;
+    //newAddress.id = $scope.addresses.length+1;
     $scope.addresses.push(newAddress);
     $scope.addAddressBool = false;
   };

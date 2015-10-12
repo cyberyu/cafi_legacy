@@ -38,6 +38,9 @@ class GeoSearch(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # class Meta:
+    #     unique_together = ('name', 'address')
+
     def __unicode__(self):
       return self.address
 
