@@ -58,7 +58,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.editVariationBool = false;
   $scope.newVariation = {};
   $scope.showSearchListBool = false;
-  $scope.addresses=GeoSearch.query({"project__id": 1});
+  $scope.addresses = GeoSearch.query({"project__id": $scope.project_id});
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
   $scope.searchedStrings = [];
@@ -337,9 +337,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.geoRefresh = function(){
-    $http.get('/api/geosearch').then(function(response){
-      $scope.addresses = response.data.results;
-    })
+    $scope.addresses = GeoSearch.query({"project__id": $scope.project_id});
   };
 
   $scope.geoDownload = function(){
