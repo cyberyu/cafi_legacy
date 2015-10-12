@@ -58,7 +58,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.editVariationBool = false;
   $scope.newVariation = {};
   $scope.showSearchListBool = false;
-  $scope.addresses=[];
+  $scope.addresses=GeoSearch.query({"project__id": 1});
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
   $scope.searchedStrings = [];
@@ -272,23 +272,11 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
   $scope.createAddress = function (newAddress) {
-    //new Project(project).$save().then(function(newProject) {
-    //    $scope.projects.push(newProject);
-    //    $scope.displayMode = "list";
-    //});
     newAddress.id = $scope.addresses.length+1;
     $scope.addresses.push(newAddress);
     $scope.addAddressBool = false;
   };
   $scope.updateAddress = function (newAddress) {
-    //project.$update(function(){
-    //    for (var i = 0; i < $scope.projects.length; i++) {
-    //        if ($scope.projects[i].id == project.id) {
-    //            $scope.projects[i] = project;
-    //            break;
-    //        } }
-    //    $scope.displayMode = "list";
-    //});
     for (var i = 0; i < $scope.addresses.length; i++) {
       if ($scope.addresses[i].id == newAddress.id) {
         $scope.addresses[i] = newAddress;
@@ -297,14 +285,25 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     $scope.addAddressBool = false;
   };
   $scope.deleteAddress = function (address) {
-    //if (popupService.showPopup('Really delete this project?')) {
-    //    project.$delete().then(function () {
-    //        $scope.projects.splice($scope.projects.indexOf(project), 1);
-    //    });
-    //}
     $scope.addresses.splice($scope.addresses.indexOf(address), 1);
-
+    if(address.id) {
+      $http.delete('/api/geosearch/' + address.id);
+    }
   };
+
+  $scope.getLatLon = function(address){
+    address.project = $scope.project_id;
+    if (address.id) {
+      $http.patch('/api/geosearch/'+address.id, address).then(function () {
+        console.log('good');
+      })
+    } else {
+      $http.post('/api/geosearch', address).then(function () {
+        console.log('good');
+      })
+    }
+  };
+
   $scope.uploadAddress = function(){
     String.prototype.replaceAll = function(str1, str2, ignore)
     {
@@ -320,7 +319,8 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.submitGeoSearch = function(){
-    $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(){
+    $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(response){
+      $scope.submitDisabled = true;
     });
   };
 
@@ -328,6 +328,12 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     $http.get('/api/geosearch').then(function(response){
       $scope.addresses = response.data.results;
     })
+  };
+
+  $scope.geoDownload = function(){
+    $http.get('/api/geosearch/'+$scope.project_id+'/download').then(function(response){
+
+    });
   };
 
   $scope.centerMap = function(address){

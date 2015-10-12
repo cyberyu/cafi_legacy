@@ -35,9 +35,10 @@
             <td>{{address.address}}</td>
             <td>{{address.lat}}</td>
             <td>{{address.lng}}</td>
-            <td><a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
+            <td>
               <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
-              <a class="btn btn-default btn-circle" ng-click="centerMap(address)" ng-show="geoResultsBool"><i class="fa fa-location-arrow"></i></a>
+              <a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
+              <!--<a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>-->
             </td>
           </tr>
         </table>
@@ -84,9 +85,13 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-10 ">
-    <a class="btn-sm btn-primary" href='' ng-click="submitGeoSearch()">Submit job</a>
-    <a class="btn-sm btn-primary" href='' ng-click="geoRefresh()">Refresh status</a>
+  <a class="col-lg-10 ">
+    <div ng-if="submitDisabled" class="alert alert-info">
+      Your file has been uploaded and being processing, click refresh button to check the status.
+    </div>
+    <button class="btn-sm btn-primary" ng-disabled="submitDisabled" ng-click="submitGeoSearch()">Submit job</button>
+    <button class="btn-sm btn-primary" ng-click="geoRefresh()">Refresh</button>
+    <a href="/api/geosearch/{{project_id}}/download"><button class="btn-sm btn-primary">download</button></a>
   </div>
 </div>
 

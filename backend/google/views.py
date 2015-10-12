@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, detail_route, list_route
 import csv
+from djqscsv import render_to_csv_response
 
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
@@ -49,7 +50,8 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
-    filter_fields = ('project__id')
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project__id', 'name')
 
     def perform_create(self, serializer):
         geosearch = serializer.save()
@@ -69,6 +71,16 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response({"msg": "success"}, status=status.HTTP_201_CREATED, headers=headers)
+
+    @detail_route(methods=['GET'])
+    def download(self, request, *args, **kwargs):
+
+        project_id = self.kwargs['pk']
+        items = GeoSearch.objects.filter(project__id=project_id)
+
+        qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng')
+        return render_to_csv_response(qs)
+
 
 
 @api_view(['POST'])
