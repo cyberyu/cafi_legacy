@@ -3,10 +3,13 @@ from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, detail_route, list_route
+import csv
 
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
 from tasks import do_search, do_geo_search
+from engagement.models import Project
 
 
 class ResultsSetPagination(PageNumberPagination):
@@ -46,6 +49,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
+    filter_fields = ('project__id')
 
     def perform_create(self, serializer):
         geosearch = serializer.save()
@@ -53,4 +57,24 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         print "doing geo search"
         do_geo_search.delay(geosearch.id, geosearch.address)
 
+    @detail_route(methods=['POST'])
+    def batch(self, request, *args, **kwargs):
+        project_id = self.kwargs['pk']
+        proj = Project.objects.get(pk=project_id)
+
+        for item in request.data:
+            item.update({"project": project_id})
+            serializer = self.get_serializer(data=item)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response({"msg": "success"}, status=status.HTTP_201_CREATED, headers=headers)
+
+
+@api_view(['POST'])
+def upload(request):
+    file = request.data.get('file')
+    data = list(csv.DictReader(file))
+
+    return Response({"items": data}, status=status.HTTP_200_OK)
 

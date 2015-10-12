@@ -2,7 +2,33 @@
  * Created by yangm on 10/6/15.
  */
 
-projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, Upload, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+
+  $scope.project_id = $routeParams.id;
+
+  $scope.uploadFiles = function(file, errFiles) {
+    $scope.f = file;
+    file.progress = 0;
+    $scope.errFile = errFiles && errFiles[0];
+    if (file) {
+      file.upload = Upload.upload({
+        url: '/api/upload',
+        data: {file: file}
+      });
+
+      file.upload.then(function (response) {
+        $timeout(function () {
+          //file.result = response.data;
+          $scope.addresses = response.data.items;
+        });
+      }, function (response) {
+        if (response.status > 0)
+          $scope.errorMsg = response.status + ': ' + response.data;
+      }, function (evt) {
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+      });
+    }
+  };
 
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
@@ -293,67 +319,17 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
 
-  $scope.batchGeoSearch = function () {
-    var timeInt = 100;
-    $scope.progressBool = true;
-    var toSearches = [];
-    for(var i=0;i < $scope.addresses.length; i++){
-      toSearches.push($scope.addresses[i]);
-    }
-    $interval(function() {
-      if (toSearches.length >0) {
-        var item = toSearches.pop();
-        var oneSearch = {
-          project: $scope.currentProject.id,
-          string: item.address};
-        $http.post('/api/geosearch',oneSearch)
-          .success(function(data) {
-            $scope.searchedGeoStrings.push(data);
-            $scope.addresses[$scope.addresses.indexOf(item)].id = data.id;
-          });
-      } else {
-        $interval.cancel();
-      }
-    }, timeInt);
-    $interval(function() {
-      if ($scope.counter < $scope.addresses.length) {
-        $scope.counter++
-      } else {
-        $interval.cancel();
-      }
-    }, 10*timeInt);
-    $timeout(function(){
-      $scope.geoResultsBool = true;
-      $scope.geoResults = GeoSearchResult.query(function(){
-        for(var j=0; j < $scope.addresses.length; j++){
-          for(var i=0; i < $scope.geoResults.length; i++){
-            if($scope.geoResults[i].search == $scope.addresses[j].id){
-              $scope.addresses[j].lat = $scope.geoResults[i].lat;
-              $scope.addresses[j].lng = $scope.geoResults[i].lng;
-            }
-          }
-        }
-        for(var j=0; j < $scope.addresses.length; j++){
-          var newMarker = {
-            id: $scope.addresses[j].id,
-            latitude: $scope.addresses[j].lat,
-            longitude: $scope.addresses[j].lng
-          };
-          $scope.mapData.markers.push(newMarker);
-        }
-      });
-
-      $scope.counter = 0;
-    }, 10*timeInt*toSearches.length);
+  $scope.submitGeoSearch = function(){
+    $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(){
+    });
   };
 
-  $scope.calculateProgressAddress = function(addresses){
-    var result = 0;
-    if(addresses.length>0){
-      result = $scope.counter/addresses.length;
-    }
-    return result
+  $scope.geoRefresh = function(){
+    $http.get('/api/geosearch').then(function(response){
+      $scope.addresses = response.data.results;
+    })
   };
+
   $scope.centerMap = function(address){
     $scope.mapData.map = {center: {latitude: address.lat, longitude: address.lng }, zoom: 12 };
   };
