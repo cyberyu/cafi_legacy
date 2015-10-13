@@ -43,22 +43,28 @@
           </tr>
         </table>
         <a ng-click="editOrCreateAddress()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
-        <!--<a ng-click="uploadAddress()" class="btn btn-default btn-circle"><i class="fa fa-upload"></i></a>-->
-        <a ng-show="geoResultsBool" ng-csv="addresses" filename="addresses.csv" csv-header="['ID', 'Entity Name', 'Address', 'Latitude', 'Longitude' ]" class="btn btn-default btn-circle"><i class="fa fa-download"></i></a>
-        <!--<ng-csv-import-->
-            <!--class="import"-->
-            <!--content="csv.content"-->
-            <!--header="csv.header"-->
-            <!--header-visible="csv.headerVisible"-->
-            <!--separator="csv.separator"-->
-            <!--separator-visible="csv.separatorVisible"-->
-            <!--result="csv.result"-->
-            <!--encoding="csv.encoding"-->
-            <!--encoding-visible="csv.encodingVisible">-->
-        <!--</ng-csv-import>-->
       </div>
     </div>
   </div>
+
+  <nav class="text-center">
+  <paging
+  class="small"
+  page="currentPage"
+  page-size="20"
+  total="totalPages"
+  adjacent="{{adjacent}}"
+  dots="{{dots}}"
+  scroll-top="{{scrollTop}}"
+  hide-if-empty="{{hideIfEmpty}}"
+  ul-class="{{ulClass}}"
+  active-class="{{activeClass}}"
+  disabled-class="{{disabledClass}}"
+  show-prev-next="{{showPrevNext}}"
+  paging-action="getAddresses(page)">
+</paging>
+  </nav>
+
   <div class="col-lg-4 pull-right" ng-show="addAddressBool">
     <div class="panel panel-default">
       <div class="panel-body">

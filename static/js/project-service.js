@@ -51,9 +51,9 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
     return $resource('/api/geosearch/:gsearchId', {gocId: '@id'}, {
         query: {
             method: 'GET',
-            isArray: true,
+            //isArray: true
             transformResponse: function(data) {
-                return angular.fromJson(data).results;
+                return angular.fromJson(data);
             }
         }
     });

@@ -58,7 +58,17 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.editVariationBool = false;
   $scope.newVariation = {};
   $scope.showSearchListBool = false;
-  $scope.addresses = GeoSearch.query({"project__id": $scope.project_id});
+
+  $scope.getAddresses = function(page) {
+    GeoSearch.query({"project__id": $scope.project_id, "page": page}).$promise.then(function (data) {
+      $scope.addresses = data.results;
+      $scope.totalPages = data.count;
+      $scope.currentPage = page;
+    });
+  };
+
+  $scope.getAddresses(1);
+
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
   $scope.searchedStrings = [];
@@ -336,8 +346,8 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.geoRefresh = function(){
-    $scope.addresses = GeoSearch.query({"project__id": $scope.project_id});
+  $scope.geoRefresh = function(page){
+    $scope.getAddresses($scope.currentPage);
   };
 
   $scope.geoDownload = function(){
