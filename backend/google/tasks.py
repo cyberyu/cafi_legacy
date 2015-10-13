@@ -25,7 +25,8 @@ def set_lock(key):
 
 class GeocodingTest():
     def __init__(self):
-        self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
+        self.key = 'AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00' #Autocafi Developer Key
+        #self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
         self.client = googlemaps.Client(self.key)
 
     def simple_geocode(self,query):
@@ -51,7 +52,7 @@ def test_api(url_string):
     return url_string
 
 
-service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
+service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
 
@@ -65,6 +66,7 @@ def do_search(search, string):
         # start=start_val,
         cx=search_engine_id
     )
+    print 'q'
     response = request.execute()
     highlighter = Highlighter()
     istring = string
