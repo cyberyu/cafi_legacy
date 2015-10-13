@@ -29,19 +29,20 @@ class SearchResult(models.Model):
 
 
 class GeoSearch(models.Model):
-    project = models.ForeignKey(Project, related_name="geosearches") 
-    string = models.CharField(max_length=1024) # search string
+    project = models.ForeignKey(Project, related_name="geosearches")
+    name = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=1024) # search string
+    lat = models.FloatField(blank=True, null=True)
+    lng = models.FloatField(blank=True, null=True)
+    status = models.CharField(blank=True, default='', max_length=4)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
-      return self.string
-
-
-class GeoSearchResult(models.Model):
-    search = models.ForeignKey(GeoSearch, related_name="georesults")
-    lat = models.CharField(max_length=255)
-    lng = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ['id']
+    #     unique_together = ('name', 'address')
 
     def __unicode__(self):
-       return self.lat
+      return self.address
+
+

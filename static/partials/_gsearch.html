@@ -75,11 +75,11 @@
               </td>
               <td>{{gdoc.title}}</td>
               <td>{{gdoc.snippet}}</td>
-              <td><a href="{{gdoc.url}}">{{gdoc.url}}</a></td>
+              <td><a href="{{gdoc.url}}">link</a></td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)"><i class="fa fa-close"></i></a></td>
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
-              <td colspan="5">{{gdoc.text}}</td>
+              <td colspan="5">{{gdoc.text}}</p></td>
             </tr>
             </tbody>
             <tfoot>
@@ -94,7 +94,6 @@
     </div>
   </div>
 </div>
-
 
 <div ng-controller="modal" class="{{modalClass}}"
      ng-click="modalClass = 'closed'">

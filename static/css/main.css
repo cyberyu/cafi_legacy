@@ -202,13 +202,33 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 select {
     margin-top: 10px;
 }
-.row {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-top: auto;
-    margin-bottom: auto;
+
+/*.row {*/
+    /*padding-left: 15px;*/
+    /*padding-right: 15px;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+    /*margin-top: auto;*/
+    /*margin-bottom: auto;*/
+/*}*/
+
+#upload {
+    /*display: inline-block;*/
+    padding-left: 50px;
+}
+
+#up-progressbar {
+    width: 200px;
+}
+
+.ubox {
+    margin-top: 20px;
+}
+
+.address-table td {
+overflow: hidden;
+max-width: 300px;
+word-wrap: break-word;
 }

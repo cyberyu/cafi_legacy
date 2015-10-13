@@ -18,3 +18,10 @@ xlrd
 django-filter
 jsonfield==1.0.3
 mechanize
+django-grappelli==2.6.5
+celery==3.1.15
+django-celery==3.1.17
+redis==2.10.3
+regex
+django-queryset-csv==0.3.1
+nltk

@@ -2,8 +2,34 @@
  * Created by yangm on 10/6/15.
  */
 
-projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
+projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams, $http,$timeout,$interval, Upload, popupService, Project, Search, Gdoc,GeoSearch,GeoSearchResult){
 
+  $scope.project_id = $routeParams.id;
+
+  $scope.uploadFiles = function(file, errFiles) {
+    $scope.f = file;
+    file.progress = 0;
+    $scope.errFile = errFiles && errFiles[0];
+    if (file) {
+      file.upload = Upload.upload({
+        url: '/api/upload',
+        data: {file: file}
+      });
+
+      file.upload.then(function (response) {
+        $timeout(function () {
+          //file.result = response.data;
+          $scope.addresses = response.data.items.concat($scope.addresses);
+        });
+      }, function (response) {
+        if (response.status > 0)
+          $scope.errorMsg = response.status + ': ' + response.data;
+      }, function (evt) {
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+      });
+    }
+  };
+  
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
@@ -32,7 +58,17 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.editVariationBool = false;
   $scope.newVariation = {};
   $scope.showSearchListBool = false;
-  $scope.addresses=[];
+
+  $scope.getAddresses = function(page) {
+    GeoSearch.query({"project__id": $scope.project_id, "page": page}).$promise.then(function (data) {
+      $scope.addresses = data.results;
+      $scope.totalPages = data.count;
+      $scope.currentPage = page;
+    });
+  };
+
+  $scope.getAddresses(1);
+
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
   $scope.searchedStrings = [];
@@ -246,23 +282,11 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
   $scope.createAddress = function (newAddress) {
-    //new Project(project).$save().then(function(newProject) {
-    //    $scope.projects.push(newProject);
-    //    $scope.displayMode = "list";
-    //});
-    newAddress.id = $scope.addresses.length+1;
+    //newAddress.id = $scope.addresses.length+1;
     $scope.addresses.push(newAddress);
     $scope.addAddressBool = false;
   };
   $scope.updateAddress = function (newAddress) {
-    //project.$update(function(){
-    //    for (var i = 0; i < $scope.projects.length; i++) {
-    //        if ($scope.projects[i].id == project.id) {
-    //            $scope.projects[i] = project;
-    //            break;
-    //        } }
-    //    $scope.displayMode = "list";
-    //});
     for (var i = 0; i < $scope.addresses.length; i++) {
       if ($scope.addresses[i].id == newAddress.id) {
         $scope.addresses[i] = newAddress;
@@ -271,14 +295,35 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     $scope.addAddressBool = false;
   };
   $scope.deleteAddress = function (address) {
-    //if (popupService.showPopup('Really delete this project?')) {
-    //    project.$delete().then(function () {
-    //        $scope.projects.splice($scope.projects.indexOf(project), 1);
-    //    });
-    //}
     $scope.addresses.splice($scope.addresses.indexOf(address), 1);
-
+    if(address.id) {
+      $http.delete('/api/geosearch/' + address.id);
+    }
   };
+
+  $scope.getAddressClass = function(address){
+    if (address.lat && address.lng){
+      return ""
+    } else if (address.status=='bad') {
+      return "danger"
+    } else {
+      return "warning"
+    }
+  };
+
+  $scope.getLatLon = function(address){
+    address.project = $scope.project_id;
+    if (address.id) {
+      $http.patch('/api/geosearch/'+address.id, address).then(function () {
+        console.log('good');
+      })
+    } else {
+      $http.post('/api/geosearch', address).then(function () {
+        console.log('good');
+      })
+    }
+  };
+
   $scope.uploadAddress = function(){
     String.prototype.replaceAll = function(str1, str2, ignore)
     {
@@ -293,67 +338,24 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
 
-  $scope.batchGeoSearch = function () {
-    var timeInt = 100;
-    $scope.progressBool = true;
-    var toSearches = [];
-    for(var i=0;i < $scope.addresses.length; i++){
-      toSearches.push($scope.addresses[i]);
-    }
-    $interval(function() {
-      if (toSearches.length >0) {
-        var item = toSearches.pop();
-        var oneSearch = {
-          project: $scope.currentProject.id,
-          string: item.address};
-        $http.post('/api/geosearch',oneSearch)
-          .success(function(data) {
-            $scope.searchedGeoStrings.push(data);
-            $scope.addresses[$scope.addresses.indexOf(item)].id = data.id;
-          });
-      } else {
-        $interval.cancel();
-      }
-    }, timeInt);
-    $interval(function() {
-      if ($scope.counter < $scope.addresses.length) {
-        $scope.counter++
-      } else {
-        $interval.cancel();
-      }
-    }, 10*timeInt);
-    $timeout(function(){
-      $scope.geoResultsBool = true;
-      $scope.geoResults = GeoSearchResult.query(function(){
-        for(var j=0; j < $scope.addresses.length; j++){
-          for(var i=0; i < $scope.geoResults.length; i++){
-            if($scope.geoResults[i].search == $scope.addresses[j].id){
-              $scope.addresses[j].lat = $scope.geoResults[i].lat;
-              $scope.addresses[j].lng = $scope.geoResults[i].lng;
-            }
-          }
-        }
-        for(var j=0; j < $scope.addresses.length; j++){
-          var newMarker = {
-            id: $scope.addresses[j].id,
-            latitude: $scope.addresses[j].lat,
-            longitude: $scope.addresses[j].lng
-          };
-          $scope.mapData.markers.push(newMarker);
-        }
-      });
-
-      $scope.counter = 0;
-    }, 10*timeInt*toSearches.length);
+  $scope.submitGeoSearch = function(){
+    $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(response){
+      $scope.submitDisabled = true;
+      $scope.numberSubmitted = response.data.count > 0 ? response.data.count : 0 ;
+      console.log($scope.numberSubmitted);
+    });
   };
 
-  $scope.calculateProgressAddress = function(addresses){
-    var result = 0;
-    if(addresses.length>0){
-      result = $scope.counter/addresses.length;
-    }
-    return result
+  $scope.geoRefresh = function(page){
+    $scope.getAddresses($scope.currentPage);
   };
+
+  $scope.geoDownload = function(){
+    $http.get('/api/geosearch/'+$scope.project_id+'/download').then(function(response){
+
+    });
+  };
+
   $scope.centerMap = function(address){
     $scope.mapData.map = {center: {latitude: address.lat, longitude: address.lng }, zoom: 12 };
   };

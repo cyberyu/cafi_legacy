@@ -1,10 +1,27 @@
+from __future__ import absolute_import
+from celery import shared_task
+import random
+import time
+
 import googlemaps
 from googleapiclient.discovery import build
 from google.alchemyapi_python.alchemyapi import AlchemyAPI
-from google.models import Search, SearchResult, GeoSearch, GeoSearchResult
+from google.models import Search, SearchResult, GeoSearch
 from google.Extract_Text.checkAlchemy_Tika import CheckLink
-import json
+from google.keywords.texthilight import Highlighter
 
+from django.conf import settings
+
+cache = settings.CACHE
+def get_lock(key):
+    while cache.get(key):
+        time.sleep(0.2)
+    return False
+
+def set_lock(key):
+    t = random.random()*1000 + 100
+    print "wait a moment %s" % t
+    cache.set(key, 1, px=t)
 
 class GeocodingTest():
     def __init__(self):
@@ -25,9 +42,7 @@ def extract_text_AlchemyAPI_single(url_string):
             #print (unicode(response1['text']))
             return unicode(response1['text'])
         except:
-
             pass
-
     else:
         return None
 
@@ -51,6 +66,11 @@ def do_search(search, string):
         cx=search_engine_id
     )
     response = request.execute()
+    highlighter = Highlighter()
+    istring = string
+    newqstr = istring[:istring.rfind("&")]
+    newqstr = newqstr.replace('\"','')
+    hiqueryStr= newqstr
 
     for i, doc in enumerate(response['items']):
         obj = SearchResult()
@@ -64,16 +84,24 @@ def do_search(search, string):
         obj.save()
 
 
-def do_geo_search(search, string):
-    query = GeocodingTest()
-    results = query.simple_geocode(string)
-    result = results[0]["geometry"]["location"]
-    obj = GeoSearchResult()
-    obj.search = search
-    obj.lat = result.get('lat')
-    obj.lng = result.get('lng')
-    obj.save()
-
+@shared_task(default_retry_delay = 20, max_retries = 3)
+def do_geo_search(id, address):
+    try:
+        query = GeocodingTest()
+        if get_lock('geo_lock')==False:
+            obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
+            results = query.simple_geocode(address)
+            if results:
+                result = results[0]["geometry"]["location"]
+                obj.lat = result.get('lat')
+                obj.lng = result.get('lng')
+                obj.status = 'good'
+            else:
+                obj.status = 'bad'
+            obj.save()
+            set_lock('geo_lock')
+    except Exception, exc:
+        raise do_geo_search.retry(exc=exc)
 
 
 if __name__ == '__main__':
