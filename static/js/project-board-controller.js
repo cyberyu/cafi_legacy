@@ -62,7 +62,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.getAddresses = function(page) {
     GeoSearch.query({"project__id": $scope.project_id, "page": page}).$promise.then(function (data) {
       $scope.addresses = data.results;
-      $scope.totalPages = data.count/20;
+      $scope.total = data.count;
       $scope.currentPage = page;
     });
   };
