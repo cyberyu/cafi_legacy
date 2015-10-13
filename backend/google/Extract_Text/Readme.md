@@ -25,3 +25,39 @@ HTTP Codes returned
 415 - Unknown file type
 422 - Unparsable document of known type (password protected documents and unsupported versions like Biff5 Excel)
 500 - Internal error
+
+Install python-boilerpipe
+-------------------------
+
+A python wrapper for Boilerpipe_, an excellent Java library for boilerplate removal and fulltext extraction from HTML pages. 
+
+Configuration
+-------------
+
+Dependencies:
+jpype, charade
+
+The boilerpipe jar files will get fetched and included automatically when building the package.
+```
+pip install JPype1    # to install https://pypi.python.org/pypi/JPype1
+pip install charade
+pip install boilerpipe
+
+Be sure to have set JAVA_HOME properly since jpype depends on this setting.
+```
+
+Usage
+-----
+
+The constructor takes a keyword argment ``extractor``, being one of the available boilerpipe extractor types:
+
+- DefaultExtractor
+- ArticleExtractor
+- ArticleSentencesExtractor
+- KeepEverythingExtractor
+- KeepEverythingWithMinKWordsExtractor
+- LargestContentExtractor
+- NumWordsRulesExtractor
+- CanolaExtractor
+
+If no extractor is passed the DefaultExtractor will be used by default. Additional keyword arguments are either ``html`` for HTML text or ``url``.
