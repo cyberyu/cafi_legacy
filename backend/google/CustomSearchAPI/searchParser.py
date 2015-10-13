@@ -38,41 +38,40 @@ class SearchQueryParser:
         - if an operator is missing, use an '&' operator
         & (And) |(Or)
         """
-        operatorOr = Forward()
+        opOr = Forward()
 
-        operatorWord = Group(Combine(Word(alphanums) + Suppress('*'))).setResultsName('wordwildcard') | \
+        opWord = Group(Combine(Word(alphanums) + Suppress('*'))).setResultsName('wordwildcard') | \
                             Group(Word(alphanums)).setResultsName('word')
-
-        operatorQuotesContent = Forward()
-        operatorQuotesContent << (
-            (operatorWord + operatorQuotesContent) | operatorWord
+        opQuotesContent = Forward()
+        opQuotesContent << (
+            (opWord + opQuotesContent) | opWord
         )
 
-        operatorQuotes = Group(
-            Suppress('"') + operatorQuotesContent + Suppress('"')
-        ).setResultsName("quotes") | operatorWord
+        opQuotes = Group(
+            Suppress('"') + opQuotesContent + Suppress('"')
+        ).setResultsName("quotes") | opWord
 
-        operatorParenthesis = Group(
-            (Suppress("(") + operatorOr + Suppress(")"))
-        ).setResultsName("parenthesis") | operatorQuotes
+        opParenthesis = Group(
+            (Suppress("(") + opOr + Suppress(")"))
+        ).setResultsName("parenthesis") | opQuotes
 
-        operatorNot = Forward()
-        operatorNot << (Group(
-            Suppress(Keyword("not", caseless=True)) + operatorNot
-        ).setResultsName("not") | operatorParenthesis)
+        opNot = Forward()
+        opNot << (Group(
+            Suppress(Keyword("not", caseless=True)) + opNot
+        ).setResultsName("not") | opParenthesis)
 
-        operatorAnd = Forward()
-        operatorAnd << (Group(
-            operatorNot + Suppress(Keyword("&", caseless=True)) + operatorAnd
+        opAnd = Forward()
+        opAnd << (Group(
+            opNot + Suppress(Keyword("&", caseless=True)) + opAnd
         ).setResultsName("&") | Group(
-            operatorNot + OneOrMore(~oneOf("& |") + operatorAnd)
-        ).setResultsName("&") | operatorNot)
+            opNot + OneOrMore(~oneOf("& |") + opAnd)
+        ).setResultsName("&") | opNot)
 
-        operatorOr << (Group(
-            operatorAnd + Suppress(Keyword("|", caseless=True)) + operatorOr
-        ).setResultsName("|") | operatorAnd)
+        opOr << (Group(
+            opAnd + Suppress(Keyword("|", caseless=True)) + opOr
+        ).setResultsName("|") | opAnd)
 
-        return operatorOr.parseString
+        return opOr.parseString
 
     def generateAnd(self, argument):
         x = self.generate(argument[0])
