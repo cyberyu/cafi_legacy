@@ -30,7 +30,7 @@
             <th>Action</th>
           </tr>
           </thead>
-          <tr ng-repeat="address in addresses">
+          <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
             <td>{{address.name}}</td>
             <td>{{address.address}}</td>
             <td>{{address.lat}}</td>
@@ -38,7 +38,7 @@
             <td>
               <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
               <a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
-              <!--<a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>-->
+              <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
             </td>
           </tr>
         </table>
@@ -59,7 +59,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-4" ng-show="addAddressBool">
+  <div class="col-lg-4 pull-right" ng-show="addAddressBool">
     <div class="panel panel-default">
       <div class="panel-body">
         <form class="form-horizontal" role="form" ng-submit="saveAddressEdit(currentAddress)">
@@ -86,12 +86,17 @@
     </div>
   </div>
   <a class="col-lg-10 ">
-    <div ng-if="submitDisabled" class="alert alert-info">
-      Your file has been uploaded and being processing, click refresh button to check the status.
+    <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
+      {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
     </div>
-    <button class="btn-sm btn-primary" ng-disabled="submitDisabled" ng-click="submitGeoSearch()">Submit job</button>
-    <button class="btn-sm btn-primary" ng-click="geoRefresh()">Refresh</button>
-    <a href="/api/geosearch/{{project_id}}/download"><button class="btn-sm btn-primary">download</button></a>
+    <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
+      Seems like you haven't uploaded a valid csv file yet.
+    </div>
+    <div class="col-sm-3 pull-right">
+      <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
+      <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
+      <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+    </div>
   </div>
 </div>
 
@@ -102,9 +107,6 @@
 <!--</div>-->
 
 
-
-<div class="row" >
-</div>
 
 <!--<div class="row">-->
   <!--<div class="col-lg-6">-->

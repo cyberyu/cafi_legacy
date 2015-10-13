@@ -11,6 +11,7 @@ from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
 from tasks import do_search, do_geo_search
 from engagement.models import Project
+from celery import chain
 
 
 class ResultsSetPagination(PageNumberPagination):
@@ -59,18 +60,25 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         print "doing geo search"
         do_geo_search.delay(geosearch.id, geosearch.address)
 
+    def perform_update(self, serializer):
+        geosearch = serializer.save()
+        do_geo_search.delay(geosearch.id, geosearch.address)
+
     @detail_route(methods=['POST'])
     def batch(self, request, *args, **kwargs):
         project_id = self.kwargs['pk']
         proj = Project.objects.get(pk=project_id)
+        count = 0
 
         for item in request.data:
             item.update({"project": project_id})
             serializer = self.get_serializer(data=item)
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+            if serializer.validated_data.get('address').strip() and (not serializer.validated_data.get('lat')):
+                self.perform_create(serializer)
+                count += 1
         headers = self.get_success_headers(serializer.data)
-        return Response({"msg": "success"}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({"count": count}, status=status.HTTP_201_CREATED, headers=headers)
 
     @detail_route(methods=['GET'])
     def download(self, request, *args, **kwargs):
@@ -78,7 +86,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         project_id = self.kwargs['pk']
         items = GeoSearch.objects.filter(project__id=project_id)
 
-        qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng')
+        qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng', 'status')
         return render_to_csv_response(qs)
 
 
