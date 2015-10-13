@@ -48,21 +48,10 @@
   </div>
 
   <nav class="text-center" ng-if="totalPages>1">
-  <paging
-  class="small"
-  page="currentPage"
-  page-size="20"
-  total="totalPages"
-  adjacent="{{adjacent}}"
-  dots="{{dots}}"
-  scroll-top="{{scrollTop}}"
-  hide-if-empty="{{hideIfEmpty}}"
-  ul-class="{{ulClass}}"
-  active-class="{{activeClass}}"
-  disabled-class="{{disabledClass}}"
-  show-prev-next="{{showPrevNext}}"
-  paging-action="getAddresses(page)">
-</paging>
+    <paging class="small" page="currentPage" page-size="20" total="totalPages" adjacent="{{adjacent}}" dots="{{dots}}"
+            scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
+            disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses(page)">
+    </paging>
   </nav>
 
   <div class="col-lg-4 pull-right" ng-show="addAddressBool">
