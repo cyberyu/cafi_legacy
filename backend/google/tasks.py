@@ -91,14 +91,17 @@ def do_geo_search(id, address):
         if get_lock('geo_lock')==False:
             obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
             results = query.simple_geocode(address)
-            result = results[0]["geometry"]["location"]
-            obj.lat = result.get('lat')
-            obj.lng = result.get('lng')
-            obj.status = 'good'
-            obj.status = 'bad'
+            if results:
+                result = results[0]["geometry"]["location"]
+                obj.lat = result.get('lat')
+                obj.lng = result.get('lng')
+                obj.status = 'good'
+            else:
+                obj.status = 'bad'
             obj.save()
-            set_lock('geo_lock')
+        set_lock('geo_lock')
     except Exception, exc:
+        set_lock('geo_lock')
         raise do_geo_search.retry(exc=exc)
 
 
