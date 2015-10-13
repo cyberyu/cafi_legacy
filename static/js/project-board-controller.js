@@ -29,7 +29,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
       });
     }
   };
-
+  
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
