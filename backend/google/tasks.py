@@ -19,7 +19,7 @@ def get_lock(key):
     return False
 
 def set_lock(key):
-    t = random.random()*1000 + 100
+    t = int(random.random()*1000 + 100)
     print "wait a moment %s" % t
     cache.set(key, 1, px=t)
 
@@ -91,13 +91,11 @@ def do_geo_search(id, address):
         if get_lock('geo_lock')==False:
             obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
             results = query.simple_geocode(address)
-            if results:
-                result = results[0]["geometry"]["location"]
-                obj.lat = result.get('lat')
-                obj.lng = result.get('lng')
-                obj.status = 'good'
-            else:
-                obj.status = 'bad'
+            result = results[0]["geometry"]["location"]
+            obj.lat = result.get('lat')
+            obj.lng = result.get('lng')
+            obj.status = 'good'
+            obj.status = 'bad'
             obj.save()
             set_lock('geo_lock')
     except Exception, exc:
