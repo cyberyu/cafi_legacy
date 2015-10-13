@@ -87,6 +87,7 @@ def do_search(search, string):
 @shared_task(default_retry_delay = 20, max_retries = 3)
 def do_geo_search(id, address):
     try:
+        set_lock('geo_lock')
         query = GeocodingTest()
         if get_lock('geo_lock')==False:
             obj = GeoSearch.objects.get(pk=id)  # due to async, we want to get latest copy of geosearch object fresh to avoid conflict
@@ -99,9 +100,7 @@ def do_geo_search(id, address):
             else:
                 obj.status = 'bad'
             obj.save()
-        set_lock('geo_lock')
     except Exception, exc:
-        set_lock('geo_lock')
         raise do_geo_search.retry(exc=exc)
 
 
