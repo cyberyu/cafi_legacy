@@ -14,6 +14,7 @@ var cafiApp = angular.module('cafiApp', [
   'uiGmapgoogle-maps',
   'smart-table',
   'ngFileUpload',
+  'bw.paging',
   // 'nya.bootstrap.select',
   'projectControllers',
   'projectServices']);

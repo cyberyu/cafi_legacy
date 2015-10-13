@@ -226,3 +226,9 @@ select {
 .ubox {
     margin-top: 20px;
 }
+
+.address-table td {
+overflow: hidden;
+max-width: 300px;
+word-wrap: break-word;
+}

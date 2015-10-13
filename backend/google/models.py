@@ -34,8 +34,13 @@ class GeoSearch(models.Model):
     address = models.CharField(max_length=1024) # search string
     lat = models.FloatField(blank=True, null=True)
     lng = models.FloatField(blank=True, null=True)
+    status = models.CharField(blank=True, default='', max_length=4)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['id']
+    #     unique_together = ('name', 'address')
 
     def __unicode__(self):
       return self.address

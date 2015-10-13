@@ -102,6 +102,15 @@ def update_settings(source_folder="/home/ubuntu/cafi"):
 
 @parallel
 def update_database(source_folder="/home/ubuntu/cafi"):
+    sudo('cp /etc/postgresql/9.3/main/pg_hba.conf /home/ubuntu/pg_hba.conf')
+    settings_path = '/home/ubuntu/pg_hba.conf'
+    sudo('rm %s' %(settings_path, ))
+    put('./pg_hba.conf', settings_path)
+    sudo('cp /home/ubuntu/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf')
+    sudo('service postgresql restart')
+    # sudo('cd %s/backend && sudo -u postgres createuser cafi' % (source_folder,))
+    sudo('cd %s/backend && sudo -u postgres dropdb cafi' % (source_folder,))
+    sudo('cd %s/backend && sudo -u postgres createdb cafi -O cafi' % (source_folder,))
     run('cd %s/backend && ../../virtualenv/bin/python manage.py makemigrations --noinput' % (source_folder,))
     run('cd %s/backend && ../../virtualenv/bin/python manage.py migrate --noinput' % (source_folder,))
 
@@ -110,6 +119,18 @@ def start_django(source_folder="/home/ubuntu/cafi"):
     kill_port(8080)
     run('nohup %s/../virtualenv/bin/python %s/backend/manage.py '
         'runserver 0.0.0.0:8080 >&/home/ubuntu/log < /home/ubuntu/log &' % (source_folder, source_folder), pty=False)
+
+@parallel
+def start_redis(source_folder="/home/ubuntu/cafi"):
+    # kill_port(8080)
+    sudo('service redis start')
+
+
+@parallel
+def start_celery(source_folder="/home/ubuntu/cafi"):
+    # kill_port(8080)
+    run('source /home/ubuntu/virtualenv/bin/activate && cd %s/backend && nohup celery -A settings worker -l INFO --concurrency=1 >&/home/ubuntu/log.celery < /home/ubuntu/log.celery &' % (source_folder, ), pty=False)
+
 
 @parallel
 def kill_port(port=8080):

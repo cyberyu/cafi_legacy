@@ -19,7 +19,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
       file.upload.then(function (response) {
         $timeout(function () {
           //file.result = response.data;
-          $scope.addresses = response.data.items;
+          $scope.addresses = response.data.items.concat($scope.addresses);
         });
       }, function (response) {
         if (response.status > 0)
@@ -29,7 +29,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
       });
     }
   };
-
+  
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
@@ -58,7 +58,17 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.editVariationBool = false;
   $scope.newVariation = {};
   $scope.showSearchListBool = false;
-  $scope.addresses=GeoSearch.query({"project__id": 1});
+
+  $scope.getAddresses = function(page) {
+    GeoSearch.query({"project__id": $scope.project_id, "page": page}).$promise.then(function (data) {
+      $scope.addresses = data.results;
+      $scope.total = data.count;
+      $scope.currentPage = page;
+    });
+  };
+
+  $scope.getAddresses(1);
+
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
   $scope.searchedStrings = [];
@@ -272,7 +282,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     }
   };
   $scope.createAddress = function (newAddress) {
-    newAddress.id = $scope.addresses.length+1;
+    //newAddress.id = $scope.addresses.length+1;
     $scope.addresses.push(newAddress);
     $scope.addAddressBool = false;
   };
@@ -288,6 +298,16 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
     $scope.addresses.splice($scope.addresses.indexOf(address), 1);
     if(address.id) {
       $http.delete('/api/geosearch/' + address.id);
+    }
+  };
+
+  $scope.getAddressClass = function(address){
+    if (address.lat && address.lng){
+      return ""
+    } else if (address.status=='bad') {
+      return "danger"
+    } else {
+      return "warning"
     }
   };
 
@@ -321,13 +341,13 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
   $scope.submitGeoSearch = function(){
     $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(response){
       $scope.submitDisabled = true;
+      $scope.numberSubmitted = response.data.count > 0 ? response.data.count : 0 ;
+      console.log($scope.numberSubmitted);
     });
   };
 
-  $scope.geoRefresh = function(){
-    $http.get('/api/geosearch').then(function(response){
-      $scope.addresses = response.data.results;
-    })
+  $scope.geoRefresh = function(page){
+    $scope.getAddresses($scope.currentPage);
   };
 
   $scope.geoDownload = function(){

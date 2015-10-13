@@ -16,11 +16,11 @@
   <br>
 </div>
 
-<div class="row col-lg-10" ng-if="addresses.length>0">
+<div class="row col-lg-10" ng-if="addresses.length>=0">
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-body">
-        <table class="table table-hover">
+        <table class="table table-hover address-table">
           <thead>
           <tr>
             <th>Entity Name</th>
@@ -30,7 +30,7 @@
             <th>Action</th>
           </tr>
           </thead>
-          <tr ng-repeat="address in addresses">
+          <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
             <td>{{address.name}}</td>
             <td>{{address.address}}</td>
             <td>{{address.lat}}</td>
@@ -38,28 +38,23 @@
             <td>
               <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
               <a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
-              <!--<a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>-->
+              <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
             </td>
           </tr>
         </table>
         <a ng-click="editOrCreateAddress()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
-        <!--<a ng-click="uploadAddress()" class="btn btn-default btn-circle"><i class="fa fa-upload"></i></a>-->
-        <a ng-show="geoResultsBool" ng-csv="addresses" filename="addresses.csv" csv-header="['ID', 'Entity Name', 'Address', 'Latitude', 'Longitude' ]" class="btn btn-default btn-circle"><i class="fa fa-download"></i></a>
-        <!--<ng-csv-import-->
-            <!--class="import"-->
-            <!--content="csv.content"-->
-            <!--header="csv.header"-->
-            <!--header-visible="csv.headerVisible"-->
-            <!--separator="csv.separator"-->
-            <!--separator-visible="csv.separatorVisible"-->
-            <!--result="csv.result"-->
-            <!--encoding="csv.encoding"-->
-            <!--encoding-visible="csv.encodingVisible">-->
-        <!--</ng-csv-import>-->
       </div>
     </div>
   </div>
-  <div class="col-lg-4" ng-show="addAddressBool">
+
+  <nav class="text-center" ng-if="total>20">
+    <paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"
+            scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
+            disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses(page)">
+    </paging>
+  </nav>
+
+  <div class="col-lg-4 pull-right" ng-show="addAddressBool">
     <div class="panel panel-default">
       <div class="panel-body">
         <form class="form-horizontal" role="form" ng-submit="saveAddressEdit(currentAddress)">
@@ -86,12 +81,17 @@
     </div>
   </div>
   <a class="col-lg-10 ">
-    <div ng-if="submitDisabled" class="alert alert-info">
-      Your file has been uploaded and being processing, click refresh button to check the status.
+    <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
+      {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
     </div>
-    <button class="btn-sm btn-primary" ng-disabled="submitDisabled" ng-click="submitGeoSearch()">Submit job</button>
-    <button class="btn-sm btn-primary" ng-click="geoRefresh()">Refresh</button>
-    <a href="/api/geosearch/{{project_id}}/download"><button class="btn-sm btn-primary">download</button></a>
+    <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
+      Seems like you haven't uploaded a valid csv file yet.
+    </div>
+    <div class="col-sm-3 pull-right">
+      <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
+      <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
+      <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+    </div>
   </div>
 </div>
 
@@ -102,9 +102,6 @@
 <!--</div>-->
 
 
-
-<div class="row" >
-</div>
 
 <!--<div class="row">-->
   <!--<div class="col-lg-6">-->

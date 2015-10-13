@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import redis
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -137,5 +139,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 20
 }
+
+CACHE = redis.Redis(host='localhost', port=6379)
 
 from settings.local import *
