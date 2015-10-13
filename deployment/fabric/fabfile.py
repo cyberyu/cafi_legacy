@@ -11,13 +11,19 @@ import csv
 
 REGION = "us-east-1"
 WEB_ROOT = "/var/www"
-REPO_URL = 'git@github.com:afei8824/auto.git'
+REPO_URL = 'git@github.com:CAFI2/auto.git'
 
 # Server user, normally AWS Ubuntu instances have default user "ubuntu"
 env.user = "ubuntu"
 
 # List of AWS private key Files
 env.key_filename = os.environ.get("AWS_KEYPATH")
+
+@parallel
+def pip_install(package):
+    sudo('pip install %s' % (package, ))
+
+
 
 @parallel
 def update_node_env():
@@ -113,6 +119,8 @@ def update_database(source_folder="/home/ubuntu/cafi"):
     sudo('cd %s/backend && sudo -u postgres createdb cafi -O cafi' % (source_folder,))
     run('cd %s/backend && ../../virtualenv/bin/python manage.py makemigrations --noinput' % (source_folder,))
     run('cd %s/backend && ../../virtualenv/bin/python manage.py migrate --noinput' % (source_folder,))
+    run('cd %s/backend && ../../virtualenv/bin/python manage.py loaddata risk/fixtures/risks.json' % (source_folder,))
+
 
 @parallel
 def start_django(source_folder="/home/ubuntu/cafi"):
@@ -121,30 +129,42 @@ def start_django(source_folder="/home/ubuntu/cafi"):
         'runserver 0.0.0.0:8080 >&/home/ubuntu/log < /home/ubuntu/log &' % (source_folder, source_folder), pty=False)
 
 @parallel
-def start_redis(source_folder="/home/ubuntu/cafi"):
-    # kill_port(8080)
-    sudo('service redis start')
+def restart_redis(source_folder="/home/ubuntu/cafi"):
+    kill_all('redis-server')
+    sudo('/etc/init.d/redis-server start')
 
 
 @parallel
 def start_celery(source_folder="/home/ubuntu/cafi"):
-    # kill_port(8080)
-    run('source /home/ubuntu/virtualenv/bin/activate && cd %s/backend && nohup celery -A settings worker -l INFO --concurrency=1 >&/home/ubuntu/log.celery < /home/ubuntu/log.celery &' % (source_folder, ), pty=False)
+    put('./supervisord.conf', '%s/backend/supervisord.conf' % (source_folder, ))
+    run('cd /home/ubuntu/cafi/backend && supervisord -c supervisord.conf')
 
 
 @parallel
+def stop_celery_workers(source_folder="/home/ubuntu/cafi"):
+    run('cd %s/backend && supervisorctl -c supervisord.conf stop celeryd' %(source_folder, ))
+    run('cd %s/backend && supervisorctl -c supervisord.conf shutdown' %(source_folder, ))
+
+
 def kill_port(port=8080):
     with settings(warn_only=True):
         run('sudo kill $(lsof -t -i:%s) ' % (port, ))
 
+def kill_all(process):
+    with settings(warn_only=True):
+        sudo('killall %s' % (process, ))
+
 @parallel
 def deploy(source_folder="/home/ubuntu/cafi"):
+    stop_celery_workers(source_folder)
     update_code(source_folder)
     update_virtualenv(source_folder)
     update_settings(source_folder)
     update_angular(source_folder)
     update_database(source_folder)
     start_django(source_folder)
+    restart_redis(source_folder)
+    start_celery(source_folder)
 
 
 def visudo(user_name):
