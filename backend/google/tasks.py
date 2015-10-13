@@ -19,9 +19,9 @@ def get_lock(key):
     return False
 
 def set_lock(key):
-    t = random.random()+0.5
+    t = random.random()*1000 + 100
     print "wait a moment %s" % t
-    cache.set(key, 1, t)
+    cache.set(key, 1, px=t)
 
 class GeocodingTest():
     def __init__(self):

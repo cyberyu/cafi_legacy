@@ -19,7 +19,7 @@ projectControllers.controller('ProjectBoardCtrl', function($scope,$rootScope,uiG
       file.upload.then(function (response) {
         $timeout(function () {
           //file.result = response.data;
-          $scope.addresses = $scope.addresses.concat(response.data.items);
+          $scope.addresses = response.data.items.concat($scope.addresses);
         });
       }, function (response) {
         if (response.status > 0)
