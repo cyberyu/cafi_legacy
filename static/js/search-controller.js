@@ -6,10 +6,12 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
                                                            $http,$timeout,$interval, Upload, popupService,
                                                            Project, Search, Gdoc,GeoSearch){
 
-  Project.get({projectId:$routeParams.id}, function(data){
-    $scope.currentProject = data;
+  //Project.get({projectId:$routeParams.id}, function(data){
+  //  $scope.currentProject = data;
+  //});
 
-  });
+  $scope.currentProject = {};
+  $scope.currentProject.id = $routeParams.id;
 
 
 

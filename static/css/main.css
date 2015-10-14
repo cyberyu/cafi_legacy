@@ -239,4 +239,5 @@ word-wrap: break-word;
 
 #gsearch-input {
     width: 600px;
+    margin: auto;
 }
