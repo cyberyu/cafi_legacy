@@ -1,8 +1,13 @@
-<nav mfb-menu position="bl" effect="zoomin" label="New Search"
-     active-icon="ion-edit" resting-icon="ion-plus-round"
-     toggling-method="hover" ng-click="openModal({mode:edit})">
-  <!--<button mfb-button icon="paper-airplane" label="menu item"></button>-->
-</nav>
+<div id="gsearch-box" class="text-center">
+  <form class="form-inline">
+    <div class="form-group col-lg-9">
+      <input id="gsearch-input" type="text" class="form-control" ng-model="search.string" placeholder="something"/>
+      <button class="btn btn-primary" ng-click="submitSearch()">search</button>
+    </div>
+  </form>
+</div>
+
+
 <div class="row">
   <div class="col-lg-12">
     <h1 class="page-header">Customized Search</h1>
