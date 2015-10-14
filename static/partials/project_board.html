@@ -4,13 +4,14 @@
 
 <tabset>
   <tab heading="Geo Search">
-    <ng-include src="'/static/partials/_geosearch.html'"></ng-include>
+    <div ng-controller="GeoSearchCtrl">
+      <ng-include src="'/static/partials/_geosearch.html'"></ng-include>
+    </div>
   </tab>
   <tab heading="Google Search">
-    <ng-include src="'/static/partials/_gsearch.html'"></ng-include>
+    <div ng-controller="GoogleSearchCtrl">
+      <ng-include src="'/static/partials/_gsearch.html'"></ng-include>
+    </div>
   </tab>
 </tabset>
-
-
-
 
