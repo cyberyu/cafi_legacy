@@ -4,6 +4,10 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
                                                            Search, Gdoc,GeoSearch){
 
   $scope.project_id = $routeParams.id;
+  $scope.currentProject = {};
+  $scope.currentProject.id = $routeParams.id;
+
+  console.log($scope.project_id)
 
   $scope.uploadFiles = function(file, errFiles) {
     $scope.f = file;

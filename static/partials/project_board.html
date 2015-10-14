@@ -1,17 +1,19 @@
 <ol class="breadcrumb">
   <li><a href="/#/projects">Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
 </ol>
 
-<tabset>
-  <tab heading="Geo Search">
-    <div ng-controller="GeoSearchCtrl">
-      <ng-include src="'/static/partials/_geosearch.html'"></ng-include>
-    </div>
-  </tab>
-  <tab heading="Google Search">
-    <div ng-controller="GoogleSearchCtrl">
-      <ng-include src="'/static/partials/_gsearch.html'"></ng-include>
-    </div>
-  </tab>
-</tabset>
+<!--<tabset>-->
+  <!--<tab heading="Geo Search">-->
+    <!--<div ng-controller="GeoSearchCtrl">-->
+      <!--<ng-include src="'/static/partials/_geosearch.html'"></ng-include>-->
+    <!--</div>-->
+  <!--</tab>-->
+  <!--<tab heading="Google Search">-->
+    <!--<div ng-controller="GoogleSearchCtrl">-->
+      <!--<ng-include src="'/static/partials/_gsearch.html'"></ng-include>-->
+    <!--</div>-->
+  <!--</tab>-->
+<!--</tabset>-->
 
