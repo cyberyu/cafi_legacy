@@ -157,8 +157,8 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.deleteGdoc = function (gdoc) {
-    gdoc.$delete().then(function () {
-      $scope.gdocs.splice($scope.gdocs.indexOf(gdoc), 1);
+    Gdoc.delete({"gdocId": gdoc.id}).$promise.then(function(){
+      $scope.displaySearchDocs.splice($scope.displaySearchDocs.indexOf(gdoc), 1);
     });
   };
 
