@@ -30,9 +30,22 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $http.get('/api/gsearch').then(function(response){
     $scope.displaySearch = response.data.results[0];
-    $scope.displaySearchDocs = Gdoc.get({search:$scope.displaySearch.id});
+    Gdoc.get({search:$scope.displaySearch.id}, 1).$promise.then(function(data){
+      $scope.displaySearchDocs = data.results;
+      $scope.total = data.count;
+      $scope.currentPage = 1;
+    });
   });
 
+  $scope.getGdocs = function(search, page) {
+    Gdoc.query({"search": search.id, "page": page}).$promise.then(function (data) {
+      $scope.displaySearchDocs = data.results;
+      $scope.total = data.count;
+      $scope.currentPage = page;
+    });
+  };
+
+  $scope.currentPage = 1;
   $scope.currentSearch = null;
   $scope.search = {};
   $scope.newSearches = [];
@@ -60,9 +73,14 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.gsearchOptions = {};
+
   $scope.setDisplaySearch = function(search){
-    $scope.displaySearchDocs = Gdoc.get({search:search.id});
-    $scope.displaySearch = search;
+    Gdoc.get({search:search.id}).$promise.then(function(data){
+      $scope.displaySearchDocs = data.results;
+      $scope.total = data.count;
+      $scope.currentPage = 1;
+      $scope.displaySearch = search;
+    });
   };
 
   $http.get('/api/risks').then(function(response){
@@ -262,8 +280,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     return result
   };
 
+  $scope.review = function(doc){
+    alert('aa');
+  };
+
   $scope.listSearches();
-  $scope.gdocs = Gdoc.query();
+  //$scope.getGdocs($scope.displaySearch, 1);
+
 }).controller('modal', function($scope,$rootScope){
   $scope.modalClass = 'closed';
   $rootScope.$on('openModal', function(event, data) {
