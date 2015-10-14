@@ -3,10 +3,10 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
     update: {method: 'PUT'},
     get: {
       method: 'GET',
-      isArray: true
-      //transformResponse: function(data) {
-      //    return angular.fromJson(data).results[0];
-      //}
+      isArray: false,
+      transformResponse: function(data) {
+          return angular.fromJson(data);
+      }
     },
     query: {
       method: 'GET',

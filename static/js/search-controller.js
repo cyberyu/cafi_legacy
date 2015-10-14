@@ -6,6 +6,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
                                                            $http,$timeout,$interval, Upload, popupService,
                                                            Project, Search, Gdoc,GeoSearch){
 
+  Project.get({projectId:$routeParams.id}, function(data){
+    $scope.currentProject = data;
+
+  });
+
+
+
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
@@ -18,7 +25,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   });
 
-  $scope.currentProject = Project.get({id:$routeParams.id});
 
   $http.get('/api/gsearch').then(function(response){
     $scope.displaySearch = response.data.results[0];
@@ -26,6 +32,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   });
 
   $scope.currentSearch = null;
+  $scope.search = {};
   $scope.newSearches = [];
   $scope.progressBool = false;
   $scope.editSearchNameBool = false;
@@ -38,6 +45,17 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.searchedStrings = [];
   $scope.counter = 0;
+
+  $scope.submitSearch = function(){
+    var oneSearch = {
+      project: $scope.currentProject.id,
+      string: $scope.search.string
+    };
+    $http.post('/api/gsearch', oneSearch)
+      .success(function(data) {
+        $scope.searches.push(data);
+      });
+  };
 
   $scope.gsearchOptions = {};
   $scope.setDisplaySearch = function(search){
