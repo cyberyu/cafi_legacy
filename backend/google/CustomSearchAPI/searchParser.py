@@ -2,6 +2,8 @@ __author__ = 'tanmoy'
 
 from pyparsing import *
 from sets import Set
+import re
+
 #import pickle
 
 class SearchQueryParser:
@@ -18,6 +20,7 @@ class SearchQueryParser:
             #add more if you want to later
         }
         self._parser = self.parser()
+        self.query = ""
         self.parsed = []
         self.genString = "" #generating string back from Data Structure
         self.keywords = set()
@@ -42,7 +45,9 @@ class SearchQueryParser:
 
         opWord = Group(Combine(Word(alphanums) + Suppress('*'))).setResultsName('wordwildcard') | \
                             Group(Word(alphanums)).setResultsName('word')
+
         opQuotesContent = Forward()
+
         opQuotesContent << (
             (opWord + opQuotesContent) | opWord
         )
@@ -50,6 +55,7 @@ class SearchQueryParser:
         opQuotes = Group(
             Suppress('"') + opQuotesContent + Suppress('"')
         ).setResultsName("quotes") | opWord
+
 
         opParenthesis = Group(
             (Suppress("(") + opOr + Suppress(")"))
@@ -117,6 +123,7 @@ class SearchQueryParser:
         self.genString += "\""
         return self.GetQuotes(" ".join(search_terms), r)
 
+
     def generateWord(self, argument):
         self.genString += " "+argument[0]
         return self.GetWord(argument[0])
@@ -140,17 +147,31 @@ class SearchQueryParser:
         self.keywords.update([search_string])
         return Set()
 
+
     def GetNot(self, not_set):
         return Set().difference(not_set)
 
-    def Parse(self, query):
+    def Parse(self, query): # Return Final list of keywords
         self.genString=""
-        self.parsed = self._parser(query)[0]
-        self.generate(self._parser(query)[0])
-        self.keywordsFinal= self.keywords
-        self.keywordsFinal.difference_update(self.keywordsRemove)
-        self.keywordsFinal = list(self.keywordsFinal) #Converting it to a list
-        return self.parsed,self.genString
+        query = re.sub('[^A-Za-z0-9|& \"*()]+', '', query)
+        self.query = query
+        try:
+            self.parsed = self._parser(query)[0]
+            self.generate(self._parser(query)[0])
+            self.keywordsFinal= self.keywords
+            self.keywordsFinal.difference_update(self.keywordsRemove)
+            self.keywordsFinal = list(self.keywordsFinal) #Converting it to a list
+            return self.keywordsFinal
+        except Exception:
+            query = ' | '.join(re.compile(r"\w{4,}").findall(query))
+            #print query
+            self.parsed = self._parser(query)[0]
+            self.generate(self._parser(query)[0])
+            self.keywordsFinal= self.keywords
+            self.keywordsFinal.difference_update(self.keywordsRemove)
+            self.keywordsFinal = list(self.keywordsFinal) #Converting it to a list
+            return self.keywordsFinal
+
 
 class ParserTest():
     """Tests the parser with some search queries
@@ -162,16 +183,18 @@ class ParserTest():
 
         query = SearchQueryParser()
         #item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"|\"teaming agreement\"|\"memorandom of understanding\"| illegal | regulation* | defandant)"
-        item = "(\"joint venture\" | \"jv\" | \"mou\" | \"memorandum of understanding\" | \"strategic alliance\" | \"teaming agreement\" | \"strategic partner*\" | \"partner\" | \"supplier\" | \"provider\" | \"agreement\" | \"contract\" | \"component\" | \"subcontract*\" | \"receive\" | \"win*\")&\"Microsoft\""
-        #item = "(\"joint venture\" | hello |\"mou\")&\"Microsoft\""
-
+        #item = "(\"joint venture\" | ( \"jv of honey's\" ) | \"mou\" | \"memorandum of understanding\" | \"strategic alliance\" | \"teaming agreement\" | \"strategic partner*\" | \"partner\" | \"supplier\" | \"provider\" | \"agreement\" | \"contract\" | \"component\" | \"subcontract*\" | \"receive\" | \"win*\" )&\"Microsoft\""
+        item = "((not rain<5 | \"snow\'s\") & cold)"
+        #item = " mcDonald's | kfc"
         print "Input Query:"+item
-        ParsedList,reGengString = query.Parse(item)
+        keywordsFinal = query.Parse(item)
+
         print "Parsed List:",
-        print ParsedList #Parsed List from query
-        print "ReGenerated String:"+reGengString #regenerated string from the parsed list
+        print query.parsed  #Parsed List from query
+        print "ReGenerated String:"+ query.genString    #regenerated string from the parsed list
         print "Keywords Final:",
-        print query.keywordsFinal
+        print keywordsFinal
+
         '''
         ##Use of pickle to serialize a complex list
         pickle.dump(query, file('parsedList.pickle','w'))
@@ -185,5 +208,3 @@ class ParserTest():
 if __name__=='__main__':
     ParserTest()
     print 'Completed'
-
-
