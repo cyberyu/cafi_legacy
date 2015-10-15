@@ -2,6 +2,8 @@ __author__ = 'tanmoy'
 
 from pyparsing import *
 from sets import Set
+import re
+
 #import pickle
 
 class SearchQueryParser:
@@ -18,9 +20,12 @@ class SearchQueryParser:
             #add more if you want to later
         }
         self._parser = self.parser()
+        self.query = ""
         self.parsed = []
         self.genString = "" #generating string back from Data Structure
-        self.keywords =[]
+        self.keywords = set()
+        self.keywordsRemove = set() #remove keywords which appear alone in a quotation
+        self.keywordsFinal = set() #Add the variable to display keywords maintaining the inherent structure of phrase
 
     def parser(self):
         """
@@ -40,7 +45,9 @@ class SearchQueryParser:
 
         opWord = Group(Combine(Word(alphanums) + Suppress('*'))).setResultsName('wordwildcard') | \
                             Group(Word(alphanums)).setResultsName('word')
+
         opQuotesContent = Forward()
+
         opQuotesContent << (
             (opWord + opQuotesContent) | opWord
         )
@@ -48,6 +55,7 @@ class SearchQueryParser:
         opQuotes = Group(
             Suppress('"') + opQuotesContent + Suppress('"')
         ).setResultsName("quotes") | opWord
+
 
         opParenthesis = Group(
             (Suppress("(") + opOr + Suppress(")"))
@@ -73,91 +81,97 @@ class SearchQueryParser:
 
     def generateAnd(self, argument):
         x = self.generate(argument[0])
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
         self.genString += " & "
         y = self.generate(argument[1])
-        if len(argument[1])==1:
-            self.keywords.extend(argument[1])
         return x.intersection(y)
 
     def generateOr(self, argument):
 
         x = self.generate(argument[0])
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
         self.genString += " |"
         y = self.generate(argument[1])
-        if len(argument[1])==1:
-            self.keywords.extend(argument[1])
         return x.union(y)
 
     def generateNot(self, argument):
-        self.genString += "Not "
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
+        self.genString += "not "
+        self.keywordsRemove.update(argument[0])
         return self.GetNot(self.generate(argument[0]))
 
     def generateParenthesis(self, argument):
         self.genString += "("
         x = self.generate(argument[0])
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
         self.genString += ")"
         return x
 
     def generateQuotes(self, argument):
-        """generate quoted strings
-
-        It does an 'and' on the indidual search terms
+        """ generate quoted strings
+            It does an 'and' on the indidual search terms
         """
         r = Set()
         search_terms = []
         self.genString += "\""
+
         for item in argument:
             search_terms.append(item[0])
             if len(r) == 0:
                 r = self.generate(item)
             else:
                 r = r.intersection(self.generate(item))
+            if len(argument)>1:
+                self.keywordsRemove.update(item)
 
         self.genString += "\""
-        self.keywords .extend([" ".join(search_terms)])
-        return self.GetQuotes(' '.join(search_terms), r)
-        #' '.join(search_terms)
+        return self.GetQuotes(" ".join(search_terms), r)
+
 
     def generateWord(self, argument):
         self.genString += " "+argument[0]
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
         return self.GetWord(argument[0])
 
     def generateWordWildcard(self, argument):
         self.genString += " "+ argument[0]+'* '
-        if len(argument[0])==1:
-            self.keywords.extend(argument[0])
         return self.GetWordWildcard(argument[0])
 
     def generate(self, argument):
         return self._methods[argument.getName()](argument)
 
     def GetWord(self, word):
+        self.keywords.update([word])
         return Set()
 
     def GetWordWildcard(self, word):
+        self.keywords.update([word])
         return Set()
 
     def GetQuotes(self, search_string, tmp_result):
+        self.keywords.update([search_string])
         return Set()
+
 
     def GetNot(self, not_set):
         return Set().difference(not_set)
 
-    def Parse(self, query):
+    def Parse(self, query): # Return Final list of keywords
         self.genString=""
-        self.parsed = self._parser(query)[0]
-        self.generate(self._parser(query)[0])
-        return self.parsed,self.genString
+        query = re.sub('[^A-Za-z0-9|& \"*()]+', '', query)
+        self.query = query
+        try:
+            self.parsed = self._parser(query)[0]
+            self.generate(self._parser(query)[0])
+            self.keywordsFinal= self.keywords
+            self.keywordsFinal.difference_update(self.keywordsRemove)
+            self.keywordsFinal = list(self.keywordsFinal) #Converting it to a list
+            return self.keywordsFinal
+        except Exception:
+            query = ' | '.join(re.compile(r"\w{4,}").findall(query))
+            #print query
+            self.parsed = self._parser(query)[0]
+            self.generate(self._parser(query)[0])
+            self.keywordsFinal= self.keywords
+            self.keywordsFinal.difference_update(self.keywordsRemove)
+            self.keywordsFinal = list(self.keywordsFinal) #Converting it to a list
+            return self.keywordsFinal
+
 
 class ParserTest():
     """Tests the parser with some search queries
@@ -168,14 +182,19 @@ class ParserTest():
     def Test(self):
 
         query = SearchQueryParser()
-        item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"|\"teaming agreement\"|\"memorandom of understanding\"| illegal | regulation* | defandant)"
+        #item = "(lawsuit* | court* | violation & greed failure |\"joint venture\"|\"teaming agreement\"|\"memorandom of understanding\"| illegal | regulation* | defandant)"
+        #item = "(\"joint venture\" | ( \"jv of honey's\" ) | \"mou\" | \"memorandum of understanding\" | \"strategic alliance\" | \"teaming agreement\" | \"strategic partner*\" | \"partner\" | \"supplier\" | \"provider\" | \"agreement\" | \"contract\" | \"component\" | \"subcontract*\" | \"receive\" | \"win*\" )&\"Microsoft\""
+        item = "((not rain<5 | \"snow\'s\") & cold)"
+        #item = " mcDonald's | kfc"
         print "Input Query:"+item
-        ParsedList,reGengString = query.Parse(item)
+        keywordsFinal = query.Parse(item)
+
         print "Parsed List:",
-        print ParsedList #Parsed List from query
-        print "ReGenerated String:"+reGengString #regenerated string from the parsed list
-        print "Keywords:",
-        print query.keywords
+        print query.parsed  #Parsed List from query
+        print "ReGenerated String:"+ query.genString    #regenerated string from the parsed list
+        print "Keywords Final:",
+        print keywordsFinal
+
         '''
         ##Use of pickle to serialize a complex list
         pickle.dump(query, file('parsedList.pickle','w'))
@@ -189,5 +208,3 @@ class ParserTest():
 if __name__=='__main__':
     ParserTest()
     print 'Completed'
-
-
