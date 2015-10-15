@@ -48,10 +48,20 @@ class HTMLExtractor :
 
                 return text
             elif extractortype in self.extractorFormat:
-                extractor = Extractor(extractor=extractortype, url=url)
-                extracted_text = extractor.getText()
+                try:
+                    extractor = Extractor(extractor=extractortype, url=url)
+                    extracted_text = extractor.getText()
 
-                return extracted_text
+                    return extracted_text
+                except Exception:
+                    response1 = alchemyapi.text('url', url)
+                    #print json.dumps(response1,indent=1)
+                    if response1['status'] == 'OK':
+                        text = unicode(response1['text'].strip())
+                    else :
+                        text =  "Empty"
+                    return text
+
             else :
                 return "Extractor Type Not Supported"
         except Exception:
