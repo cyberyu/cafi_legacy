@@ -3,7 +3,7 @@
  */
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
-                                                           $http,$timeout,$interval, Upload, popupService,
+                                                           $http,$timeout,$interval, $uibModal, Upload, popupService,
                                                            Project, Search, Gdoc,GeoSearch){
 
   //Project.get({projectId:$routeParams.id}, function(data){
@@ -280,6 +280,40 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     return result
   };
 
+  // modal stuff
+  $scope.open = function (size, doc) {
+
+    var modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: '/static/partials/_gdoc.html',
+      controller: 'gDocCtrl',
+      size: size,
+      scope: $scope,
+      resolve: {
+        currentDoc: function(){
+          $scope.currentDoc = doc;
+          return $scope.currentDoc;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      console.log('---')
+    }, function () {
+      console.log('Modal dismissed at: ' + new Date());
+    });
+  };
+
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+  /////
+
   $scope.review = function(doc){
     alert('aa');
   };
@@ -294,4 +328,5 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     $scope.modalClass = 'open';
   });
 });
+
 
