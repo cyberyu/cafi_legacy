@@ -85,6 +85,24 @@ def do_search(search, string):
         obj.text = CheckLink(doc.get('link'),"DefaultExtractor").parsed_text #calls Boilerpipe function if its an html,otherwise tika
         obj.save()
 
+"""
+Types of extractors for tasks.py --> do_search --> obj.text
+Just replace DefaultExtractor with type you wish
+Boilerpipe:
+
+    * DefaultExtractor
+    * ArticleExtractor
+    * ArticleSentencesExtractor
+    * KeepEverythingExtractor
+    * KeepEverythingWithMinKWordsExtractor # Not supported anymore
+    * LargestContentExtractor
+    * NumWordsRulesExtractor
+    * CanolaExtractor
+
+Alchemy API
+    *Alchemy
+"""
+
 
 @shared_task(default_retry_delay = 20, max_retries = 3)
 def do_geo_search(id, address):
