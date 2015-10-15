@@ -35,7 +35,7 @@ class TextDuplicationTestCase(TestCase):
         cls._es = es
         actions = []
         for i,data in enumerate(data_to_insert):
-            actions.append({'_id':i, '_source':{'data':data}})
+            actions.append({'_id':i, '_source':{'text':data}})
         cls._index_name = "textsimilaritytest"
         cls._doc_type_name = "newsgroup"
         rv = bulk(es,actions,stats_only=True,index=cls._index_name , doc_type=cls._doc_type_name, refresh=True) #default action is 'index'
@@ -48,15 +48,15 @@ class TextDuplicationTestCase(TestCase):
         test text_util.text_similarity_scores() on a synthetic dataset
         """
         #test whether duplications are identified. 
-        rv_mat = text_similarity_scores(index = self._index_name, doc_type = self._doc_type_name, mlt_fields=['data'])
+        rv_mat = text_similarity_scores(index = self._index_name, doc_type = self._doc_type_name, mlt_fields=['text'])
         self.assertTrue((np.abs(rv_mat.row-rv_mat.col)== self._data_size).all())
         return 
     
     def test_similarity_score_by_content(self):
         es = self._es
         rv = es.get(index=self._index_name, doc_type=self._doc_type_name, id = 0)
-        like_text = rv['_source']['data']
-        r_id, _ = text_similarity_score_by_content(index=self._index_name, doc_type=self._doc_type_name, mlt_fields=['data'], content=like_text)
+        like_text = rv['_source']['text']
+        r_id, _ = text_similarity_score_by_content(index=self._index_name, doc_type=self._doc_type_name, content=like_text, fields=['text'], stop_words=[u"is",u"a"])
         self.assertEqual(r_id, 0)
         return 
 
@@ -64,7 +64,8 @@ class TextDuplicationTestCase(TestCase):
         es = self._es
         rv = es.get(index=self._index_name, doc_type=self._doc_type_name, id = 0)
         obj_json = json.dumps(rv['_source'])
-        r_id, _ = text_similarity_score_by_json(index=self._index_name, doc_type=self._doc_type_name, obj_json=obj_json, stop_words=[u"is",u"a"])
+        new_obj_json = text_similarity_score_by_json(index=self._index_name, doc_type=self._doc_type_name, obj_json=obj_json, fields=['text'], stop_words=[u"is",u"a"])
+        r_id = json.loads(new_obj_json)["similar_to"]
         self.assertEqual(r_id, 0)
         return                                         
                                                 
