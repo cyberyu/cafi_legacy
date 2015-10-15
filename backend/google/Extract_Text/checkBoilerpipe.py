@@ -40,7 +40,7 @@ class HTMLExtractor :
         try:
             if extractortype == 'Alchemy':
                 response1 = alchemyapi.text('url', url)
-                print json.dumps(response1,indent=1)
+                #print json.dumps(response1,indent=1)
                 if response1['status'] == 'OK':
                     text = unicode(response1['text'].strip())
                 else :
