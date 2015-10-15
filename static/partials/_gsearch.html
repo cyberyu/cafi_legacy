@@ -56,11 +56,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="gdoc in displayedGdocs">
+            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">
               <td>
                 <a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>
               </td>
-              <td>{{gdoc.title}}</td>
+              <td><a href="" ng-click="open('lg', gdoc)"> {{gdoc.title}}</a></td>
               <td>{{gdoc.snippet}}</td>
               <td><a href="{{gdoc.url}}">link</a></td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)"><i class="fa fa-close"></i></a></td>
@@ -86,6 +86,14 @@
     </div>
   </div>
 </div>
+
+<button type="button" class="btn btn-default" ng-click="open('lg')">Open me!</button>
+
+<!--<nav mfb-menu position="bl" effect="zoomin" label="New Search"-->
+     <!--active-icon="ion-edit" resting-icon="ion-plus-round"-->
+     <!--toggling-method="hover" ng-click="openModal({mode:edit})">-->
+  <!--&lt;!&ndash;<button mfb-button icon="paper-airplane" label="menu item"></button>&ndash;&gt;-->
+<!--</nav>-->
 
 <!--<div ng-controller="modal" class="{{modalClass}}"-->
      <!--ng-click="modalClass = 'closed'">-->

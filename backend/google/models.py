@@ -5,8 +5,17 @@ from engagement.models import Project
 
 
 class Search(models.Model):
-    project = models.ForeignKey(Project, related_name="searches") 
+    STATUS_CHOICES = (
+        (0, ''),
+        (1, 'submitted'),
+        (2, 'in processing'),
+        (3, 'done'),
+    )
+
+    project = models.ForeignKey(Project, related_name="searches")
     string = models.CharField(max_length=1024) # search string
+    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -14,6 +23,14 @@ class Search(models.Model):
 
 
 class SearchResult(models.Model):
+    LABEL_CHOICES = (
+        (0, ''),
+        (1, 'junk'),
+        (2, 'risk'),
+        (3, 'biz'),
+    )
+
+
     search = models.ForeignKey(Search, related_name="results")
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False)
@@ -22,6 +39,9 @@ class SearchResult(models.Model):
 
     text = models.TextField(blank=True, null=True)
     doc_type = models.CharField(blank=True, max_length=20)
+
+    label = models.IntegerField(choices=LABEL_CHOICES, default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
