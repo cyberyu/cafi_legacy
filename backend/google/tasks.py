@@ -82,7 +82,7 @@ def do_search(search, string):
         obj.url = doc.get('link')
         obj.rank = start_val + i
         #obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
-        obj.text = CheckLink(doc.get('link')).parsed_text
+        obj.text = CheckLink(doc.get('link'),"DefaultExtractor").parsed_text #calls Boilerpipe function if its an html,otherwise tika
         obj.save()
 
 
