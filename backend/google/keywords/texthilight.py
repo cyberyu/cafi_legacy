@@ -15,32 +15,23 @@ class Highlighter:
             kwfinal = self.union(kwlist, namevariations)
             return self.addcolor(text,kwfinal)
         else:
-            kwlist = self.parseSearchString(searchstr)
             return self.addcolor(text,kwlist)
 
     def addcolor (self, text, kwlist):
         regmatch = '(\\b' + '\\b)|(\\b'.join(kwlist) + '\\b)'
         regex = re.compile(regmatch, re.I)
 
-        i=0; output="<html>"
+        i=0; output=""
 
         if len(regex.findall(text))>1:  # when there is matched keywords, add color
-            i = 0; output = "<html>"
+            i = 0; output = ""
             for m in regex.finditer(text):
                 output += "".join([text[i:m.start()],
                                    "<strong><span style='color:%s'>" % self.COLOR[m.lastindex % 5],
                                    text[m.start():m.end()],
                                    "</span></strong>"])
                 i = m.end()
-            highlighted_text = "".join([output, text[m.end():], "</html>"])
-            # for m in regex.finditer(text):
-            #     output += "".join([text[i:m.start()],
-            #             "<strong><span style='color:%s'>" % self.COLOR[m.lastindex % 5],
-            #                       text[m.start():m.end()],
-            #                       "</span></strong>"])
-            #
-            # i=m.end()
-            # highlighted_text = "".join([output, text[m.end():],  "</html>"])
+            highlighted_text = "".join([output, text[m.end():]])
         else:  # if there is no matched keyword, output the same text
             highlighted_text = text
 
@@ -48,8 +39,7 @@ class Highlighter:
 
     def parseSearchString(self, searchstr):
         query = SearchQueryParser()
-        query.Parse(searchstr)
-        return query.keywords
+        return query.Parse(searchstr)
 
     def union(self,a,b):
         return list(set(a) | set(b))
@@ -59,9 +49,11 @@ if __name__ == "__main__":
 
     h = Highlighter()
     istring = "(\"joint venture\")&\"Deloitte\""
+    # istring = 'Deloitte'
     #istring = "(\"Lisp Perl Python\")&\"Deloitte\""
     newqstr = istring[:istring.rfind("&")]
     newqstr = newqstr.replace('\"','')
+    # newqstr = istring
 
 
     hiqueryStr= newqstr
