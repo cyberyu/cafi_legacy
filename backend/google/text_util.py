@@ -39,7 +39,7 @@ def text_similarity_scores(index, doc_type, **kwargs):
 def text_similarity_score_by_id(index, doc_type, id, **kwargs):
     """
     Find the document most like the given id  
-    Return: (id, score) if any match is found; otherwise, (-1, -Inf)
+    Return: (id, score) if any match is found; otherwise, (-1, -np.inf)
     """
 
     _build_default(kwargs)
@@ -51,14 +51,14 @@ def text_similarity_score_by_id(index, doc_type, id, **kwargs):
         score =  rv['hits']['hits'][0]['_score']
         return (j, score)
     else:
-        return (-1, -Inf)
+        return (-1, -np.inf)
 
 def text_similarity_score_by_json(index, doc_type, obj_json, **kwargs):
     """
     Find the document most like the given artificial document (json). 
     Example Usage: 
         new_obj_json = text_similarity_score_by_json(index="myindex", doc_type="mytype", obj_json='{"text": "find me"}', fields=['text'], stop_words=[u"is",u"a"])
-    Return: a new json object with two extra key "similar_to" and "similarity_score" (which are -1 and -Inf if no match is found) 
+    Return: a new json object with two extra key "similar_to" and "similarity_score" (which are -1 and -np.inf if no match is found) 
     """
     _build_default(kwargs)
     es = Elasticsearch()
@@ -76,7 +76,7 @@ def text_similarity_score_by_json(index, doc_type, obj_json, **kwargs):
         r_score = results[0]['_score']
     else:
         r_id = -1
-        r_score = -Inf
+        r_score = -np.inf
     obj_dict["similar_to"] = r_id
     obj_dict["similarity_score"] = r_score
     return json.dumps(obj_dict)
@@ -87,7 +87,7 @@ def text_similarity_score_by_content(index, doc_type, content, **kwargs):
     Example Usage: 
           id, score = text_similarity_score_by_content(index="myindex", doc_type="mytype", content=u"search me", fields=['text'], stop_words=[u"is",u"a"])
 
-    Return: (id, score) if any match is found; otherwise, (-1, -Inf)
+    Return: (id, score) if any match is found; otherwise, (-1, -np.inf)
     """
 
     _build_default(kwargs)
@@ -103,5 +103,5 @@ def text_similarity_score_by_content(index, doc_type, content, **kwargs):
     if len(results) > 0: 
         return (int(results[0]['_id']),  results[0]['_score'])
     else:
-        return (-1, -Inf)
+        return (-1, -np.inf)
 
