@@ -9,7 +9,7 @@ import string
 #from gensim.parsing.preprocessing import STOPWORDS
 from TikaExtractCookie import DocumentConvertor
 
-from checkAlchemy_Tika import CheckLink #Refer to the code Input Url and Output Noisy Text
+#from checkAlchemy_Tika import CheckLink #Refer to the code Input Url and Output Noisy Text
 
 """
 Some functions are written for later review cases.
@@ -90,7 +90,8 @@ if __name__ == "__main__": # For testcases
     url = "http://www.nytimes.com/2015/10/13/business/for-profit-colleges-accused-of-fraud-still-receive-us-funds.html?hp&action=click&pgtype=Homepage&module=first-column-region&region=top-news&WT.nav=top-news"
     #url ="https://rstudio-pubs-static.s3.amazonaws.com/79360_850b2a69980c4488b1db95987a24867a.html"
     #url ="http://www.shareholder.com/visitors/activeedgardoc.cfm?f=xls&companyid=AAPL&id=10916067"
-    text = CheckLink(url).parsed_text
+    #text = CheckLink(url).parsed_text
+    text = "Hello..."
     #text = DocumentConvertor("Path").parsed_json['content']
     clean_Text = CleanText(text).clean_text
     """
