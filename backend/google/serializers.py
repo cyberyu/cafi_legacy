@@ -16,22 +16,22 @@ class SearchResultSerializer(serializers.ModelSerializer):
         model = SearchResult
 
     def get_hltitle(self, obj):
-        # highlighter = Highlighter()
-        # istring = obj.search.string
-        # newqstr = istring[:istring.rfind("&")]
-        # newqstr = newqstr.replace('\"','')
-        # hiqueryStr= newqstr
-        # return highlighter.highlight(obj.title,hiqueryStr)
-        return obj.title
+        highlighter = Highlighter()
+        istring = obj.search.string
+        newqstr = istring[:istring.rfind("&")]
+        newqstr = newqstr.replace('\"','')
+        hiqueryStr= newqstr
+        return highlighter.highlight(obj.title,hiqueryStr)
+        # return obj.title
 
     def get_hlsnippet(self, obj):
-        # highlighter = Highlighter()
-        # istring = obj.search.string
-        # newqstr = istring[:istring.rfind("&")]
-        # newqstr = newqstr.replace('\"','')
-        # hiqueryStr= newqstr
-        # return highlighter.highlight(obj.snippet,hiqueryStr)
-        return obj.snippet
+        highlighter = Highlighter()
+        istring = obj.search.string
+        newqstr = istring[:istring.rfind("&")]
+        newqstr = newqstr.replace('\"','')
+        hiqueryStr= newqstr
+        return highlighter.highlight(obj.snippet,hiqueryStr)
+        # return obj.snippet
 
 
 class GeoSearchSerializer(serializers.ModelSerializer):

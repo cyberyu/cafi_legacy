@@ -37,7 +37,7 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     serializer_class = SearchResultSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('search',)
+    filter_fields = ('search','label')
 
     def get_queryset(self):
         queryset = SearchResult.objects.all()
