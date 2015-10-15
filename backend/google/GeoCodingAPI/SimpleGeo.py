@@ -10,7 +10,8 @@ import json
 
 class GeocodingTest():
     def __init__(self):
-        self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
+        #self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
+        self.key = 'AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00'
         self.client = googlemaps.Client(self.key)
 
     def test_simple_geocode(self,query):
@@ -61,4 +62,4 @@ class GeocodingTest():
 
 query1 = GeocodingTest()
 #Examples :
-query1.test_simple_geocode('1600 Amphitheatre Parkway, Mountain View, CA')
+query1.test_simple_geocode('PO Box 11365-171, Ferdowsi Avenue')

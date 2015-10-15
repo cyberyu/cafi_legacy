@@ -32,12 +32,18 @@ cafiApp.config(['$routeProvider',
     }).when('/', {
       controller: 'loginCtrl',
       templateUrl: '/static/partials/register.html'
+    }).when('/projects/:id/google', {
+      controller: 'GoogleSearchCtrl',
+      templateUrl: '/static/partials/_gsearch.html'
+    }).when('/projects/:id/geo', {
+      controller: 'GeoSearchCtrl',
+      templateUrl: '/static/partials/_geosearch.html'
     }).when('/projects/:id', {
       controller: 'ProjectBoardCtrl',
       templateUrl: '/static/partials/project_board.html'
     }).otherwise({
       redirectTo: '/projects'
-    });
+    })
   }]).config(function(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
     libraries: 'weather,geometry,visualization'

@@ -232,3 +232,18 @@ overflow: hidden;
 max-width: 300px;
 word-wrap: break-word;
 }
+
+#gsearch-box {
+    margin-top: 20px;
+}
+
+#gsearch-input {
+    width: 600px;
+    margin: auto;
+}
+
+.content-container {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
