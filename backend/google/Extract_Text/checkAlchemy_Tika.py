@@ -10,6 +10,8 @@ import requests
 import mechanize
 import re
 import cookielib
+from checkBoilerpipe import HTMLExtractor
+from TextClean import CleanText
 
 #==============================
 browser = mechanize.Browser()
@@ -39,26 +41,30 @@ alchemyapi = AlchemyAPI()
 TIMEOUT = 30
 class CheckLink :
 
-    def __init__(self, url):
+    def __init__(self, url,extractor):
         self.url = url
-        self.parsed_text = self.check(url)
+        self.parsed_text = CleanText(self.check(url,extractor)).clean_text
 
     def get_headers(self,url): #Get the headers
         r = browser.open(url,timeout=TIMEOUT)
         return r.info()
 
-    def check(self, url):
+    def check(self, url,extractor):
         r = self.get_headers(url)
 
         try:
             if "text/html" in r['Content-Type']: # checking if the response content-type is html
                 #print "Parsed by Alchemy.. "
+                """
                 response1 = alchemyapi.text('url', url)
                 #print json.dumps(response1,indent=1)
                 if response1['status'] == 'OK':
                     return unicode(response1['text'].strip())
                 else :
                     return ""
+                """
+                query1 = HTMLExtractor(url,extractor)
+                return query1.parsed_text
             else:
                 #print "Parsed by Tika.. "
                 query1 = TE.DocumentConvertor(url) # using tika as a http service
@@ -69,7 +75,7 @@ class CheckLink :
 
 if __name__ == "__main__":
     url= raw_input("Enter url for check:")
-    query1 = CheckLink(url)
+    query1 = CheckLink(url,"DefaultExtractor")
     if query1.parsed_text == "":
         print "Its empty"
     else:
