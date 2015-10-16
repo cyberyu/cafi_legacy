@@ -76,6 +76,16 @@ class TextDuplicationTestCase(TestCase):
         new_obj_json = text_similarity_score_by_json(index=self._index_name, doc_type=self._doc_type_name, obj_json=obj_json, fields=['text'], stop_words=[u"is",u"a"])
         r_id = json.loads(new_obj_json)["similar_to"]
         self.assertEqual(r_id, 0)
+        return 
+
+    def test_similarity_score_by_json_no_match(self):
+        es = self._es
+        obj_json = json.dumps({'text': "aaaHello aaaWorld"})
+        new_obj_json = text_similarity_score_by_json(index=self._index_name, doc_type=self._doc_type_name, obj_json=obj_json, fields=['text'], stop_words=[u"is",u"a"])
+        r_id = json.loads(new_obj_json)["similar_to"]
+        r_score = json.loads(new_obj_json)["similarity_score"]
+        self.assertEqual(r_id, -1)
+        self.assertEqual(r_score, float('-inf'))
         return                                         
                                                 
     def test_similarity_score_by_id(self):
