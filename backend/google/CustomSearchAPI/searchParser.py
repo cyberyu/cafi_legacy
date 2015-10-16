@@ -186,6 +186,8 @@ class ParserTest():
         #item = "(\"joint venture\" | ( \"jv of honey's\" ) | \"mou\" | \"memorandum of understanding\" | \"strategic alliance\" | \"teaming agreement\" | \"strategic partner*\" | \"partner\" | \"supplier\" | \"provider\" | \"agreement\" | \"contract\" | \"component\" | \"subcontract*\" | \"receive\" | \"win*\" )&\"Microsoft\""
         item = "((not rain<5 | \"snow\'s\") & cold)"
         #item = " mcDonald's | kfc"
+        import sys
+        item = sys.argv[1]
         print "Input Query:"+item
         keywordsFinal = query.Parse(item)
 
