@@ -1,7 +1,6 @@
 from django.db import models
 from jsonfield import JSONField
 
-
 class Company(models.Model):
     name = models.CharField(max_length=200)
     address = models.TextField(blank=True)
