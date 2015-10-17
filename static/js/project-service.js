@@ -32,6 +32,7 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   });
 }).factory('Gdoc', function ($resource) {
   return $resource('/api/gdocs/:gdocId', {gdocId: '@id'}, {
+    update: {method: 'PUT'},
     get: {
       method: 'GET'
       //isArray: false,

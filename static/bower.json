@@ -35,7 +35,8 @@
     "ng-file-upload": "9.0.9",
     "angular-paging": "2.0.0",
     "ng-mfb": "latest",
-    "ionicons": "latest"
+    "ionicons": "latest",
+    "ng-tags-input": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"
