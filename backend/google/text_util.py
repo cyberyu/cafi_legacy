@@ -14,6 +14,18 @@ def _build_default(kwargs):
         kwargs['min_term_freq'] = 0
     return 
 
+def index_text(index, doc_type, obj_json, **kwargs):
+    """
+    Addes or updates the given text(obj_json) into index/doc_type/id. The input obj_json should have "id" and "text"  keys. Other keys in obj_json are left out. 
+    """
+    es = Elasticsearch()
+    obj_dict = json.loads(obj_json)
+    id = obj_dict['id']
+    text = obj_dict['text']
+    body = {"id":id, "text": text}
+    es.index(index=index, doc_type=doc_type, id=id, body=body, **kwargs)
+    
+
 def text_similarity_scores(index, doc_type, **kwargs):
     """
     return a sparse matrix whose (i,j) entry is the similarity score of document i and document j of /index_name/doc_type

@@ -5,7 +5,7 @@ import numpy as np
 from elasticsearch import Elasticsearch
 from sklearn.datasets import fetch_20newsgroups
 from elasticsearch.helpers import bulk, scan
-from text_util import text_similarity_scores, text_similarity_score_by_content, text_similarity_score_by_id, text_similarity_score_by_json
+from text_util import text_similarity_scores, text_similarity_score_by_content, text_similarity_score_by_id, text_similarity_score_by_json, index_text
 
 def random_sample_by_pct(a,pct):
     """
@@ -42,6 +42,18 @@ class TextDuplicationTestCase(TestCase):
         assert(rv[1] == 0)  # assert no failure
         rv = es.search(index=cls._index_name, doc_type=cls._doc_type_name, body={"query":{"match_all":{}}},search_type="count")
         assert(rv['hits']['total'] == len(data_to_insert))
+
+    def test_index_text(self):
+        """
+        test index_text 
+        """
+        text =  "Quotes are real-time for NASDAQ, NYSE.\n  Yahoo! has not reviewed, and in no way endorses the validity of such data. Yahoo! and ThomsonFN shall not be liable for any actions taken in reliance thereon."
+        obj_json = json.dumps({ "id": 3, "title": "IBM: Summary for International Business Machines- Yahoo! Finance", "url": "http://finance.yahoo.com/q?s=IBM", "snippet": "2 days ago ... View the basic IBM stock chart on Yahoo! Finance. Change the date range, chart \ntype and compare International Business Machines against ...", "rank": 2, "text": text, "docType": "", "label": 0, "createdAt": "2015-10-11T21:49:37.797821Z", "search": 1 })
+        index_text(index = self._index_name, doc_type="indextest",obj_json=obj_json)
+        es = self._es
+        rv = es.get(index=self._index_name, doc_type="indextest", id = 3)
+        self.assertEqual(rv['_source']['text'], text)
+        return 
 
     def test_similarity_scores(self):
         """
