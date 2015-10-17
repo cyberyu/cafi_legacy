@@ -4,16 +4,18 @@ from nltk.tag.stanford import StanfordNERTagger
 from nltk import pos_tag
 from nltk.chunk import conlltags2tree
 from nltk.tree import Tree
+from cafi_tokenizer import CAFI_Tokenizer as tkner
 
 class CAFI_NETagger:
 
     def __init__(self):
         # define enviornment variables!
-        import os
-        os.environ['CLASSPATH'] = "/home/shiyu/cafi_main/backend/google/ner/models/"
-        os.environ['STANFORD_MODELS'] = "/home/shiyu/cafi_main/backend/google/ner/models/"
-        java_path = "/home/shiyu/Downloads/jre1.8.0_60/bin/java" # replace this
-        os.environ['JAVAHOME'] = java_path
+        # import os
+        # os.environ['CLASSPATH'] = "/home/shiyu/cafi_main/backend/google/ner/models/"
+        # os.environ['STANFORD_MODELS'] = "/home/shiyu/cafi_main/backend/google/ner/models/"
+        # java_path = "/home/shiyu/Downloads/jre1.8.0_60/bin/java" # replace this
+        # os.environ['JAVAHOME'] = java_path
+
         self.st = StanfordNERTagger('english.muc.7class.nodistsim.crf.ser.gz')
         self.NELIST_PERSON = []
         self.NELIST_ORGANIZATION = []
@@ -75,11 +77,14 @@ class CAFI_NETagger:
         # auto flush
         self.flush()
 
-        tagged = self.st.tag(intext.split())
+        # initialize the tokenizer
+        tk = tkner()
+
+        tagged = self.st.tag(tk.tokenize(intext))
         nes = self.get_continuous_chunks(tagged)
         ett = self.get_entities_str_tag(nes)
         for x,y in ett:
-            print x,y
+            #print x,y
             if y=='PERSON':
                 self.NELIST_PERSON.append(x)
             elif y=='ORGANIZATION':
@@ -112,7 +117,7 @@ class CAFI_NETagger:
 
 if __name__=='__main__':
 
-    # initialize the tagger, which costs IO and memory, each instance only needs to initialize this once
+    #initialize the tagger, which costs IO and memory, each instance only needs to initialize this once
     nt = CAFI_NETagger()
 
     # tag some text
@@ -137,5 +142,22 @@ if __name__=='__main__':
     nt.flush()
 
 
+    long_text = "International Business Machines Corp. dismissed a report stating that massive new layoffs were coming this week for the computing giant. " \
+           "A report in Forbes on Thursday said the company was preparing to cut its workforce by 26%, " \
+           "which would amount to the largest workforce reductions in IBM's history and affect more than 100,000 employees. " \
+           "In an emailed statement, an IBM spokesman reiterated management's comments following its..."
+    nt.get_ne_tags_all(long_text)
+    print nt.get_ne_tags_PERSON()
+    print nt.get_ne_tags_ORGANIZATION()
+    print nt.get_ne_tags_LOCATION()
+    print nt.get_ne_tags_MONEY()
+    nt.flush()
 
-#print ne_dict
+    f = open('/home/shiyu/test1.csv','r')
+    hugetext =  f.readline()
+    nt.get_ne_tags_all(hugetext)
+    print nt.get_ne_tags_PERSON()
+    print nt.get_ne_tags_ORGANIZATION()
+    print nt.get_ne_tags_LOCATION()
+    print nt.get_ne_tags_MONEY()
+    nt.flush()
