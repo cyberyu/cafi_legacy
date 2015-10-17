@@ -3,12 +3,15 @@ from django.contrib import admin
 from django.conf import settings
 
 from rest_framework import routers
+# from rest_framework_extensions.routers import ExtendedSimpleRouter
+
 from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
 from engagement.views import ProjectViewSet
 from risk.views import RiskViewSet, CompanyViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
+
 router.register(r'projects', ProjectViewSet)
 router.register(r'gsearch', SearchViewSet)
 router.register(r'gdocs', SearchResultViewSet)

@@ -1,14 +1,7 @@
 from django.db import models
 from jsonfield import JSONField
-
-class Company(models.Model):
-    name = models.CharField(max_length=200)
-    address = models.TextField(blank=True)
-    zipcode = models.CharField(max_length=20, blank=True)
-    variations = JSONField(blank=True)
-
-    def __unicode__(self):
-        return self.name
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Risk(models.Model):
@@ -19,4 +12,26 @@ class Risk(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class Company(models.Model):
+    name = models.CharField(max_length=200)
+    address = models.TextField(blank=True)
+    zipcode = models.CharField(max_length=20, blank=True)
+    variations = JSONField(blank=True)
+
+    risks = models.ManyToManyField(Risk, through='CompanyRisk', through_fields=('from_company', 'risk'))
+
+    def __unicode__(self):
+        return self.name
+
+
+class CompanyRisk(models.Model):
+    risk = models.ForeignKey(Risk)
+    from_company = models.ForeignKey(Company, related_name='from_company')
+    to_company = models.ForeignKey(Company, related_name='to_company')
+    # article = models.ForeignKey('google.SearchResult', related_name='article')
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 

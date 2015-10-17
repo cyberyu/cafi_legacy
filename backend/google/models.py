@@ -30,7 +30,6 @@ class SearchResult(models.Model):
         (3, 'biz'),
     )
 
-
     search = models.ForeignKey(Search, related_name="results")
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False)

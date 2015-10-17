@@ -124,8 +124,8 @@ ES_TYPE = 'YOUR-ES-TYPE-HERE'
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-        'djangorestframework_camel_case.parser.CamelCaseJSONParser'
+        # 'rest_framework.parsers.JSONParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ),
     'DEFAULT_RENDERER_CLASSES': [
         # 'rest_framework.renderers.JSONRenderer',
