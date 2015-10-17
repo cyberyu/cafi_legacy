@@ -1,5 +1,7 @@
 from django.db import models
 from jsonfield import JSONField
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Risk(models.Model):
@@ -27,4 +29,9 @@ class CompanyRisk(models.Model):
     risk = models.ForeignKey(Risk)
     from_company = models.ForeignKey(Company, related_name='from_company')
     to_company = models.ForeignKey(Company, related_name='to_company')
+    # article = models.ForeignKey('google.SearchResult', related_name='article')
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
