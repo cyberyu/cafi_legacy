@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from rest_framework import routers
-from rest_framework_extensions.routers import ExtendedSimpleRouter
+# from rest_framework_extensions.routers import ExtendedSimpleRouter
 
 from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
 from engagement.views import ProjectViewSet
