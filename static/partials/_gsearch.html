@@ -42,13 +42,13 @@
   <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-heading">
-        search: {{displaySearch.string}}
+        {{total}} search results: {{displaySearch.string}}
       </div>
       <div class="panel-body">
           <table st-table="displayedGdocs" st-safe-src="displaySearchDocs" class="table table-striped">
             <thead>
             <tr>
-              <th style="width: 30px;"></th>
+              <!--<th style="width: 30px;"></th>-->
               <th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
               <th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
               <th> </th>
@@ -57,9 +57,9 @@
             </thead>
             <tbody>
             <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">
-              <td>
-                <a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>
-              </td>
+              <!--<td>-->
+                <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
+              <!--</td>-->
               <td><a href="" ng-click="open('lg', gdoc)"> {{gdoc.title}}</a></td>
               <td>{{gdoc.snippet}}</td>
               <td><a href="{{gdoc.url}}">link</a></td>
