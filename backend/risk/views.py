@@ -3,11 +3,11 @@ from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
 
-from models import Company, Risk
+from models import Company, Risk, RiskItem
 from engagement.models import Project
 import csv
 
-from serializers import CompanySerializer, RiskSerializer
+from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
 
 
 class RiskViewSet(viewsets.ModelViewSet):
@@ -47,3 +47,6 @@ class CompanyViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class RiskItemViewSet(viewsets.ModelViewSet):
+    queryset = RiskItem.objects.all()
+    serializer_class = RiskItemSerializer

@@ -1,7 +1,10 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth.models import User
 from django.conf import settings
+
 from engagement.models import Project
+from risk.models import RiskItem
 
 
 class Search(models.Model):
@@ -38,6 +41,8 @@ class SearchResult(models.Model):
 
     text = models.TextField(blank=True, null=True)
     doc_type = models.CharField(blank=True, max_length=20)
+
+    risks = GenericRelation(RiskItem)
 
     label = models.IntegerField(choices=LABEL_CHOICES, default=0)
 

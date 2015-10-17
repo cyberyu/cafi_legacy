@@ -1,5 +1,5 @@
 from django.contrib import admin
-from risk.models import Risk, Company
+from risk.models import Risk, Company, RiskItem
 
 
 class RiskAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class CompanyAdmin(admin.ModelAdmin):
 
 admin.site.register(Risk, RiskAdmin)
 admin.site.register(Company, CompanyAdmin)
+admin.site.register(RiskItem)

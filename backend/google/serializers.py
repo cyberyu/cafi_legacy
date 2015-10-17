@@ -8,9 +8,15 @@ class SearchSerializer(serializers.ModelSerializer):
         model = Search
 
 
+class RiskObjectRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.risk.name
+
+
 class SearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
     hlsnippet = serializers.SerializerMethodField()
+    risks = RiskObjectRelatedField(read_only=True, many=True)
 
     class Meta:
         model = SearchResult
