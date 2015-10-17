@@ -24,7 +24,7 @@ def index_text(index, doc_type, obj_json, **kwargs):
     text = obj_dict['text']
     body = {"id":id, "text": text}
     es.index(index=index, doc_type=doc_type, id=id, body=body, **kwargs)
-    
+    return 
 
 def text_similarity_scores(index, doc_type, **kwargs):
     """
