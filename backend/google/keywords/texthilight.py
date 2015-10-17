@@ -10,7 +10,6 @@ class Highlighter:
 
     def highlight (self, text, searchstr, namevariations=None):
         kwlist = self.parseSearchString(searchstr)
-        #print kwlist
         if namevariations!=None:
             kwfinal = self.union(kwlist, namevariations)
             return self.addcolor(text,kwfinal)
@@ -20,7 +19,6 @@ class Highlighter:
     def addcolor (self, text, kwlist):
         regmatch = '(\\b' + '\\b)|(\\b'.join(kwlist) + '\\b)'
         regex = re.compile(regmatch, re.I)
-        #print regmatch
         i=0; output=""
 
         if len(regex.findall(text))>=1:  # when there is matched keywords, add color
