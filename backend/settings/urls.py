@@ -7,7 +7,7 @@ from rest_framework import routers
 
 from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
 from engagement.views import ProjectViewSet
-from risk.views import RiskViewSet, CompanyViewSet
+from risk.views import RiskViewSet, CompanyViewSet, RiskItemViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -18,6 +18,7 @@ router.register(r'gdocs', SearchResultViewSet)
 router.register(r'risks', RiskViewSet)
 router.register(r'companies', CompanyViewSet)
 router.register(r'geosearch', GeoSearchViewSet)
+router.register(r'risk_items', RiskItemViewSet)
 
 
 urlpatterns = patterns('',

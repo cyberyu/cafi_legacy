@@ -19,19 +19,25 @@ class Company(models.Model):
     zipcode = models.CharField(max_length=20, blank=True)
     variations = JSONField(blank=True)
 
-    risks = models.ManyToManyField(Risk, through='CompanyRisk', through_fields=('from_company', 'risk'))
+    risks = models.ManyToManyField(Risk, through='RiskItem', through_fields=('from_company', 'risk'))
 
     def __unicode__(self):
         return self.name
 
 
-class CompanyRisk(models.Model):
+class RiskItem(models.Model):
+    #RiskItem(content_type=article, risk=r)
+
     risk = models.ForeignKey(Risk)
+    project = models.ForeignKey('engagement.Project')
     from_company = models.ForeignKey(Company, related_name='from_company')
-    to_company = models.ForeignKey(Company, related_name='to_company')
+    to_company = models.ForeignKey(Company, related_name='to_company', null=True)
     # article = models.ForeignKey('google.SearchResult', related_name='article')
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    def __unicode__(self):
+        return "%s : %s : %s" % (self.risk.name, self.from_company.name, self.project.client)
 
