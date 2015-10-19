@@ -104,6 +104,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.saveEditCompany = function (newCompany) {
+    newCompany.variations = [];
     $scope.companyNames.push(newCompany);
     $scope.editCompanyBool = false;
     $scope.newCompany = {};
@@ -147,5 +148,4 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
     $scope.editVariationBool = false;
     $scope.newVariation = {};
   };
-
 });
