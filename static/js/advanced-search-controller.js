@@ -57,35 +57,17 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.batchSearch = function (newSearches) {
-    var timeInt = 2000;
-    $scope.progressBool = true;
     var toSearches = [];
     for(var i=0; i< newSearches.length; i++){
       if(newSearches[i].use){
         toSearches.push(newSearches[i]);
       }
     }
-    $interval(function() {
-      if (toSearches.length >0) {
-        var item = toSearches.pop();
-        var oneSearch = {
-          project: $scope.currentProject.id,
-          string: item.string};
-        $http.post('/api/gsearch',oneSearch)
-          .success(function(data) {
-          });
-        $scope.searchedStrings.push(oneSearch);
-        $scope.showSearchListBool = false;
-        $scope.msg = "submitted " + toSearches.length + ' search strings to the server.';
-        $scope.msg_class = "alert-success";
-      } else {
-        $interval.cancel();
-      }
-    }, timeInt);
-    $timeout(function(){
-      $scope.boolGdocs = true;
-      $scope.gdocs = Gdoc.query();
-    }, timeInt*toSearches.length);
+    console.log(JSON.stringify(toSearches));
+
+    $scope.msg = toSearches.length + ' search strings were successfully submitted to the server.';
+    $scope.msg_class = "alert-success";
+    $scope.showSearchListBool = false;
   };
 
   $scope.addCompany = function () {
