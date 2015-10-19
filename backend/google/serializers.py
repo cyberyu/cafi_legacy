@@ -16,6 +16,7 @@ class RiskObjectRelatedField(serializers.RelatedField):
 class SearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
     hlsnippet = serializers.SerializerMethodField()
+    hltext = serializers.SerializerMethodField()
     risks = RiskObjectRelatedField(read_only=True, many=True)
 
     class Meta:
@@ -30,6 +31,11 @@ class SearchResultSerializer(serializers.ModelSerializer):
         highlighter = Highlighter()
         istring = obj.search.string
         return highlighter.highlight(obj.snippet, istring)
+
+    def get_hltext(self, obj):
+        highlighter = Highlighter()
+        istring = obj.search.string
+        return highlighter.highlight(obj.text, istring)
 
 
 class GeoSearchSerializer(serializers.ModelSerializer):
