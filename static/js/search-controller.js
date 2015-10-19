@@ -182,6 +182,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       controller: 'advancedSearchCtrl',
       size: size,
       scope: $scope,
+      //windowClass: 'gen-search-modal'
     });
 
     $scope.modalInstance.result.then(function(){
