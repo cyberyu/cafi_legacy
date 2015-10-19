@@ -10,128 +10,10 @@
     <div class="form-group ">
       <input id="gsearch-input" type="text" class="form-control" ng-model="search.string" placeholder="Search something"/>
       <button class="btn btn-primary" ng-click="submitSearch()">search</button>
-      <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Advanced search</button>
+      <button type="button" class="btn btn-default" ng-click="openGenSearch('gensearch')">Advanced search</button>
     </div>
   </form>
 </div>
-
-<div ng-controller="advancedSearchCtrl">
-	<hr>
-	<div uib-collapse="isCollapsed">
-		<div class="well well-lg">
-        <div class="modal-box" ng-click="$event.stopPropagation()">
-          <div class="row" ng-show="!showSearchListBool">
-            <div class="col-lg-3">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  Search Types
-                </div>
-                <div class="panel-body">
-                  <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedSearchNames" ng-options="c.name for c in availableSearchNames">
-                  </select>
-                  <a ng-click="addSearchName()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-                  <a ng-click="deleteSearchNames(gsearchOptions.selectedSearchNames)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
-                  <form class="form-horizontal" role="form" ng-submit="saveEditSearchName(newSearchName)" ng-show="editSearchNameBool">
-                    <input type="text" ng-model="newSearchName.name" class="form-control" placeholder="new search name"/>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  Search String
-                </div>
-                <div class="panel-body">
-                  <textarea class="form-control" ng-model="gsearchOptions.selectedSearchNames[0].searchString" rows="10"></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  Company List
-                </div>
-                <div class="panel-body">
-                  <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedCompanyNames" ng-options="c.name for c in companyNames">
-                  </select>
-                  <a ng-click="addCompany()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-                  <a ng-click="deleteCompanies(gsearchOptions.selectedCompanyNames)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
-                  <form class="form-horizontal" role="form" ng-submit="saveEditCompany(newCompany)" ng-show="editCompanyBool">
-                    <input type="text" ng-model="newCompany.name" class="form-control" placeholder="new company name"/>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  Company Name Variations
-                </div>
-                <div class="panel-body">
-                  <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedVariations" ng-options="c for c in gsearchOptions.selectedCompanyNames[0].variations">
-                  </select>
-                  <a ng-click="addVariation()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-                  <a ng-click="deleteVariations(gsearchOptions.selectedVariations)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
-                  <form class="form-horizontal" role="form" ng-submit="saveEditVariation(newVariation)" ng-show="editVariationBool">
-                    <input type="text" ng-model="newVariation.name" class="form-control" placeholder="new variation"/>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row" ng-show="showSearchListBool && !boolGdocs">
-            <div class="col-md-12" >
-              <table class="table table-hover">
-                <thead>
-                <tr>
-                  <th>Search Name</th>
-                  <th>Search Company</th>
-                  <th>Search String</th>
-                  <!--<th>Created At</th>-->
-                  <!--<th>ID</th>-->
-                  <th>Search?</th>
-                </tr>
-                </thead>
-                <tr ng-repeat="search in newSearches">
-                  <td>{{search.searchName}}</td>
-                  <td>{{search.name}}</td>
-                  <td>{{search.searchString}}</td>
-                  <!--<td>{{search.createdAt}}</td>-->
-                  <!--<td>{{search.id}}</td>-->
-                  <td>
-                    <input type="checkbox" ng-model="search.use">
-                    <!--<a class="btn-sm btn-primary" ng-click="editOrCreateSearch(search)">Edit</a>-->
-                    <!--<a class="btn-sm btn-danger" ng-click="deleteSearch(search)">Delete</a>-->
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div class="row" ng-show="showSearchListBool">
-              <div class="pull-right">
-                <a class="btn btn-danger btn" ng-click="cancelGenearateSearch()">Cancel</a>
-                <a class="btn btn-primary" ng-click="batchSearch(newSearches)">Google them!</a>
-              </div>
-            </div>
-          </div>
-          <div class="row" ng-show="!showSearchListBool">
-            <div class="pull-right">
-              <a class="btn btn-primary" ng-click="generateSearches()">Generate Searches</a>
-            </div>
-          </div>
-          <div class="row" ng-show="progressBool && calculateProgress(searchedStrings, newSearches)<1">
-            <div class="col-md-12">
-              <progressbar animate="false" value="calculateProgress(searchedStrings, newSearches)*100" type="success" max="100"><b>{{calculateProgress(searchedStrings, newSearches)*100|number:0}}%</b></progressbar>
-            </div>
-          </div>
-        </div>
-    </div>
-	</div>
-</div>
-
 
 <div class="row content-container">
   <div class="col-md-3" >
@@ -148,7 +30,7 @@
             <ul id="list-0" class="list-0 active-list">
               <li ng-repeat="search in searches | filter:searchQuery ">
                 <a ng-click="setDisplaySearch(search)" class="list-link">
-                  <span class="list-link-label">{{search.string|limitTo:45}}</span>
+                  <span class="list-link-label small">{{search.string}}</span>
                 </a>
               </li>
             </ul>

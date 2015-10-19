@@ -3,7 +3,7 @@
  */
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
-                                                           $http,$timeout,$interval, $uibModal, Upload, popupService,
+                                                           $http, $uibModal, Upload, popupService,
                                                            Project, Search, Gdoc,GeoSearch){
 
   //Project.get({projectId:$routeParams.id}, function(data){
@@ -52,17 +52,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.currentPage = 1;
   $scope.currentSearch = null;
   $scope.search = {};
-  $scope.newSearches = [];
-  $scope.progressBool = false;
-  $scope.editSearchNameBool = false;
-  $scope.newSearchName = {};
-  $scope.editCompanyBool = false;
-  $scope.newCompany = {};
-  $scope.editVariationBool = false;
-  $scope.newVariation = {};
-  $scope.showSearchListBool = false;
 
-  $scope.searchedStrings = [];
   $scope.counter = 0;
 
   $scope.submitSearch = function(){
@@ -87,14 +77,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.displaySearch = search;
     });
   };
-
-  $http.get('/api/risks').then(function(response){
-    $scope.availableSearchNames = response.data;
-  });
-
-  $http.get('/api/companies').then(function(response){
-    $scope.companyNames = response.data;
-  });
 
   $scope.listSearches = function () {
     $scope.searches = Search.query({"project": $scope.currentProject.id});
@@ -167,124 +149,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.generateSearches= function () {
-    $scope.newSearches =[];
-    for(var i = 0; i < $scope.gsearchOptions.selectedSearchNames.length; i++){
-      for(var j = 0; j < $scope.gsearchOptions.selectedCompanyNames.length; j++){
-        for(var k = 0; k <$scope.gsearchOptions.selectedCompanyNames[j].variations.length; k++){
-          var oneSearch = {};
-          oneSearch.use = true;
-          oneSearch.searchName = $scope.gsearchOptions.selectedSearchNames[i].name;
-          oneSearch.companyName = $scope.gsearchOptions.selectedCompanyNames[j].variations[k];
-          oneSearch.string = $scope.gsearchOptions.selectedSearchNames[i].string + '&"' + oneSearch.companyName+'"';
-          oneSearch.project = $scope.currentProject.id;
-          $scope.newSearches.push(oneSearch);
-        }
-      }
-    }
-    $scope.showSearchListBool = true;
-
-  };
-
-  $scope.cancelGenearateSearch = function () {
-    $scope.listSearches();
-    $scope.newSearches =[];
-    $scope.showSearchListBool = false;
-
-  };
-
-  $scope.batchSearch = function (newSearches) {
-    var timeInt = 2000;
-    $scope.progressBool = true;
-    var toSearches = [];
-    for(var i=0; i< newSearches.length; i++){
-      if(newSearches[i].use){
-        toSearches.push(newSearches[i]);
-      }
-    }
-    $interval(function() {
-      if (toSearches.length >0) {
-        var item = toSearches.pop();
-        var oneSearch = {
-          project: $scope.currentProject.id,
-          string: item.string};
-        $http.post('/api/gsearch',oneSearch)
-          .success(function(data) {
-          });
-        $scope.searchedStrings.push(oneSearch);
-      } else {
-        $interval.cancel();
-      }
-    }, timeInt);
-    $timeout(function(){
-      $scope.boolGdocs = true;
-      $scope.gdocs = Gdoc.query();
-    }, timeInt*toSearches.length);
-  };
-
-  $scope.addCompany = function () {
-    $scope.editCompanyBool = true;
-  };
-
-  $scope.saveEditCompany = function (newCompany) {
-    $scope.companyNames.push(newCompany);
-    $scope.editCompanyBool = false;
-    $scope.newCompany = {};
-  };
-
-  $scope.deleteCompanies = function(selected){
-    for(var i =0; i <selected.length; i++){
-      $scope.companyNames.pop(selected[i]);
-    }
-  };
-
-  $scope.addSearchName = function(){
-    $scope.editSearchNameBool = true;
-  };
-
-  $scope.saveEditSearchName = function(newSearchName){
-    $scope.availableSearchNames.push(newSearchName);
-    $scope.editSearchNameBool = false;
-    $scope.newSearchName = {};
-  };
-
-  $scope.deleteSearchNames = function(selected){
-    for(var i =0; i <selected.length; i++){
-      $scope.availableSearchNames.pop(selected[i]);
-    }
-  };
-
-  $scope.addVariation = function(){
-    $scope.editVariationBool = true;
-  };
-
-  $scope.deleteVariations = function(selected){
-    for(var i =0; i <selected.length; i++){
-      $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].variations.pop(selected[i]);
-    }
-  };
-
-  $scope.saveEditVariation = function(newVariation){
-    $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
-      variations.push(newVariation.name);
-    $scope.editVariationBool = false;
-    $scope.newVariation = {};
-  };
-
-  $scope.calculateProgress = function(searchedStrings, newSearches){
-    var toSearches = [];
-    for(var i=0; i< newSearches.length; i++){
-      if(newSearches[i].use){
-        toSearches.push(newSearches[i]);
-      }
-    }
-    var result = 0;
-    if(toSearches.length>0){
-      result = searchedStrings.length/toSearches.length;
-    }
-    return result
-  };
-
   // modal stuff
   $scope.openGdoc = function (size, doc) {
     $scope.modalInstance = $uibModal.open({
@@ -311,6 +175,22 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.openGenSearch = function(size){
+    $scope.modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: '/static/partials/_gen_search.html',
+      controller: 'advancedSearchCtrl',
+      size: size,
+      scope: $scope,
+      //windowClass: 'gen-search-modal'
+    });
+
+    $scope.modalInstance.result.then(function(){
+      console.log('---')
+    }, function(){
+      console.log('dismissed');
+    });
+  };
 
   $scope.saveEdit = function (newDoc) {
     $http.put('/api/gdocs/' + newDoc.id, newDoc).success(function(data) {
