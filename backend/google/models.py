@@ -11,7 +11,7 @@ class Search(models.Model):
     STATUS_CHOICES = (
         (0, ''),
         (1, 'submitted'),
-        (2, 'in processing'),
+        (2, 'processing'),
         (3, 'done'),
     )
 
