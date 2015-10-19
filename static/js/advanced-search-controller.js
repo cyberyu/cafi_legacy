@@ -21,6 +21,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.ok = function () {
     $modalInstance.close();
+    $scope.listSearches();
   };
 
   $scope.cancel = function () {
@@ -63,7 +64,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
         toSearches.push(newSearches[i]);
       }
     }
-    console.log(JSON.stringify(toSearches));
+    $http.post('/api/gsearch/batch', toSearches);
 
     $scope.msg = toSearches.length + ' search strings were successfully submitted to the server.';
     $scope.msg_class = "alert-success";
