@@ -321,3 +321,7 @@ word-wrap: break-word;
 .modal-gensearch {
     width: 95%;
 }
+
+#gen-search-btn {
+    padding-right: 15px;
+}

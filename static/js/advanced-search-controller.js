@@ -20,26 +20,13 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   });
 
   $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
+    $modalInstance.close();
   };
 
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
 
-  $scope.calculateProgress = function(searchedStrings, newSearches){
-    var toSearches = [];
-    for(var i=0; i< newSearches.length; i++){
-      if(newSearches[i].use){
-        toSearches.push(newSearches[i]);
-      }
-    }
-    var result = 0;
-    if(toSearches.length>0){
-      result = searchedStrings.length/toSearches.length;
-    }
-    return result
-  };
   $scope.generateSearches= function () {
     $scope.newSearches =[];
     for(var j = 0; j < $scope.gsearchOptions.selectedCompanyNames.length; j++){
@@ -67,7 +54,6 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
     $scope.listSearches();
     $scope.newSearches =[];
     $scope.showSearchListBool = false;
-
   };
 
   $scope.batchSearch = function (newSearches) {
@@ -89,6 +75,9 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
           .success(function(data) {
           });
         $scope.searchedStrings.push(oneSearch);
+        $scope.showSearchListBool = false;
+        $scope.msg = "submitted " + toSearches.length + ' search strings to the server.';
+        $scope.msg_class = "alert-success";
       } else {
         $interval.cancel();
       }
