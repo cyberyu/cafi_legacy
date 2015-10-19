@@ -4,17 +4,13 @@
 <div class="modal-body">
   <article>
     <header>
-      <h2>{{currentDoc.title}}</h2>
+      <h2 ng-bind-html="currentDoc.hltitle"></h2>
     </header>
 
     <aside>
-      <p>
-        {{currentDoc.snippet}}
-      </p>
+      <p ng-bind-html="currentDoc.hlsnippet"> </p>
     </aside>
-    <p>
-      {{currentDoc.text}}
-    </p>
+    <p ng-bind-html="currentDoc.hltext"> </p>
     <footer>
       <p>Posted {{currentDoc.createdAt}}</p>
       <div class="form-group">

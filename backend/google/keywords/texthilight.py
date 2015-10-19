@@ -10,7 +10,7 @@ EN_PERSON_PATTERN = "<span style='background-color: #F5D0A9'>"
 EN_ORGANIZATION_PATTERN = "<span style='background-color: #FFFF00'>"
 EN_LOCATION_PATTERN = "<span style='background-color: #819FF7'>"
 EN_MONEY_PATTERN = "<span style='background-color: #D0F5A9'>"
-KWCOLOR = ['red', 'blue', 'orange', 'violet', 'green']
+KWCOLOR = ['blue', 'red', 'orange', 'violet', 'green']
 
 
 class Highlighter:
@@ -57,8 +57,7 @@ class Highlighter:
             i = 0; output = ""
             for m in regex.finditer(text):
                 output += "".join([text[i:m.start()],
-                                   "<strong><span style='color:%s'>" % self.keyword_color[m.lastindex % 5],
-                                   text[m.start():m.end()],
+                                   "<strong><span class='text-danger'>", text[m.start():m.end()],
                                    "</span></strong>"])
                 i = m.end()
             highlighted_text = "".join([output, text[m.end():]])
@@ -105,6 +104,7 @@ class Highlighter:
 
     def parseSearchString(self, searchstr):
         query = SearchQueryParser()
+        print query.Parse(searchstr), '-----'
         return query.Parse(searchstr)
 
     def union(self,a,b):

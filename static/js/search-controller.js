@@ -28,9 +28,11 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   });
 
 
-  $http.get('/api/gsearch').then(function(response){
+  $http.get('/api/gsearch?project='+$scope.currentProject.id).then(function(response){
     if(response.data.count > 0){
+      console.log(response.data.count)
       $scope.displaySearch = response.data.results[0];
+      console.log($scope.displaySearch);
       Gdoc.get({search:$scope.displaySearch.id}, 1).$promise.then(function(data){
         $scope.displaySearchDocs = data.results;
         $scope.total = data.count;
@@ -95,7 +97,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   });
 
   $scope.listSearches = function () {
-    $scope.searches = Search.query();
+    $scope.searches = Search.query({"project": $scope.currentProject.id});
   };
 
   $scope.deleteSearch = function (search) {
@@ -284,8 +286,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   // modal stuff
-  $scope.open = function (size, doc) {
-
+  $scope.openGdoc = function (size, doc) {
     $scope.modalInstance = $uibModal.open({
       animation: true,
       templateUrl: '/static/partials/_gdoc.html',
@@ -330,14 +331,15 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
 
-  $scope.cancel = function () {
-    $scope.modalInstance.dismiss('cancel');
-  };
+  //$scope.cancel = function () {
+  //  $scope.modalInstance.dismiss('cancel');
+  //};
+  //
+  //$scope.review = function(doc){
+  //  alert('aa');
+  //};
 
-  $scope.review = function(doc){
-    alert('aa');
-  };
-
+  $scope.isCollapsed = true;
   $scope.listSearches();
   //$scope.getGdocs($scope.displaySearch, 1);
 
