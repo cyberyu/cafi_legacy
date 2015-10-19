@@ -104,7 +104,6 @@ class Highlighter:
 
     def parseSearchString(self, searchstr):
         query = SearchQueryParser()
-        print query.Parse(searchstr), '-----'
         return query.Parse(searchstr)
 
     def union(self,a,b):

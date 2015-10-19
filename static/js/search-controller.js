@@ -315,6 +315,21 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.openGenSearch = function(size){
+    $scope.modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: '/static/partials/_gen_search.html',
+      controller: 'advancedSearchCtrl',
+      size: size,
+      scope: $scope,
+    });
+
+    $scope.modalInstance.result.then(function(){
+      console.log('---')
+    }, function(){
+      console.log('dismissed');
+    });
+  };
 
   $scope.saveEdit = function (newDoc) {
     $http.put('/api/gdocs/' + newDoc.id, newDoc).success(function(data) {
