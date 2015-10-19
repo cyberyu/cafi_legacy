@@ -28,9 +28,11 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   });
 
 
-  $http.get('/api/gsearch').then(function(response){
+  $http.get('/api/gsearch?project='+$scope.currentProject.id).then(function(response){
     if(response.data.count > 0){
+      console.log(response.data.count)
       $scope.displaySearch = response.data.results[0];
+      console.log($scope.displaySearch);
       Gdoc.get({search:$scope.displaySearch.id}, 1).$promise.then(function(data){
         $scope.displaySearchDocs = data.results;
         $scope.total = data.count;
@@ -95,7 +97,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   });
 
   $scope.listSearches = function () {
-    $scope.searches = Search.query();
+    $scope.searches = Search.query({"project": $scope.currentProject.id});
   };
 
   $scope.deleteSearch = function (search) {
