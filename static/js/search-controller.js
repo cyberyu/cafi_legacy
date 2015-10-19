@@ -284,8 +284,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   // modal stuff
-  $scope.open = function (size, doc) {
-
+  $scope.openGdoc = function (size, doc) {
     $scope.modalInstance = $uibModal.open({
       animation: true,
       templateUrl: '/static/partials/_gdoc.html',
@@ -330,14 +329,15 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
 
-  $scope.cancel = function () {
-    $scope.modalInstance.dismiss('cancel');
-  };
+  //$scope.cancel = function () {
+  //  $scope.modalInstance.dismiss('cancel');
+  //};
+  //
+  //$scope.review = function(doc){
+  //  alert('aa');
+  //};
 
-  $scope.review = function(doc){
-    alert('aa');
-  };
-
+  $scope.isCollapsed = true;
   $scope.listSearches();
   //$scope.getGdocs($scope.displaySearch, 1);
 
