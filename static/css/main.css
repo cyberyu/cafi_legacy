@@ -310,3 +310,9 @@ word-wrap: break-word;
     margin-left: 10px;
     margin-right: 10px;
 }
+
+#adv-search {
+    min-height: 200px;
+    overflow: hidden;
+    height: auto;
+}

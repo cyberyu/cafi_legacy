@@ -169,21 +169,25 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.generateSearches= function () {
     $scope.newSearches =[];
-    for(var i = 0; i < $scope.gsearchOptions.selectedSearchNames.length; i++){
-      for(var j = 0; j < $scope.gsearchOptions.selectedCompanyNames.length; j++){
-        for(var k = 0; k <$scope.gsearchOptions.selectedCompanyNames[j].variations.length; k++){
-          var oneSearch = {};
-          oneSearch.use = true;
-          oneSearch.searchName = $scope.gsearchOptions.selectedSearchNames[i].name;
-          oneSearch.companyName = $scope.gsearchOptions.selectedCompanyNames[j].variations[k];
-          oneSearch.string = $scope.gsearchOptions.selectedSearchNames[i].string + '&"' + oneSearch.companyName+'"';
-          oneSearch.project = $scope.currentProject.id;
-          $scope.newSearches.push(oneSearch);
-        }
+    for(var j = 0; j < $scope.gsearchOptions.selectedCompanyNames.length; j++){
+      for(var i = 0; i < $scope.gsearchOptions.selectedSearchNames.length; i++){
+        var variations = [];
+        angular.forEach($scope.gsearchOptions.selectedCompanyNames[j].variations, function(v){
+          variations.push('"'+v+'"');
+        });
+        var companyVariations = variations.join(' | ');
+
+        var oneSearch = {};
+        oneSearch.use = true;
+        oneSearch.searchName = $scope.gsearchOptions.selectedSearchNames[i].name;
+        oneSearch.companyName = $scope.gsearchOptions.selectedCompanyNames[j].name;
+        oneSearch.companyNameString = '"'+$scope.gsearchOptions.selectedCompanyNames[j].name + '" | ' + companyVariations;
+        oneSearch.string = '(' + $scope.gsearchOptions.selectedSearchNames[i].searchString + ') & (' + oneSearch.companyNameString +')';
+        oneSearch.project = $scope.currentProject.id;
+        $scope.newSearches.push(oneSearch);
       }
     }
     $scope.showSearchListBool = true;
-
   };
 
   $scope.cancelGenearateSearch = function () {

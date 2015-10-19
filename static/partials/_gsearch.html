@@ -18,8 +18,8 @@
 <div ng-controller="advancedSearchCtrl">
 	<hr>
 	<div uib-collapse="isCollapsed">
-		<div class="well well-lg">
-        <div class="modal-box" ng-click="$event.stopPropagation()">
+		<div class="well well-lg" id="adv-search">
+        <div class="" ng-click="$event.stopPropagation()">
           <div class="row" ng-show="!showSearchListBool">
             <div class="col-lg-3">
               <div class="panel panel-default">
@@ -98,8 +98,8 @@
                 </thead>
                 <tr ng-repeat="search in newSearches">
                   <td>{{search.searchName}}</td>
-                  <td>{{search.name}}</td>
-                  <td>{{search.searchString}}</td>
+                  <td>{{search.companyName}}</td>
+                  <td>{{search.string}}</td>
                   <!--<td>{{search.createdAt}}</td>-->
                   <!--<td>{{search.id}}</td>-->
                   <td>
@@ -133,77 +133,77 @@
 </div>
 
 
-<div class="row content-container">
-  <div class="col-md-3" >
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        Existing Searches
-      </div>
-      <div class="panel-body">
-        <div class="list-container">
-          <div class="list-header-container">
-            <input type="text" class="form-control" ng-model="searchQuery" placeholder="Looking for a search?"/>
-          </div>
-          <div class="list-body-container">
-            <ul id="list-0" class="list-0 active-list">
-              <li ng-repeat="search in searches | filter:searchQuery ">
-                <a ng-click="setDisplaySearch(search)" class="list-link">
-                  <span class="list-link-label">{{search.string|limitTo:45}}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-9">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        {{total}} search results: {{displaySearch.string}}
-      </div>
-      <div class="panel-body">
-          <table st-table="displayedGdocs" st-safe-src="displaySearchDocs" class="table table-striped">
-            <thead>
-            <tr>
+<!--<div class="row content-container">-->
+  <!--<div class="col-md-3" >-->
+    <!--<div class="panel panel-default">-->
+      <!--<div class="panel-heading">-->
+        <!--Existing Searches-->
+      <!--</div>-->
+      <!--<div class="panel-body">-->
+        <!--<div class="list-container">-->
+          <!--<div class="list-header-container">-->
+            <!--<input type="text" class="form-control" ng-model="searchQuery" placeholder="Looking for a search?"/>-->
+          <!--</div>-->
+          <!--<div class="list-body-container">-->
+            <!--<ul id="list-0" class="list-0 active-list">-->
+              <!--<li ng-repeat="search in searches | filter:searchQuery ">-->
+                <!--<a ng-click="setDisplaySearch(search)" class="list-link">-->
+                  <!--<span class="list-link-label">{{search.string|limitTo:45}}</span>-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="col-md-9">-->
+    <!--<div class="panel panel-default">-->
+      <!--<div class="panel-heading">-->
+        <!--{{total}} search results: {{displaySearch.string}}-->
+      <!--</div>-->
+      <!--<div class="panel-body">-->
+          <!--<table st-table="displayedGdocs" st-safe-src="displaySearchDocs" class="table table-striped">-->
+            <!--<thead>-->
+            <!--<tr>-->
+              <!--&lt;!&ndash;<th style="width: 30px;"></th>&ndash;&gt;-->
+              <!--<th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>-->
+              <!--<th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>-->
+              <!--<th> </th>-->
               <!--<th style="width: 30px;"></th>-->
-              <th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
-              <th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
-              <th> </th>
-              <th style="width: 30px;"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">
-              <!--<td>-->
-                <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">-->
+              <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>&ndash;&gt;-->
+              <!--&lt;!&ndash;</td>&ndash;&gt;-->
+              <!--<td><a href="" ng-click="openGdoc('lg', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>-->
+              <!--<td ng-bind-html="gdoc.hlsnippet"></td>-->
+              <!--<td><a href="{{gdoc.url}}">link</a></td>-->
+              <!--<td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)"><i class="fa fa-close"></i></a></td>-->
+            <!--</tr>-->
+            <!--<tr ng-if="gdoc.expanded" ng-repeat-end="">-->
+              <!--&lt;!&ndash;<td colspan="5">{{gdoc.text}}</p></td>&ndash;&gt;-->
+            <!--</tr>-->
+            <!--</tbody>-->
+            <!--<tfoot>-->
+            <!--<tr>-->
+              <!--<td colspan="5" class="text-center">-->
               <!--</td>-->
-              <td><a href="" ng-click="openGdoc('lg', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
-              <td ng-bind-html="gdoc.hlsnippet"></td>
-              <td><a href="{{gdoc.url}}">link</a></td>
-              <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)"><i class="fa fa-close"></i></a></td>
-            </tr>
-            <tr ng-if="gdoc.expanded" ng-repeat-end="">
-              <!--<td colspan="5">{{gdoc.text}}</p></td>-->
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-              <td colspan="5" class="text-center">
-              </td>
-            </tr>
-            </tfoot>
-          </table>
-        <nav class="text-center" ng-if="total>20">
-          <paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"
-                  scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
-                  disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getGdocs(displaySearch, page)">
-          </paging>
-        </nav>
-      </div>
-    </div>
-  </div>
-</div>
+            <!--</tr>-->
+            <!--</tfoot>-->
+          <!--</table>-->
+        <!--<nav class="text-center" ng-if="total>20">-->
+          <!--<paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"-->
+                  <!--scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"-->
+                  <!--disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getGdocs(displaySearch, page)">-->
+          <!--</paging>-->
+        <!--</nav>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
 
 
 
