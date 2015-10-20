@@ -13,7 +13,11 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
 
-
+  $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
+  $scope.currentSource = $scope.dataSources[0];
+  $scope.selectDataSource = function(src){
+    $scope.currentSource = src;
+  };
 
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
@@ -210,7 +214,19 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.status = {
+    isopen: false
+  };
 
+  $scope.toggled = function(open) {
+    $log.log('Dropdown is now: ', open);
+  };
+
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.status.isopen = !$scope.status.isopen;
+  };
   //$scope.cancel = function () {
   //  $scope.modalInstance.dismiss('cancel');
   //};
