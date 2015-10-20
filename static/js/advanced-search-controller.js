@@ -74,11 +74,11 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.addCompany = function () {
     $scope.editCompanyBool = true;
+    $scope.editVariationBool = false;
   };
 
   $scope.saveEditCompany = function (newCompany) {
     if(newCompany.name) {
-      console.log(newCompany.to_variations);
       if (newCompany.to_variations) newCompany.variations = newCompany.to_variations.split(';');
       console.log(newCompany.variations);
 
@@ -104,6 +104,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   $scope.editCompany = function(selected){
     if(selected.length==1){
       $scope.editCompanyBool = true;
+      $scope.editVariationBool = false;
       $scope.newCompany = selected[0];
       $scope.newCompany.to_variations = selected[0].variations.join(';');
     } else {
@@ -135,7 +136,6 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.deleteSearchNames = function(selected){
-    console.log(selected);
     for(var i =0; i <selected.length; i++){
       if(selected[i].id) Risk.delete({"riskId": selected[i].id});
       $scope.availableSearchNames.pop(selected[i]);
@@ -158,18 +158,25 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.addVariation = function(){
+    $scope.editCompanyBool = false;
     $scope.editVariationBool = true;
   };
 
   $scope.deleteVariations = function(selected){
     for(var i =0; i <selected.length; i++){
-      $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].variations.pop(selected[i]);
+      $scope.gsearchOptions.selectedCompanyNames[0].variations.pop(selected[i]);
     }
+    $scope.saveEditCompany($scope.gsearchOptions.selectedCompanyNames[0]);
+  };
+
+  $scope.cancelEditVariation = function(){
+    $scope.newVariation = {};
+    $scope.editVariationBool = false;
   };
 
   $scope.saveEditVariation = function(newVariation){
-    $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
-      variations.push(newVariation.name);
+    $scope.gsearchOptions.selectedCompanyNames[0].variations.push(newVariation.name);
+    $scope.saveEditCompany($scope.gsearchOptions.selectedCompanyNames[0]);
     $scope.editVariationBool = false;
     $scope.newVariation = {};
   };

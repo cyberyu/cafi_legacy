@@ -32,7 +32,7 @@
               </div>
             </div>
           </div>
-          <form id="search-edit" role="form" ng-submit="saveEditSearchName(newSearchName)" ng-show="editSearchNameBool">
+          <form id="search-edit" role="form"  ng-show="editSearchNameBool">
             <div class="form-group col-lg-6">
               <input type="text" ng-model="newSearchName.name" class="form-control" placeholder="search name"/>
             </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="pull-right edit-button">
               <button class="btn btn-sm btn-primary" ng-click='cancelEditSearchName()'>cancel</button>
-              <input type="submit" class="btn btn-sm btn-primary" value="Save"/>
+              <input type="submit" class="btn btn-sm btn-primary" ng-click="saveEditSearchName(newSearchName)" value="Save"/>
             </div>
           </form>
       </div>
@@ -75,7 +75,7 @@
             </div>
           </div>
         </div>
-        <form id="company-edit" role="form" ng-submit="saveEditCompany(newCompany)" ng-show="editCompanyBool">
+        <form id="company-edit" role="form"  ng-show="editCompanyBool">
           <div class="form-group col-lg-6">
             <input type="text" ng-model="newCompany.name" class="form-control" placeholder="company name"/>
           </div>
@@ -84,7 +84,16 @@
           </div>
           <div class="edit-button pull-right">
             <button class="btn btn-sm btn-primary" ng-click='cancelEditCompany()'>Cancel</button>
-            <input type="submit" class="btn btn-sm btn-primary" value="Save"/>
+            <input type="submit" class="btn btn-sm btn-primary" ng-click="saveEditCompany(newCompany)" value="Save"/>
+          </div>
+        </form>
+        <form id="variation-edit" role="form"  ng-show="editVariationBool">
+          <div class="form-group col-lg-6">
+            <input type="text" ng-model="newVariation.name" class="form-control" placeholder="new variation"/>
+          </div>
+          <div class="edit-button pull-right">
+            <button class="btn btn-sm btn-primary" ng-click='cancelEditVariation()'>Cancel</button>
+            <input type="submit" class="btn btn-sm btn-primary" ng-click="saveEditVariation(newVariation)" value="Save"/>
           </div>
         </form>
       </div>
