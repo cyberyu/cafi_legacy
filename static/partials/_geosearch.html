@@ -8,21 +8,25 @@
   <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
 </ol>
 
-<div class="row ubox">
-  <div class="col-sm-3" id="upload">
-    <form class="form-group">
-    <input type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-primary btn-sm"
-            accept=".csv" ngf-max-height="1000" ngf-max-size="1MB">
-    <!--{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
-    </form>
+<div class="row">
+  <div class="ubox col-lg-offset-1">
+    <div class="col-sm-3" id="upload">
+      <form class="form-group">
+      <input type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-primary btn-sm"
+              accept=".csv" ngf-max-height="1000" ngf-max-size="1MB">
+      <!--{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
+      </form>
+    </div>
+    <div class="col-sm-4" id="up-progressbar" ng-if="f.progress>0">
+      <uib-progressbar value="f.progress" type="success"><span style="color:white; white-space:nowrap;">{{f.progress}}%</span></uib-progressbar>
+    </div>
+    <br>
   </div>
-  <div class="col-sm-4" id="up-progressbar" ng-if="f.progress>0">
-    <uib-progressbar value="f.progress" type="success"><span style="color:white; white-space:nowrap;">{{f.progress}}%</span></uib-progressbar>
-  </div>
-  <br>
 </div>
 
-<div class="row col-lg-10" ng-if="addresses.length>=0">
+<div class="row">
+  <div class="col-lg-1"></div>
+<div class="col-lg-10" ng-if="addresses.length>=0">
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-body">
@@ -43,7 +47,7 @@
             <td>{{address.lng}}</td>
             <td>
               <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
-              <a class="btn btn-default btn-circle" ng-click="editOrCreateAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
+              <a class="btn btn-default btn-circle" ng-click="openGeoEdit('', address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
               <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
             </td>
           </tr>
@@ -60,10 +64,9 @@
     </paging>
   </nav>
 
-  <div class="col-lg-4 pull-right" ng-show="addAddressBool">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <form class="form-horizontal" role="form" ng-submit="saveAddressEdit(currentAddress)">
+<script type="text/ng-template" id="geoModal.html">
+  <div class="modal-body">
+        <form class="form-horizontal" role="form">
           <div class="form-group">
             <label for="name" class="col-sm-2 control-label">Entity name</label>
             <div class="col-sm-10">
@@ -76,16 +79,13 @@
               <input type="text" ng-model="currentAddress.address" class="form-control" id="client" placeholder="Address here"/>
             </div>
           </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <input type="submit" class="btn btn-primary" value="Save"/>
-              <a class="btn btn-primary btn-danger" ng-click="cancelAddressEdit()">Cancel</a>
-            </div>
-          </div>
         </form>
-      </div>
-    </div>
   </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary btn-danger" ng-click="cancel()">Cancel</a>
+    <a class="btn btn-primary" ng-click="saveAddressEdit(currentAddress); ok()">Save</a>
+  </div>
+</script>
   <a class="col-lg-10 ">
     <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
       {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
@@ -99,6 +99,7 @@
       <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
     </div>
   </div>
+</div>
 </div>
 
 <!--<div class="row" ng-show="progressBool && calculateProgressAddress(addresses)<1">-->

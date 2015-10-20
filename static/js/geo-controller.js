@@ -1,5 +1,5 @@
 projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi,
-                                                           $routeParams, $http,$timeout,
+                                                           $routeParams, $http,$timeout, $uibModal,
                                                            $interval, Upload, popupService, Project,
                                                            Search, Gdoc,GeoSearch){
 
@@ -129,4 +129,35 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     });
   };
 
+  $scope.openGeoEdit = function (size, address) {
+    $scope.currentAddress =
+      address ? angular.copy(address) : {};
+    $scope.addAddressBool = true;
+
+    var modalInstance = $uibModal.open({
+      animation: false,
+      templateUrl: 'geoModal.html',
+      controller: 'geoModalCtrl',
+      size: size,
+      scope: $scope,
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      console.log('Modal dismissed at: ' + new Date());
+    });
+  };
+
+});
+
+projectControllers.controller('geoModalCtrl', function ($scope, $modalInstance){
+
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
 });
