@@ -76,8 +76,10 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.saveEditCompany = function (newCompany) {
-    newCompany.variations = [];
-    $scope.companyNames.push(newCompany);
+    if(newCompany.name) {
+      if (newCompany.varations) newCompany.variations = newCompany.variations.split(';');
+      $scope.companyNames.push(newCompany);
+    }
     $scope.editCompanyBool = false;
     $scope.newCompany = {};
   };
@@ -93,7 +95,10 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.saveEditSearchName = function(newSearchName){
-    $scope.availableSearchNames.push(newSearchName);
+    if(newSearchName.name && newSearchName.searchString) {
+      console.log(newSearchName);
+      $scope.availableSearchNames.push(newSearchName);
+    }
     $scope.editSearchNameBool = false;
     $scope.newSearchName = {};
   };
