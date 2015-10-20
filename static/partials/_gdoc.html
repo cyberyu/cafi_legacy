@@ -2,11 +2,11 @@
   <!--<h3 class="modal-title">{{currentDoc.title}}</h3>-->
 <!--</div>-->
 <div class="modal-body">
+
   <article>
     <header>
       <h2 ng-bind-html="currentDoc.hltitle"></h2>
     </header>
-
     <aside>
       <p ng-bind-html="currentDoc.hlsnippet"> </p>
     </aside>
@@ -16,21 +16,46 @@
       <div class="form-group">
         <label>Is this article relevant?</label>
         <label class="radio-inline">
-          <input type="radio" name="yes" value="1" ng-model="currentDoc.label">
+          <input type="radio" name="yes" value="1" ng-model="currentDoc.label"ng-click="saveEdit(currentDoc)">
           yes
         </label>
         <label class="radio-inline">
-          <input type="radio" name="no" value="2" ng-model="currentDoc.label">
+          <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)">
           no
         </label>
       </div>
-      <tags-input ng-model="currentDoc.docType"></tags-input>
+
+      <div class="form-group">
+        <label>How to label this article?</label>
+        <select  ng-model="selectedRisk">
+          <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        <label>Risk</label>
+        <label>From</label>
+        <select  ng-model="selectedFromCompany">
+          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        <label>To</label>
+        <select  ng-model="selectedToCompany">
+          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        <a ng-click="labelSubmit()" class="btn btn-default btn-circle"><i class="fa fa-floppy-o"></i></a>
+      </div>
+      <!--<tags-input ng-model="currentDoc.docType"></tags-input>-->
+      <!--{{selectedRisk}}-->
+      <!--{{selectedFromCompany}}-->
+      <!--{{selectedToCompany}}-->
+      <!--{{currentDoc.id}}-->
+      <!--{{currentProject.id}}-->
+      <div class="tags clearfix" ng-repeat="tag in tags">
+        <div class="tag">{{tag}}</div>
+      </div>
     </footer>
   </article>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>
-  <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  <!--<button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>-->
+  <button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
 </div>
   <!--<ul>-->
     <!--<li ng-repeat="item in items">-->
