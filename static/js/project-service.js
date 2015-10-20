@@ -61,13 +61,20 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
 });
 
 angular.module('projectServices').factory('Company', function ($resource) {
-  return $resource('/api/companies/:companyId', {projectId: '@id'}, {
+  return $resource('/api/companies/:companyId', {companyId: '@id'}, {
     update: {method: 'PUT'},
   });
 });
 
 angular.module('projectServices').factory('Risk', function ($resource) {
-  return $resource('/api/risks/:riskId', {projectId: '@id'}, {
+  return $resource('/api/risks/:riskId', {riskId: '@id'}, {
+    update: {method: 'PUT'},
+  });
+});
+
+
+angular.module('projectServices').factory('RiskItem', function ($resource) {
+  return $resource('/api/risk_items/:riskItemId', {riskItemId: '@id'}, {
     update: {method: 'PUT'},
   });
 });
