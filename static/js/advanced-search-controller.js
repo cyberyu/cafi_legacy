@@ -83,7 +83,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
       console.log(newCompany.variations);
 
       if (newCompany.id) {
-        var obj = Company.update({"companyId":newCompany.id}, newCompany);
+        var obj = Company.update(newCompany);
       } else {
         newCompany.project = $scope.project_id;
         var obj = Company.save(newCompany);
@@ -102,13 +102,13 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.editCompany = function(selected){
-    if(selected.length==1){
+    if(selected && selected.length==1){
       $scope.editCompanyBool = true;
       $scope.editVariationBool = false;
       $scope.newCompany = selected[0];
       $scope.newCompany.to_variations = selected[0].variations.join(';');
     } else {
-      $scope.msg = "Please select only one item";
+      $scope.msg = "Please select one item";
       $scope.msg_class = "alert-danger";
     }
   };
@@ -125,7 +125,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   $scope.saveEditSearchName = function(newSearchName){
     if(newSearchName.name && newSearchName.searchString) {
       if(newSearchName.id) {
-        var newSearch = Risk.update({"riskId": newSearchName.id}, newSearchName);
+        var newSearch = Risk.update(newSearchName);
       } else {
         var newSearch = Risk.save(newSearchName);
         $scope.availableSearchNames.push(newSearch);
@@ -143,11 +143,11 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.editSearchName = function(selected){
-    if (selected.length == 1){
+    if (selected && selected.length == 1){
       $scope.editSearchNameBool = true;
       $scope.newSearchName = selected[0];
     } else {
-      $scope.msg = "Please select only one item";
+      $scope.msg = "Please select one item";
       $scope.msg_class = "alert-danger";
     }
   };
