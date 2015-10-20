@@ -83,7 +83,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
       console.log(newCompany.variations);
 
       if (newCompany.id) {
-        var obj = Company.update({"companyId":newCompany.id}, newCompany);
+        var obj = Company.update(newCompany);
       } else {
         newCompany.project = $scope.project_id;
         var obj = Company.save(newCompany);
@@ -125,7 +125,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   $scope.saveEditSearchName = function(newSearchName){
     if(newSearchName.name && newSearchName.searchString) {
       if(newSearchName.id) {
-        var newSearch = Risk.update({"riskId": newSearchName.id}, newSearchName);
+        var newSearch = Risk.update(newSearchName);
       } else {
         var newSearch = Risk.save(newSearchName);
         $scope.availableSearchNames.push(newSearch);
