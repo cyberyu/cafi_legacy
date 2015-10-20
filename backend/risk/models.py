@@ -14,6 +14,8 @@ class Risk(models.Model):
 
 
 class Company(models.Model):
+    project = models.ForeignKey('engagement.Project')
+
     name = models.CharField(max_length=200)
     address = models.TextField(blank=True)
     zipcode = models.CharField(max_length=20, blank=True)

@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import filters
 
 from models import Company, Risk, RiskItem
 from engagement.models import Project
@@ -18,6 +19,8 @@ class RiskViewSet(viewsets.ModelViewSet):
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
 
     def get_queryset(self):
         project_id = self.request.query_params.get('project', None)
@@ -36,12 +39,13 @@ class CompanyViewSet(viewsets.ModelViewSet):
         data = list(csv.DictReader(file))
         for item in data:
             item['variations'] = [v.strip() for v in item.get('variations').split(';')]
+            item['project'] = project_id;
             serializer = CompanySerializer(data=item)
             serializer.is_valid()
             company = serializer.save()
-            company.project_set.add(project)
+            # company.project_set.add(project)
 
-        queryset = Company.objects.filter(project__id=project_id).values('name', 'variations')
+        queryset = Company.objects.filter(project__id=project_id);
         serializer = self.get_serializer(queryset, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

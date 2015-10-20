@@ -1,4 +1,7 @@
-projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $interval, $timeout, $modalInstance, Search, Gdoc) {
+projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $interval, $timeout, $modalInstance,
+                                                              $routeParams, Upload, Search, Company, Risk) {
+  $scope.project_id = $routeParams.id;
+
   $scope.newSearches = [];
   $scope.progressBool = false;
   $scope.editSearchNameBool = false;
@@ -15,9 +18,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
     $scope.availableSearchNames = response.data;
   });
 
-  $http.get('/api/companies').then(function(response){
-    $scope.companyNames = response.data;
-  });
+  $scope.companyNames = Company.query({"project__id": $scope.project_id});
 
   $scope.ok = function () {
     $modalInstance.close();
@@ -73,19 +74,48 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.addCompany = function () {
     $scope.editCompanyBool = true;
+    $scope.editVariationBool = false;
   };
 
   $scope.saveEditCompany = function (newCompany) {
-    newCompany.variations = [];
-    $scope.companyNames.push(newCompany);
+    if(newCompany.name) {
+      if (newCompany.to_variations) newCompany.variations = newCompany.to_variations.split(';');
+      console.log(newCompany.variations);
+
+      if (newCompany.id) {
+        var obj = Company.update({"companyId":newCompany.id}, newCompany);
+      } else {
+        newCompany.project = $scope.project_id;
+        var obj = Company.save(newCompany);
+        $scope.companyNames.push(obj);
+      }
+    }
     $scope.editCompanyBool = false;
     $scope.newCompany = {};
   };
 
   $scope.deleteCompanies = function(selected){
     for(var i =0; i <selected.length; i++){
+      if(selected[i].id) Company.delete({"companyId": selected[i].id});
       $scope.companyNames.pop(selected[i]);
     }
+  };
+
+  $scope.editCompany = function(selected){
+    if(selected.length==1){
+      $scope.editCompanyBool = true;
+      $scope.editVariationBool = false;
+      $scope.newCompany = selected[0];
+      $scope.newCompany.to_variations = selected[0].variations.join(';');
+    } else {
+      $scope.msg = "Please select only one item";
+      $scope.msg_class = "alert-danger";
+    }
+  };
+
+  $scope.cancelEditCompany = function(){
+    $scope.newCompany = {};
+    $scope.editCompanyBool = false;
   };
 
   $scope.addSearchName = function(){
@@ -93,31 +123,84 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   };
 
   $scope.saveEditSearchName = function(newSearchName){
-    $scope.availableSearchNames.push(newSearchName);
+    if(newSearchName.name && newSearchName.searchString) {
+      if(newSearchName.id) {
+        var newSearch = Risk.update({"riskId": newSearchName.id}, newSearchName);
+      } else {
+        var newSearch = Risk.save(newSearchName);
+        $scope.availableSearchNames.push(newSearch);
+      }
+    }
     $scope.editSearchNameBool = false;
     $scope.newSearchName = {};
   };
 
   $scope.deleteSearchNames = function(selected){
     for(var i =0; i <selected.length; i++){
+      if(selected[i].id) Risk.delete({"riskId": selected[i].id});
       $scope.availableSearchNames.pop(selected[i]);
     }
   };
 
+  $scope.editSearchName = function(selected){
+    if (selected.length == 1){
+      $scope.editSearchNameBool = true;
+      $scope.newSearchName = selected[0];
+    } else {
+      $scope.msg = "Please select only one item";
+      $scope.msg_class = "alert-danger";
+    }
+  };
+
+  $scope.cancelEditSearchName = function(){
+    $scope.newSearchName = {};
+    $scope.editSearchNameBool = false;
+  };
+
   $scope.addVariation = function(){
+    $scope.editCompanyBool = false;
     $scope.editVariationBool = true;
   };
 
   $scope.deleteVariations = function(selected){
     for(var i =0; i <selected.length; i++){
-      $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].variations.pop(selected[i]);
+      $scope.gsearchOptions.selectedCompanyNames[0].variations.pop(selected[i]);
     }
+    $scope.saveEditCompany($scope.gsearchOptions.selectedCompanyNames[0]);
+  };
+
+  $scope.cancelEditVariation = function(){
+    $scope.newVariation = {};
+    $scope.editVariationBool = false;
   };
 
   $scope.saveEditVariation = function(newVariation){
-    $scope.companyNames[$scope.companyNames.indexOf($scope.gsearchOptions.selectedCompanyNames[0])].
-      variations.push(newVariation.name);
+    $scope.gsearchOptions.selectedCompanyNames[0].variations.push(newVariation.name);
+    $scope.saveEditCompany($scope.gsearchOptions.selectedCompanyNames[0]);
     $scope.editVariationBool = false;
     $scope.newVariation = {};
+  };
+
+  $scope.uploadFiles = function(file, errFiles) {
+    $scope.f = file;
+    file.progress = 0;
+    $scope.errFile = errFiles && errFiles[0];
+    if (file) {
+      file.upload = Upload.upload({
+        url: '/api/companies/'+$scope.project_id+'/upload',
+        data: {file: file}
+      });
+
+      file.upload.then(function (response) {
+        $timeout(function () {
+          $scope.companyNames = response.data;
+        });
+      }, function (response) {
+        if (response.status > 0)
+          $scope.errorMsg = response.status + ': ' + response.data;
+      }, function (evt) {
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+      });
+    }
   };
 });

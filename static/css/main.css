@@ -325,3 +325,21 @@ word-wrap: break-word;
 #gen-search-btn {
     padding-right: 15px;
 }
+
+#search-edit {
+    margin-top: 10px;
+    padding-top: 20px;
+}
+
+#company-edit {
+    margin-top: 10px;
+}
+
+.edit-button {
+    margin-bottom: 20px;
+    padding-right: 15px;
+}
+
+.search-panel {
+    height: 300px;
+}
