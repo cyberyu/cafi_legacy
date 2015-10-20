@@ -2,8 +2,8 @@ __author__ = 'shiyu'
 
 import re
 import regex
-from backend.google.CustomSearchAPI.searchParser import SearchQueryParser
-from backend.google.ner.cafi_netagger import CAFI_NETagger
+from google.CustomSearchAPI.searchParser import SearchQueryParser
+from google.ner.cafi_netagger import CAFI_NETagger
 
 KEYWORDS_PATTERN = "<span style='color:%s'>"
 EN_PERSON_PATTERN = "<span style='background-color: #F5D0A9'>"
