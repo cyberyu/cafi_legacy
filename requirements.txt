@@ -25,4 +25,4 @@ django-celery==3.1.17
 redis==2.10.3
 regex==2015.10.5
 django-queryset-csv==0.3.1
-nltk==3.1
+nltk==3.0.5
