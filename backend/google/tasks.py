@@ -71,6 +71,7 @@ def do_search(search, string):
         obj.save()
         do_download.delay(obj.id, obj.url)
 
+
 @shared_task(default_retry_delay = 3, max_retries = 3)
 def do_download(id, url):
     data = download(url)
@@ -78,7 +79,9 @@ def do_download(id, url):
     obj.path = data.get('path')
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
+    obj.raw_html = data.get('raw_html')
     obj.save()
+
 
 @shared_task(default_retry_delay = 3, max_retries = 3)
 def do_geo_search(id, address):

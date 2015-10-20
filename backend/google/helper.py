@@ -29,7 +29,7 @@ def extract_from_file(s):
 
 def extract_from_html(html):
     blocks = content_comments_extractor.analyze(html, blocks=True)
-    
+
     return '\n'.join([b.text for b in blocks])
 
 def download(url):
@@ -41,17 +41,19 @@ def download(url):
     if r.headers.get('content-type', '').strip() in txt_fmts:
         path = None
         text = extract_from_html(r.content)
+        raw_html = r.content
         doc_type = 'txt'
     else:
         path = save_file(r.content, url)
         text = extract_from_file(r.content)
+        raw_html = None
         tmp = url.split('.')
         if len(tmp) >= 2:
             doc_type = tmp[-1]
         else:
             doc_type = None
 
-    data = {'path': path, 'doc_type': doc_type, 'text': text}
+    data = {'path': path, 'doc_type': doc_type, 'text': text, 'raw_html': raw_html}
 
     return data
 
