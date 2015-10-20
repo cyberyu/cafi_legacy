@@ -4,7 +4,7 @@
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
                                                            $http, $uibModal, Upload, popupService,
-                                                           Project, Search, Gdoc,GeoSearch){
+                                                           Project, Search, Gdoc,GeoSearch, Company, Risk, RiskItem){
 
   //Project.get({projectId:$routeParams.id}, function(data){
   //  $scope.currentProject = data;
@@ -12,6 +12,9 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
+  $scope.riskitems = RiskItem.query();
+  $scope.predefinedCompanies = Company.query();
+  $scope.predefinedRisks = Risk.query();
 
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
@@ -210,7 +213,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
           break;
         }
       }
-      $scope.modalInstance.dismiss('cancel');
+      //$scope.modalInstance.dismiss('cancel');
     });
   };
 
