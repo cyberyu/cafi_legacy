@@ -11,7 +11,7 @@ class Search(models.Model):
     STATUS_CHOICES = (
         (0, ''),
         (1, 'submitted'),
-        (2, 'processing'),
+        (2, 'in process'),
         (3, 'done'),
     )
 
@@ -39,8 +39,10 @@ class SearchResult(models.Model):
     snippet = models.TextField(blank=True)
     rank = models.IntegerField(blank=True, null=True)  # rank of the google search result
 
+    raw_html = models.TextField(blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     doc_type = models.CharField(blank=True, max_length=20)
+    raw_file = models.FilePathField(blank=True, null=True)
 
     risks = GenericRelation(RiskItem)
 
