@@ -31,6 +31,14 @@ class SearchViewSet(viewsets.ModelViewSet):
         search_obj = serializer.save()
         do_search(search_obj, serializer.data.get('string'))
 
+    @list_route(methods=['POST'])
+    def batch(self, request):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid()
+        objs = serializer.save()
+        print objs
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class SearchResultViewSet(viewsets.ModelViewSet):
     queryset = SearchResult.objects.all()

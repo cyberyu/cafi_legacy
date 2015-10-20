@@ -8,9 +8,16 @@ class SearchSerializer(serializers.ModelSerializer):
         model = Search
 
 
+class RiskObjectRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.risk.name
+
+
 class SearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
     hlsnippet = serializers.SerializerMethodField()
+    hltext = serializers.SerializerMethodField()
+    risks = RiskObjectRelatedField(read_only=True, many=True)
 
     class Meta:
         model = SearchResult
@@ -18,20 +25,17 @@ class SearchResultSerializer(serializers.ModelSerializer):
     def get_hltitle(self, obj):
         highlighter = Highlighter()
         istring = obj.search.string
-        newqstr = istring[:istring.rfind("&")]
-        newqstr = newqstr.replace('\"','')
-        hiqueryStr= newqstr
-        return highlighter.highlight(obj.title,hiqueryStr)
-        # return obj.title
+        return highlighter.highlight(obj.title, istring)
 
     def get_hlsnippet(self, obj):
         highlighter = Highlighter()
         istring = obj.search.string
-        newqstr = istring[:istring.rfind("&")]
-        newqstr = newqstr.replace('\"','')
-        hiqueryStr= newqstr
-        return highlighter.highlight(obj.snippet,hiqueryStr)
-        # return obj.snippet
+        return highlighter.highlight(obj.snippet, istring)
+
+    def get_hltext(self, obj):
+        highlighter = Highlighter()
+        istring = obj.search.string
+        return highlighter.highlight(obj.text, istring)
 
 
 class GeoSearchSerializer(serializers.ModelSerializer):

@@ -1,16 +1,44 @@
-<div class="modal-header">
-  <h3 class="modal-title">I'm a modal!</h3>
-</div>
+<!--<div class="modal-header">-->
+  <!--<h3 class="modal-title">{{currentDoc.title}}</h3>-->
+<!--</div>-->
 <div class="modal-body">
-  {{currentDoc.title}} aa
-  <ul>
-    <li ng-repeat="item in items">
-      <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-    </li>
-  </ul>
-  Selected: <b>{{ selected.item }}</b>
+  <article>
+    <header>
+      <h2 ng-bind-html="currentDoc.hltitle"></h2>
+    </header>
+
+    <aside>
+      <p ng-bind-html="currentDoc.hlsnippet"> </p>
+    </aside>
+    <p ng-bind-html="currentDoc.hltext"> </p>
+    <footer>
+      <p>Posted {{currentDoc.createdAt}}</p>
+      <div class="form-group">
+        <label>Is this article relevant?</label>
+        <label class="radio-inline">
+          <input type="radio" name="yes" value="1" ng-model="currentDoc.label">
+          yes
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="no" value="2" ng-model="currentDoc.label">
+          no
+        </label>
+      </div>
+      <tags-input ng-model="currentDoc.docType"></tags-input>
+    </footer>
+  </article>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+  <button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>
   <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>
+  <!--<ul>-->
+    <!--<li ng-repeat="item in items">-->
+      <!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
+    <!--</li>-->
+  <!--</ul>-->
+  <!--Selected: <b>{{ selected.item }}</b>-->
+<!--<div class="modal-footer">-->
+  <!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
+  <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
+<!--</div>-->

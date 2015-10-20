@@ -32,6 +32,7 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   });
 }).factory('Gdoc', function ($resource) {
   return $resource('/api/gdocs/:gdocId', {gdocId: '@id'}, {
+    update: {method: 'PUT'},
     get: {
       method: 'GET'
       //isArray: false,
@@ -59,3 +60,14 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   });
 });
 
+angular.module('projectServices').factory('Company', function ($resource) {
+  return $resource('/api/companies/:companyId', {companyId: '@id'}, {
+    update: {method: 'PUT'},
+  });
+});
+
+angular.module('projectServices').factory('Risk', function ($resource) {
+  return $resource('/api/risks/:riskId', {riskId: '@id'}, {
+    update: {method: 'PUT'},
+  });
+});

@@ -9,6 +9,7 @@ var cafiApp = angular.module('cafiApp', [
   'ngRoute',
   'ngCsvImport',
   'ngCsv',
+  'ngTagsInput',
   'ng-mfb',
   'ui.bootstrap',
   'uiGmapgoogle-maps',
