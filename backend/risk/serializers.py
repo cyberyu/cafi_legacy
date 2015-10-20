@@ -25,6 +25,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
+        exclude = ('risks', )
 
 
 class ContentObjectRelatedField(serializers.RelatedField):
