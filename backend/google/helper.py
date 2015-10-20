@@ -24,10 +24,12 @@ def save_file(content, url):
 
 def extract_from_file(s):
     data = parser.from_buffer(s, serverEndpoint=settings.TIKA_SERVER)
+
     return data.get('content')
 
 def extract_from_html(html):
     blocks = content_comments_extractor.analyze(html, blocks=True)
+    
     return '\n'.join([b.text for b in blocks])
 
 def download(url):
