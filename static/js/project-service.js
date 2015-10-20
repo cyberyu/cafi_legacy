@@ -71,3 +71,10 @@ angular.module('projectServices').factory('Risk', function ($resource) {
     update: {method: 'PUT'},
   });
 });
+
+
+angular.module('projectServices').factory('RiskItem', function ($resource) {
+  return $resource('/api/risk_items/:riskItemId', {riskItemId: '@id'}, {
+    update: {method: 'PUT'},
+  });
+});
