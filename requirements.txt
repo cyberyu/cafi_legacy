@@ -1,7 +1,7 @@
 Django==1.7
 elasticsearch==1.6.0
 psycopg2==2.6
-djangorestframework==3.2.0
+djangorestframework==3.2.4
 drf-extensions==0.2.8
 requests==2.7.0
 django-nose==1.4.1
@@ -25,4 +25,4 @@ django-celery==3.1.17
 redis==2.10.3
 regex==2015.10.5
 django-queryset-csv==0.3.1
-nltk==3.1
+nltk==3.0.5
