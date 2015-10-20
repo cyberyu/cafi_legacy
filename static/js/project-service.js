@@ -60,3 +60,12 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   });
 });
 
+angular.module('projectServices').factory('Company', function ($resource) {
+  return $resource('/api/companies/:companyId', {projectId: '@id'}, {
+  });
+});
+
+angular.module('projectServices').factory('Risk', function ($resource) {
+  return $resource('/api/risks/:riskId', {projectId: '@id'}, {
+  });
+});

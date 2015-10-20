@@ -1,4 +1,5 @@
-projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $interval, $timeout, $modalInstance, Search, Gdoc) {
+projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $interval, $timeout, $modalInstance,
+                                                              Search, Company, Risk) {
   $scope.newSearches = [];
   $scope.progressBool = false;
   $scope.editSearchNameBool = false;
@@ -78,6 +79,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   $scope.saveEditCompany = function (newCompany) {
     if(newCompany.name) {
       if (newCompany.varations) newCompany.variations = newCompany.variations.split(';');
+      Company.save(newCompany);
       $scope.companyNames.push(newCompany);
     }
     $scope.editCompanyBool = false;
@@ -86,6 +88,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.deleteCompanies = function(selected){
     for(var i =0; i <selected.length; i++){
+      if(selected[i].id) Company.delete({"companyId": selected[i].id});
       $scope.companyNames.pop(selected[i]);
     }
   };
@@ -96,7 +99,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.saveEditSearchName = function(newSearchName){
     if(newSearchName.name && newSearchName.searchString) {
-      console.log(newSearchName);
+      Risk.save(newSearchName);
       $scope.availableSearchNames.push(newSearchName);
     }
     $scope.editSearchNameBool = false;
@@ -105,6 +108,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.deleteSearchNames = function(selected){
     for(var i =0; i <selected.length; i++){
+      if(selected[i].id) Risk.delete({"riskId": selected[i].id});
       $scope.availableSearchNames.pop(selected[i]);
     }
   };
