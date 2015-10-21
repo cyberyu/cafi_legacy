@@ -14,14 +14,13 @@ class RiskObjectRelatedField(serializers.RelatedField):
                 "from": value.from_company.name}
 
 
-class SearchResultSerializer(serializers.ModelSerializer):
+class SimpleSearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
     hlsnippet = serializers.SerializerMethodField()
-    hltext = serializers.SerializerMethodField()
-    risks = RiskObjectRelatedField(read_only=True, many=True)
 
     class Meta:
         model = SearchResult
+        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search')
 
     def get_hltitle(self, obj):
         highlighter = Highlighter()
@@ -32,6 +31,14 @@ class SearchResultSerializer(serializers.ModelSerializer):
         highlighter = Highlighter()
         istring = obj.search.string
         return highlighter.highlight(obj.snippet, istring)
+
+
+class SearchResultSerializer(SimpleSearchResultSerializer):
+    hltext = serializers.SerializerMethodField()
+    risks = RiskObjectRelatedField(read_only=True, many=True)
+
+    class Meta:
+        model = SearchResult
 
     def get_hltext(self, obj):
         highlighter = Highlighter()

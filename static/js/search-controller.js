@@ -157,7 +157,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   // modal stuff
-  $scope.openGdoc = function (size, doc) {
+  $scope.openGdoc = function (size, gdoc) {
     $scope.modalInstance = $uibModal.open({
       animation: true,
       templateUrl: '/static/partials/_gdoc.html',
@@ -166,11 +166,9 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       scope: $scope,
       resolve: {
         currentDoc: function(){
-          $scope.currentDoc = angular.copy(doc) ;
-          //$scope.currentDocRelevant = $scope.currentDoc.label;
-          //$scope.currentDocTags = $scope.currentDoc.docType;
-          $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
-          return $scope.currentDoc;
+          return Gdoc.get({"gdocId": gdoc.id}).$promise.then(function(data){
+            return data;
+          });
         }
       }
     });
