@@ -48,7 +48,7 @@ service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdS
 collection = service.cse()
 
 
-@shared_task(default_retry_delay = 3, max_retries = 3)
+@shared_task(default_retry_delay=3, max_retries=3)
 def do_search(search):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
@@ -72,7 +72,7 @@ def do_search(search):
         do_download.delay(obj.id, obj.url)
 
 
-@shared_task(default_retry_delay = 3, max_retries = 3)
+@shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
     data = download(url)
     obj = SearchResult.objects.get(pk=id)
@@ -83,7 +83,7 @@ def do_download(id, url):
     obj.save()
 
 
-@shared_task(default_retry_delay = 3, max_retries = 3)
+@shared_task(default_retry_delay=3, max_retries=3)
 def do_geo_search(id, address):
     try:
         set_lock('geo_lock')
