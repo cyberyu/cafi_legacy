@@ -1,58 +1,64 @@
-<!--<div class="modal-header">-->
-  <!--<h3 class="modal-title">{{currentDoc.title}}</h3>-->
-<!--</div>-->
-<div class="modal-body">
+<div class="modal-header">
+  <div class = "row">
+    <div class="col-md-10">
+      <h3 class="modal-title">From Search: {{displaySearch.string}} </h3>
+    </div>
+    <div class="col-md-2">
+      <a ng-show = "nextID" ng-click="openNextGdoc()" class="btn btn-default">Next <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
 
+</div>
+
+<div class="modal-body">
   <article>
+    <div class="sidebar-right">
+      <footer>
+        <div class="form-group">
+          <label>Is this article relevant?</label>
+          <label class="radio-inline">
+            <input type="radio" name="yes" value="1" ng-model="currentDoc.label"ng-click="saveEdit(currentDoc)">
+            yes
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)">
+            no
+          </label>
+        </div>
+        <div class="form-group">
+          <label>How to label this article?</label>
+          <select  ng-model="selectedRisk">
+            <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+          </select>
+          <label>Risk</label>
+          <label>From</label>
+          <select  ng-model="selectedFromCompany">
+            <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+          </select>
+          <label>To</label>
+          <select  ng-model="selectedToCompany">
+            <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+          </select>
+          <a ng-click="labelSubmit()" class="btn btn-default btn-circle"><i class="fa fa-floppy-o"></i></a>
+        </div>
+        <div class="tags clearfix" ng-repeat="tag in tags">
+          <div class="tag">{{tag}}</div>
+        </div>
+      </footer>
+    </div>
     <header>
       <h2 ng-bind-html="currentDoc.hltitle"></h2>
     </header>
+      <p>Collected {{currentDoc.createdAt}}</p>
     <aside>
+      <p ng-show ="currentDoc.rank">Google rank: {{currentDoc.rank}}</p>
+      <p ng-show ="currentDoc.docType">Doc type: {{currentDoc.docType}}</p>
+      <p ng-show ="currentDoc.url"> <a href="{{currentDoc.url}}">Link to original article</a></p>
       <p ng-bind-html="currentDoc.hlsnippet"> </p>
     </aside>
     <p ng-repeat="p in currentDoc.hltext.split('\n') track by $index">
       <span ng-bind-html="p"> </span>
     </p>
-    <footer>
-      <p>Posted {{currentDoc.createdAt}}</p>
-      <div class="form-group">
-        <label>Is this article relevant?</label>
-        <label class="radio-inline">
-          <input type="radio" name="yes" value="1" ng-model="currentDoc.label"ng-click="saveEdit(currentDoc)">
-          yes
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)">
-          no
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>How to label this article?</label>
-        <select  ng-model="selectedRisk">
-          <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <label>Risk</label>
-        <label>From</label>
-        <select  ng-model="selectedFromCompany">
-          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <label>To</label>
-        <select  ng-model="selectedToCompany">
-          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <a ng-click="labelSubmit()" class="btn btn-default btn-circle"><i class="fa fa-floppy-o"></i></a>
-      </div>
-      <!--<tags-input ng-model="currentDoc.docType"></tags-input>-->
-      <!--{{selectedRisk}}-->
-      <!--{{selectedFromCompany}}-->
-      <!--{{selectedToCompany}}-->
-      <!--{{currentDoc.id}}-->
-      <!--{{currentProject.id}}-->
-      <div class="tags clearfix" ng-repeat="tag in tags">
-        <div class="tag">{{tag}}</div>
-      </div>
-    </footer>
   </article>
 </div>
 <div class="modal-footer">

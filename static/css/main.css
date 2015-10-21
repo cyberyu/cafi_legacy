@@ -1,5 +1,16 @@
 @import "../vendor/bootstrap/dist/css/bootstrap.css";
 
+.sidebar-right {
+    width:33.33%;
+    float:right;
+    padding:1em;
+    margin:2em 0 1em;
+    box-shadow:2px 0 16px rgba(0,0,0,0.1);
+}
+.sidebar-right p.sidebar-bottom {
+    margin-top:400px;
+}
+
 .container {
     margin: 20px auto;
     padding: 40px 20px;
