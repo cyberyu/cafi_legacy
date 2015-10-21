@@ -2,105 +2,122 @@
   <!--<a class="btn btn-danger btn-sm" href="/#/projects">Back to Projects</a>-->
 <!--</div>-->
 
+
 <ol class="breadcrumb">
   <li><a href="/#/projects">Projects</a></li>
   <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
   <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
 </ol>
 
-<div class="row">
-  <div class="ubox col-lg-offset-1">
-    <div class="col-sm-3" id="upload">
-      <form class="form-group">
-      <input type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-primary btn-sm"
-              accept=".csv" ngf-max-height="1000" ngf-max-size="1MB">
-      <!--{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
-      </form>
-    </div>
-    <div class="col-sm-4" id="up-progressbar" ng-if="f.progress>0">
-      <uib-progressbar value="f.progress" type="success"><span style="color:white; white-space:nowrap;">{{f.progress}}%</span></uib-progressbar>
-    </div>
-    <br>
-  </div>
-</div>
+<div ng-controller="mapCtrl">
+  <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
+    <ui-gmap-marker idkey="marker.id" coords="marker.coords" options="marker.options" click="onClick()" events="marker.events" >
+      <ui-gmap-window options="windowOptions" closeClick="closeClick()">
+        <div>{{title}}</div>
+      </ui-gmap-window>
+    </ui-gmap-marker>
+  </ui-gmap-google-map>
 
-<div class="row">
-  <div class="col-lg-1"></div>
-<div class="col-lg-10" ng-if="addresses.length>=0">
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table class="table table-hover address-table">
-          <thead>
-          <tr>
-            <th>Entity Name</th>
-            <th>Address</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
-            <td>{{address.name}}</td>
-            <td>{{address.address}}</td>
-            <td>{{address.lat}}</td>
-            <td>{{address.lng}}</td>
-            <td>
-              <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
-              <a class="btn btn-default btn-circle" ng-click="openGeoEdit('', address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
-              <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
-            </td>
-          </tr>
-        </table>
-        <a ng-click="openGeoEdit('')" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
-      </div>
-    </div>
-  </div>
-
-  <nav class="text-center" ng-if="total>20">
-    <paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"
-            scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
-            disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses(page)">
-    </paging>
-  </nav>
-
-<script type="text/ng-template" id="geoModal.html">
-  <div class="modal-body">
-        <form class="form-horizontal" role="form">
-          <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Entity name</label>
-            <div class="col-sm-10">
-              <input type="text" ng-model="currentAddress.name" class="form-control" id="title" placeholder="Entity name here"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="client" class="col-sm-2 control-label">Address</label>
-            <div class="col-sm-10">
-              <input type="text" ng-model="currentAddress.address" class="form-control" id="client" placeholder="Address here"/>
-            </div>
-          </div>
+  <div class="row">
+    <div class="ubox col-lg-offset-1">
+      <div class="col-sm-3" id="upload">
+        <form class="form-group">
+          <input type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-primary btn-sm"
+                 accept=".csv" ngf-max-height="1000" ngf-max-size="1MB">
+          <!--{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
         </form>
-  </div>
-  <div class="modal-footer">
-    <a class="btn btn-primary btn-danger" ng-click="cancel()">Cancel</a>
-    <a class="btn btn-primary" ng-click="saveAddressEdit(currentAddress); ok()">Save</a>
-  </div>
-</script>
-  <a class="col-lg-10 ">
-    <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
-      {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
-    </div>
-    <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
-      Seems like you haven't uploaded a valid csv file yet.
-    </div>
-    <div class="col-sm-3 pull-right">
-      <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
-      <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
-      <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+      </div>
+      <div class="col-sm-4" id="up-progressbar" ng-if="f.progress>0">
+        <uib-progressbar value="f.progress" type="success"><span style="color:white; white-space:nowrap;">{{f.progress}}%</span></uib-progressbar>
+      </div>
+      <br>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10" ng-if="addresses.length>=0">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <table class="table table-hover address-table">
+              <thead>
+              <tr>
+                <th>Entity Name</th>
+                <th>Address</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
+                <td>{{address.name}}</td>
+                <td>{{address.address}}</td>
+                <td>{{address.lat}}</td>
+                <td>{{address.lng}}</td>
+                <td>
+                  <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="openGeoEdit('', address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="locateOnMap(address)"  ng-show="address.lat && address.lng"><i class="fa fa-location-arrow"></i></a>
+
+                </td>
+              </tr>
+            </table>
+            <a ng-click="openGeoEdit('')" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <nav class="text-center" ng-if="total>20">
+        <paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"
+                scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
+                disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses(page)">
+        </paging>
+      </nav>
+
+      <script type="text/ng-template" id="geoModal.html">
+        <div class="modal-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">Entity name</label>
+              <div class="col-sm-10">
+                <input type="text" ng-model="currentAddress.name" class="form-control" id="title" placeholder="Entity name here"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="client" class="col-sm-2 control-label">Address</label>
+              <div class="col-sm-10">
+                <input type="text" ng-model="currentAddress.address" class="form-control" id="client" placeholder="Address here"/>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-primary btn-danger" ng-click="cancel()">Cancel</a>
+          <a class="btn btn-primary" ng-click="saveAddressEdit(currentAddress); ok()">Save</a>
+        </div>
+      </script>
+      <a class="col-lg-10 ">
+        <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
+          {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
+        </div>
+        <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
+          Seems like you haven't uploaded a valid csv file yet.
+        </div>
+        <div class="col-sm-3 pull-right">
+          <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
+          <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
+          <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+        </div>
+      </a>
+    </div>
+  </div>
+
 </div>
-</div>
+
+
+
 
 <!--<div class="row" ng-show="progressBool && calculateProgressAddress(addresses)<1">-->
   <!--<div class="col-md-12">-->
