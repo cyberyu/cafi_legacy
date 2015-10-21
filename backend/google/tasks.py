@@ -49,12 +49,12 @@ collection = service.cse()
 
 
 @shared_task(default_retry_delay = 3, max_retries = 3)
-def do_search(search, string):
+def do_search(search):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     start_val = 0
     request = collection.list(
-        q=string,
+        q=search.string,
         # num=10, #this is the maximum & default anyway
         # start=start_val,
         cx=search_engine_id

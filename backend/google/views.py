@@ -28,15 +28,16 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        search_obj = serializer.save()
-        do_search(search_obj, serializer.data.get('string'))
+        obj = serializer.save()
+        do_search.delay(obj)
 
     @list_route(methods=['POST'])
     def batch(self, request):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid()
         objs = serializer.save()
-        print objs
+        for obj in objs:
+            do_search.delay(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
