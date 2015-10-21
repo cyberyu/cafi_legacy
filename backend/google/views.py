@@ -8,7 +8,7 @@ import csv
 from djqscsv import render_to_csv_response
 
 from models import Search, SearchResult,GeoSearch
-from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer
+from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
 from tasks import do_search, do_geo_search
 from engagement.models import Project
 from celery import chain
@@ -28,16 +28,18 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        search_obj = serializer.save()
-        do_search(search_obj, serializer.data.get('string'))
+        obj = serializer.save()
+        do_search.delay(obj)
 
     @list_route(methods=['POST'])
     def batch(self, request):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid()
         objs = serializer.save()
-        print objs
+        for obj in objs:
+            do_search.delay(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 class SearchResultViewSet(viewsets.ModelViewSet):
@@ -53,6 +55,10 @@ class SearchResultViewSet(viewsets.ModelViewSet):
         if project is not None:
             queryset = queryset.filter(search__project=project)
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = SimpleSearchResultSerializer
+        return super(SearchResultViewSet, self).list(self, request, *args, **kwargs)
 
 
 class GeoSearchViewSet(viewsets.ModelViewSet):

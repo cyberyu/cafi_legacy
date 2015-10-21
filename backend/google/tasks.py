@@ -2,15 +2,15 @@ from __future__ import absolute_import
 from celery import shared_task
 import random
 import time
+from django.conf import settings
 
 import googlemaps
 from googleapiclient.discovery import build
-from google.alchemyapi_python.alchemyapi import AlchemyAPI
 from google.models import Search, SearchResult, GeoSearch
-from google.Extract_Text.checkAlchemy_Tika import CheckLink
-from google.keywords.texthilight import Highlighter
+from google.helper import download
+# from google.alchemyapi_python.alchemyapi import AlchemyAPI
+# from google.Extract_Text.checkAlchemy_Tika import CheckLink
 
-from django.conf import settings
 
 cache = settings.CACHE
 def get_lock(key):
@@ -19,60 +19,47 @@ def get_lock(key):
     return False
 
 def set_lock(key):
-    t = int(random.random()*1000 + 100)
+    t = int(random.random()*100 + 100)
     print "wait a moment %s" % t
     cache.set(key, 1, px=t)
 
 class GeocodingTest():
     def __init__(self):
         self.key = 'AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00' #Autocafi Developer Key
-        #self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
         self.client = googlemaps.Client(self.key)
 
     def simple_geocode(self,query):
         results = self.client.geocode(query)
         return results
-        #print json.dumps(results, indent=1)
-        
+
 def extract_text_AlchemyAPI_single(url_string):
 
     alchemyapi = AlchemyAPI()
     response1 = alchemyapi.text('url', url_string)
     if response1['status'] == 'OK':
         try:
-            #print (unicode(response1['text']))
             return unicode(response1['text'])
         except:
             pass
     else:
         return None
 
-
-def test_api(url_string):
-    return url_string
-
-
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
 
-def do_search(search, string):
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_search(search):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     start_val = 0
     request = collection.list(
-        q=string,
+        q=search.string,
         # num=10, #this is the maximum & default anyway
         # start=start_val,
         cx=search_engine_id
     )
-    print 'q'
     response = request.execute()
-    highlighter = Highlighter()
-    istring = string
-    newqstr = istring[:istring.rfind("&")]
-    newqstr = newqstr.replace('\"','')
-    hiqueryStr= newqstr
 
     for i, doc in enumerate(response['items']):
         obj = SearchResult()
@@ -81,12 +68,22 @@ def do_search(search, string):
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
-        #obj.text = extract_text_AlchemyAPI_single(doc.get('link'))
-        obj.text = CheckLink(doc.get('link')).parsed_text
         obj.save()
+        do_download.delay(obj.id, obj.url)
 
 
-@shared_task(default_retry_delay = 20, max_retries = 3)
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_download(id, url):
+    data = download(url)
+    obj = SearchResult.objects.get(pk=id)
+    obj.raw_file.name = data.get('path')
+    obj.doc_type = data.get('doc_type')
+    obj.text = data.get('text')
+    obj.raw_html = data.get('raw_html')
+    obj.save()
+
+
+@shared_task(default_retry_delay=3, max_retries=3)
 def do_geo_search(id, address):
     try:
         set_lock('geo_lock')

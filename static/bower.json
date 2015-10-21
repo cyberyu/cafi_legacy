@@ -30,7 +30,7 @@
     "startbootstrap-sb-admin-2": "~1.0.7",
     "angular-csv-import": "latest",
     "ng-csv": "latest",
-    "angular-google-maps": "latest",
+    "angular-google-maps": "~2.0.9",
     "angular-smart-table": "latest",
     "ng-file-upload": "9.0.9",
     "angular-paging": "2.0.0",

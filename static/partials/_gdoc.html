@@ -10,7 +10,9 @@
     <aside>
       <p ng-bind-html="currentDoc.hlsnippet"> </p>
     </aside>
-    <p ng-bind-html="currentDoc.hltext"> </p>
+    <p ng-repeat="p in currentDoc.hltext.split('\n') track by $index">
+      <span ng-bind-html="p"> </span>
+    </p>
     <footer>
       <p>Posted {{currentDoc.createdAt}}</p>
       <div class="form-group">

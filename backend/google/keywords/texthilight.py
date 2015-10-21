@@ -53,7 +53,7 @@ class Highlighter:
         regex = re.compile(regmatch, re.I)
         i=0; output=""
 
-        if len(regex.findall(text))>=1:  # when there is matched keywords, add color
+        if text and len(regex.findall(text))>=1:  # when there is matched keywords, add color
             i = 0; output = ""
             for m in regex.finditer(text):
                 output += "".join([text[i:m.start()],
