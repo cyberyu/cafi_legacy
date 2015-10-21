@@ -7,7 +7,7 @@ from django.conf import settings
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
-from helper import download
+from google.helper import download
 # from google.alchemyapi_python.alchemyapi import AlchemyAPI
 # from google.Extract_Text.checkAlchemy_Tika import CheckLink
 
