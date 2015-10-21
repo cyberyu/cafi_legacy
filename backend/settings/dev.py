@@ -141,5 +141,6 @@ REST_FRAMEWORK = {
 }
 
 CACHE = redis.Redis(host='localhost', port=6379)
+TIKA_SERVER = 'http://localhost:9998'
 
 from settings.local import *
