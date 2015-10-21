@@ -76,7 +76,7 @@ def do_search(search, string):
 def do_download(id, url):
     data = download(url)
     obj = SearchResult.objects.get(pk=id)
-    obj.path = data.get('path')
+    obj.raw_file.name = data.get('path')
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
     obj.raw_html = data.get('raw_html')
