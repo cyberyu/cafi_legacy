@@ -1,7 +1,8 @@
 projectControllers.controller('gDocCtrl', function ($scope, $modalInstance, currentDoc, $http) {
 
   $scope.currentDoc = currentDoc;
-  console.log($scope.currentPage);
+  $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
+
   $scope.tags = [];
   for (var i = 0; i < $scope.riskitems.length; i++) {
     if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {

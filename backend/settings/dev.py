@@ -143,4 +143,16 @@ REST_FRAMEWORK = {
 CACHE = redis.Redis(host='localhost', port=6379)
 TIKA_SERVER = 'http://localhost:9998'
 
+CELERY_ROUTES = {
+    'google.tasks.do_search': {
+        'queue': 'search_q'
+    },
+    'google.tasks.do_download': {
+        'queue': 'download_q'
+    },
+    'google.tasks.do_geo_search': {
+        'queue': 'geo_q'
+    }
+}
+
 from settings.local import *
