@@ -10,7 +10,8 @@ class SearchSerializer(serializers.ModelSerializer):
 
 class RiskObjectRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        return value.risk.name
+        return {"risk": value.risk.name,
+                "from": value.from_company.name}
 
 
 class SearchResultSerializer(serializers.ModelSerializer):
