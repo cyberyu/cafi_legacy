@@ -38,7 +38,7 @@ def download(url):
     s.headers.update({'User-agent': agent})
     r = s.get(url)
 
-    if r.headers.get('content-type', '').strip() in txt_fmts:
+    if r.headers.get('content-type', '').split(';')[0].strip() in txt_fmts:
         path = None
         text = extract_from_html(r.content)
         raw_html = r.content
@@ -67,5 +67,6 @@ if __name__ == '__main__':
     # url = 'http://www.vtk.org/wp-content/uploads/2015/04/file-formats.pdf'
     # url = 'http://hdwallpaperspretty.com/wp-content/gallery/beauty-nature-images/24701-nature-natural-beauty.jpg'
     url = 'http://docs.python-requests.org/en/latest/'
+    url = 'http://stackoverflow.com/questions/13137817/how-to-download-image-using-requests'
 
     print download(url)
