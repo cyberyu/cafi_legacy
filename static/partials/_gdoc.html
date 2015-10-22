@@ -19,6 +19,25 @@
     <p ng-show ="currentDoc.url"> <a href="{{currentDoc.url}}" target="_blank">Original article</a></p>
     <p ng-show ="currentDoc.rank"><strong>Google rank</strong>: {{currentDoc.rank}}</p>
     <p ng-show ="currentDoc.docType"><strong>Doc type</strong>: {{currentDoc.docType}}</p>
+    <hr>
+    <div>
+      <span class="label label-primary">Organization</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.org" ng-class="wcls"
+            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-success">Location</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.location" ng-class="wcls"
+            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-warning">Person</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
+            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
   </div>
 
   <div class="col-lg-8 mid-panel" >

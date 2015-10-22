@@ -9,9 +9,13 @@ angular.module('angular-highlight', []).directive('highlight', function() {
       return '<span class="'+attrs.highlightClass+'">'+match+'</span>';
     };
 
+    var ner_replacer = function(match, item) {
+      return '<span class="'+'ner'+'">'+match+'</span>';
+    };
+
     var tokenize = function(keywords) {
       //keywords = keywords.replace(new RegExp(',$','g'), '').split(',');
-      keywords = JSON.parse(keywords);
+      if(typeof(keywords) == 'string') keywords = JSON.parse(keywords);
       var i;
       var l = keywords.length;
       for (i=0;i<l;i++) {
@@ -21,7 +25,7 @@ angular.module('angular-highlight', []).directive('highlight', function() {
     };
 
     scope.$watch('currentDoc', function() {
-      var keywords = attrs['keywords'];
+      var keywords =  attrs['keywords'];
       var text = attrs['text'];
 
       if (!keywords || keywords == '') {
@@ -32,15 +36,24 @@ angular.module('angular-highlight', []).directive('highlight', function() {
       var tokenized	= tokenize(keywords);
       var regex = new RegExp(tokenized.join('|'), 'gmi');
 
-      // Find the words
-      var paragraphs = text.split('\n').map(function(s){
-        if(s != '') return '<p>' + s.replace(regex, replacer) + '</p>';
-      });
+      if (scope.currentDoc.ner) {
+        var ner = angular.copy(scope.currentDoc.ner);
+        var ner_tokenized = tokenize(ner);
+        var ner_regex = new RegExp(ner_tokenized.join('|'), 'gmi');
+        var paragraphs = text.split('\n').map(function (s) {
+          if (s != '') return '<p>' + s.replace(regex, replacer).replace(ner_regex, ner_replacer) + '</p>';
+        });
+      } else {
+        // Find the words
+        var paragraphs = text.split('\n').map(function (s) {
+          if (s != '') return '<p>' + s.replace(regex, replacer) + '</p>';
+        });
+      }
 
       var html = paragraphs.join('\n');
 
       element.html(html);
-    });
+    }, true);
   };
   return {
     restrict: 'EA',

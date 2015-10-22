@@ -16,7 +16,8 @@ class CAFI_NETagger:
         # java_path = "/home/shiyu/Downloads/jre1.8.0_60/bin/java" # replace this
         # os.environ['JAVAHOME'] = java_path
 
-        self.st = StanfordNERTagger('english.muc.7class.nodistsim.crf.ser.gz')
+        # self.st = StanfordNERTagger('english.muc.7class.nodistsim.crf.ser.gz')
+        self.st = StanfordNERTagger('english.all.3class.nodistsim.crf.ser.gz')
         self.NELIST_PERSON = []
         self.NELIST_ORGANIZATION = []
         self.NELIST_LOCATION = []

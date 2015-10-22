@@ -403,3 +403,15 @@ word-wrap: break-word;
     background-color: #00C8BE;	 /* #a94442; */
     /*font-weight: bold;*/
 }
+
+.ner {
+    background-color: #d43f3a;
+}
+
+.ner-clicked {
+    background-color: #d43f3a;
+}
+
+.ner-words {
+    font-size: 11px;
+}
