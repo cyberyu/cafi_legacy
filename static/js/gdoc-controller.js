@@ -1,13 +1,22 @@
-projectControllers.controller('gDocCtrl', function ($scope, $modalInstance, currentDoc, $http) {
+projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, Gdoc) {
 
   $scope.currentDoc = currentDoc;
   $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
-
   $scope.tags = [];
   for (var i = 0; i < $scope.riskitems.length; i++) {
     if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
       $scope.tags.push( $scope.riskitems[i].risk + " Risk from " +  $scope.riskitems[i].fromCompany + " to " + $scope.riskitems[i].toCompany)
     }
+  }
+  for (var i = 0; i < $scope.displayedGdocs.length; i++) {
+    if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+      break;
+    }
+  }
+  if (i < $scope.displayedGdocs.length -1){
+    $scope.nextID = $scope.displayedGdocs[i+1].id;
+  }else{
+    $scope.nextID = null;
   }
 
 
@@ -32,6 +41,24 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance, curr
         });
   };
 
+
+  $scope.openNextGdoc = function () {
+    for (var i = 0; i < $scope.displayedGdocs.length; i++) {
+      if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+        break;
+      }
+    }
+    if (i < $scope.displayedGdocs.length -1){
+      $scope.nextID = $scope.displayedGdocs[i+1].id;
+    }else{
+      $scope.nextID = null;
+    }
+    Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
+      $scope.currentDoc = data;
+      $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
+      $scope.tags = [];
+    });
+  };
 
   $scope.ok = function () {
     $modalInstance.close($scope.selected.item);

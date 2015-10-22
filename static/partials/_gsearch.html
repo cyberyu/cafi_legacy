@@ -6,6 +6,7 @@
 </ol>
 
 
+
 <div id="gsearch-box" class="text-center">
   <form class="form-inline">
     <div class="btn-group" uib-dropdown is-open="status.isopen">
@@ -71,7 +72,7 @@
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
-              <td><a href="" ng-click="openGdoc('lg', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
+              <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)"><i class="fa fa-close"></i></a></td>
