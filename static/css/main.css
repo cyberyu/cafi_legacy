@@ -360,18 +360,39 @@ word-wrap: break-word;
 }
 
 #gdoc-container {
-    position: relative;
+    height: 100%;
+    /*position: relative;*/
 }
 
 #gdoc-meta-box {
     margin-top: 40px;
+    /*background: gainsboro;*/
 }
 
 #gdoc-label-box {
     margin-top: 40px;
+    /*background: gainsboro;*/
+    height: 100%;
+    min-height: 100%;
     /*position: sticky;*/
     /*margin-right: 5px;*/
 }
+
+.mid-panel {
+    /*border-style: solid;*/
+    min-height: 500px;
+    border-left: 2px solid  #d4d4d4;
+    border-right: 2px solid #d4d4d4;
+    display: table-cell;
+}
+
+/*.left-panel {*/
+    /*display: table-cell;*/
+/*}*/
+
+/*.right-panel {*/
+    /*display: table-cell;*/
+/*}*/
 
 .label-div {
     margin-bottom: 10px;
