@@ -23,19 +23,19 @@
     <div>
       <span class="label label-primary">Organization</span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.org" ng-class="wcls"
-            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
     </div>
     <div>
       <span class="label label-success">Location</span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.location" ng-class="wcls"
-            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
     </div>
     <div>
       <span class="label label-warning">Person</span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
-            ng-mouseover="wcls='ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
     </div>
   </div>

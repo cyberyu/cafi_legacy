@@ -405,11 +405,11 @@ word-wrap: break-word;
 }
 
 .ner {
-    background-color: #d43f3a;
+    background-color: #fe9090;
 }
 
 .ner-clicked {
-    background-color: #d43f3a;
+    background-color: #fe9090;
 }
 
 .ner-words {
