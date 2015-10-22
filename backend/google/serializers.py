@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from models import Search, SearchResult, GeoSearch
 from google.keywords.texthilight import Highlighter
+from google.CustomSearchAPI.searchParser import SearchQueryParser
+from google.ner.cafi_netagger import CAFI_NETagger
 
 
 class SearchSerializer(serializers.ModelSerializer):
@@ -34,17 +36,23 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
 
 class SearchResultSerializer(SimpleSearchResultSerializer):
-    hltext = serializers.SerializerMethodField()
     risks = RiskObjectRelatedField(read_only=True, many=True)
+    keywords = serializers.SerializerMethodField()
+    nerwords = serializers.SerializerMethodField()
 
     class Meta:
         model = SearchResult
 
-    def get_hltext(self, obj):
-        highlighter = Highlighter()
-        istring = obj.search.string
-        return highlighter.highlight(obj.text, istring)
+    def get_keywords(self, obj):
+        parser = SearchQueryParser()
+        return parser.Parse(obj.search.string)
 
+    def get_nerwords(self, obj):
+        nt = CAFI_NETagger()  # intialize the tagger
+        nt.get_ne_tags_all(obj.text)  # tag the text
+        return {"person": set(nt.get_ne_tags_PERSON()),
+                "org": set(nt.get_ne_tags_ORGANIZATION()),
+                "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
     class Meta:

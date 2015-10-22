@@ -398,3 +398,20 @@ word-wrap: break-word;
     margin-bottom: 10px;
     height: auto;
 }
+
+.keywords {
+    background-color: #00C8BE;	 /* #a94442; */
+    /*font-weight: bold;*/
+}
+
+.ner {
+    background-color: #fe9090;
+}
+
+.ner-clicked {
+    background-color: #fe9090;
+}
+
+.ner-words {
+    font-size: 11px;
+}

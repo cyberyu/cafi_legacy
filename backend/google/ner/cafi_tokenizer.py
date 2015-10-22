@@ -15,7 +15,8 @@ class CAFI_Tokenizer:
         '''
 
     def textcleanse(self,intext):
-        return unicode(intext, 'ascii', 'ignore')
+        # return unicode(intext, 'ascii', 'ignore')
+        return intext
 
 
     def tokenize(self,intext):
