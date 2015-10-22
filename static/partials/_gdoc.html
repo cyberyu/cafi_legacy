@@ -26,9 +26,10 @@
       <h4 ng-bind-html="currentDoc.hltitle"></h4>
     </header>
     <p><em><small>Collected at {{currentDoc.createdAt}}</small></em></p>
-    <p ng-repeat="p in currentDoc.hltext.split('\n') track by $index">
-      <span ng-bind-html="p"> </span>
-    </p>
+    <div highlight keywords="{{currentDoc.keywords}}" text="{{currentDoc.text}}" highlight-class="keywords"></div>
+    <!--<p ng-repeat="p in currentDoc.text.split('\n') track by $index">-->
+      <!--<span ng-bind-html="p"> </span>-->
+    <!--</p>-->
   </div>
 
   <div class="col-lg-2 right-panel" id="gdoc-label-box" >
