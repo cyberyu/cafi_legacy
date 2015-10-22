@@ -383,7 +383,9 @@ word-wrap: break-word;
     min-height: 500px;
     border-left: 2px solid  #d4d4d4;
     border-right: 2px solid #d4d4d4;
-    display: table-cell;
+    /*display: table-cell;*/
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
 }
 
 /*.left-panel {*/
