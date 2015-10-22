@@ -25,7 +25,7 @@ def set_lock(key):
 
 class GeocodingTest():
     def __init__(self):
-        self.key = 'AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00' #Autocafi Developer Key
+        self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
         self.client = googlemaps.Client(self.key)
 
     def simple_geocode(self,query):
@@ -44,6 +44,7 @@ def extract_text_AlchemyAPI_single(url_string):
     else:
         return None
 
+# the search API key is now separated from AutoCafi account, and stay as a trial version
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
