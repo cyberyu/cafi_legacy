@@ -15,13 +15,13 @@
 </div>
 
 <div class="modal-body row" id="gdoc-container">
-  <div class="col-lg-2" id="gdoc-meta-box">
+  <div class="col-lg-2 left-panel" id="gdoc-meta-box">
     <p ng-show ="currentDoc.url"> <a href="{{currentDoc.url}}" target="_blank">Original article</a></p>
     <p ng-show ="currentDoc.rank"><strong>Google rank</strong>: {{currentDoc.rank}}</p>
     <p ng-show ="currentDoc.docType"><strong>Doc type</strong>: {{currentDoc.docType}}</p>
   </div>
 
-  <div class="col-lg-8" >
+  <div class="col-lg-8 mid-panel" >
     <header>
       <h4 ng-bind-html="currentDoc.hltitle"></h4>
     </header>
@@ -31,7 +31,7 @@
     </p>
   </div>
 
-  <div class="col-lg-2" id="gdoc-label-box" >
+  <div class="col-lg-2 right-panel" id="gdoc-label-box" >
 
     <div class="label-div">
           <label class="control-label">Relevant?</label>
