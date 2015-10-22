@@ -364,11 +364,11 @@ word-wrap: break-word;
 }
 
 #gdoc-meta-box {
-    margin-top: 100px;
+    margin-top: 40px;
 }
 
 #gdoc-label-box {
-    margin-top: 30px;
+    margin-top: 40px;
     /*position: sticky;*/
     /*margin-right: 5px;*/
 }
