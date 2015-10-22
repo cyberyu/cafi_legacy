@@ -17,6 +17,7 @@ var cafiApp = angular.module('cafiApp', [
   'ngFileUpload',
   'bw.paging',
   'sticky',
+  'angular-highlight',
   // 'nya.bootstrap.select',
   'projectControllers',
   'projectServices']);

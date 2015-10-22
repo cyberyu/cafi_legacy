@@ -41,6 +41,10 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         });
   };
 
+  $scope.addKeywords = function(w){
+    if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
+    $scope.currentDoc.ner.push(w);
+  };
 
   $scope.openNextGdoc = function () {
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {

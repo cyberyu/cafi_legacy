@@ -19,6 +19,25 @@
     <p ng-show ="currentDoc.url"> <a href="{{currentDoc.url}}" target="_blank">Original article</a></p>
     <p ng-show ="currentDoc.rank"><strong>Google rank</strong>: {{currentDoc.rank}}</p>
     <p ng-show ="currentDoc.docType"><strong>Doc type</strong>: {{currentDoc.docType}}</p>
+    <hr>
+    <div>
+      <span class="label label-primary">Organization</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.org" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-success">Location</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.location" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-warning">Person</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
   </div>
 
   <div class="col-lg-8 mid-panel" >
@@ -26,9 +45,10 @@
       <h4 ng-bind-html="currentDoc.hltitle"></h4>
     </header>
     <p><em><small>Collected at {{currentDoc.createdAt}}</small></em></p>
-    <p ng-repeat="p in currentDoc.hltext.split('\n') track by $index">
-      <span ng-bind-html="p"> </span>
-    </p>
+    <div highlight keywords="{{currentDoc.keywords}}" text="{{currentDoc.text}}" highlight-class="keywords"></div>
+    <!--<p ng-repeat="p in currentDoc.text.split('\n') track by $index">-->
+      <!--<span ng-bind-html="p"> </span>-->
+    <!--</p>-->
   </div>
 
   <div class="col-lg-2 right-panel" id="gdoc-label-box" >
