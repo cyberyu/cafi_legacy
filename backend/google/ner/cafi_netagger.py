@@ -17,7 +17,8 @@ class CAFI_NETagger:
         # os.environ['JAVAHOME'] = java_path
 
         # self.st = StanfordNERTagger('english.muc.7class.nodistsim.crf.ser.gz')
-        self.st = StanfordNERTagger('english.all.3class.nodistsim.crf.ser.gz')
+        # self.st = StanfordNERTagger('english.all.3class.nodistsim.crf.ser.gz')
+        self.st = StanfordNERTagger('english.all.3class.distsim.crf.ser.gz')
         self.NELIST_PERSON = []
         self.NELIST_ORGANIZATION = []
         self.NELIST_LOCATION = []
@@ -147,6 +148,7 @@ if __name__=='__main__':
            "A report in Forbes on Thursday said the company was preparing to cut its workforce by 26%, " \
            "which would amount to the largest workforce reductions in IBM's history and affect more than 100,000 employees. " \
            "In an emailed statement, an IBM spokesman reiterated management's comments following its..."
+    long_text = "The new system will enable the gold producer to centralize and quickly analyze data about its mining operations. It includes a dashboard of important information enabling the companys management team to make informed decisions about which ore to mine and which extraction processes to use to achieve the best return on investment. Once the project is complete, JSC Altyntau Resources will be able to speed up its annual financial planning cycle from two months to two weeks and ensure that investors are kept informed on the company's operations and forecasts.".decode('ascii', 'ignore')
     nt.get_ne_tags_all(long_text)
     print nt.get_ne_tags_PERSON()
     print nt.get_ne_tags_ORGANIZATION()
