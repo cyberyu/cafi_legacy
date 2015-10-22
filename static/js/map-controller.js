@@ -33,7 +33,7 @@ projectControllers.controller('mapCtrl', function($scope){
         $scope.marker.coords.longitude = address.lng;
         $scope.map.center.latitude = address.lat;
         $scope.map.center.longitude = address.lng;
-        $scope.map.zoom = 12;
+        $scope.map.zoom = 4;
         $scope.title = address.name;
 
     }
