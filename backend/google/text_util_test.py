@@ -5,7 +5,7 @@ import numpy as np
 from elasticsearch import Elasticsearch
 from sklearn.datasets import fetch_20newsgroups
 from elasticsearch.helpers import bulk, scan
-from text_util import text_similarity_scores, text_similarity_score_by_content, text_similarity_score_by_id, text_similarity_score_by_json, index_text
+from text_util import text_similarity_scores, text_similarity_score_by_content, text_similarity_score_by_id, text_similarity_score_by_json, index_text, text_grouping_by_graph_cut
 
 def random_sample_by_pct(a,pct):
     """
@@ -110,7 +110,13 @@ class TextDuplicationTestCase(TestCase):
     def tearDownClass(cls):
         cls._es.indices.delete(index = cls._index_name)
         return 
-        
+
+class TextGroupingTestCase(TestCase):
+    def test_text_grouping_by_graph_cut(self):
+        docs = json.dumps([{'id':0, 'similar_to':1, 'similarity_score':0.8, 'rank':7},{'id':1, 'similar_to':2, 'similarity_score':0.8, 'rank':6},{'id':2, 'similar_to':3, 'similarity_score':0.8, 'rank':5},{'id':3, 'similar_to':2, 'similarity_score':0.8, 'rank':4},{'id':4, 'similar_to':3, 'similarity_score':0.4, 'rank':0},{'id':5, 'similar_to':4, 'similarity_score':0.8, 'rank':1},{'id':6, 'similar_to':-1, 'similarity_score':np.inf, 'rank':2},{'id':7, 'similar_to':6, 'similarity_score':0.8, 'rank':3}])
+        r_v = text_grouping_by_graph_cut(docs, 0.5)
+        self.assertEqual(r_v.popitem(last=False)[0],4) #should be  OrderedDict([(4, [5]), (6, [7]), (3, [0, 1, 2])])
+        return 
 if __name__ == '__main__':
     main()
         

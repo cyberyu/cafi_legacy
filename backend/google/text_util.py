@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 import numpy as np
 from scipy.sparse import coo_matrix
 from elasticsearch import Elasticsearch
@@ -117,3 +118,64 @@ def text_similarity_score_by_content(index, doc_type, content, **kwargs):
     else:
         return (-1, -np.inf)
 
+class _Graph:
+    """
+    A helper class for grouping (by finding connected components of undirected graph) 
+    """
+    def __init__(self):
+        self._adjacent={}
+        self.n_components = 0
+    def add_vertex(self,v):
+        if not v in self._adjacent: 
+            self._adjacent[v] = set()
+        return 
+
+    def add_edge(self, v1, v2):
+        self._adjacent[v1].add(v2)
+        self._adjacent[v2].add(v1)
+        return 
+    
+    def find_components(self):
+        self._color = {v:0 for v in self._adjacent}
+        cur_comp = 0 
+        for v in self._adjacent:
+            if self._color[v] == 0:
+                cur_comp += 1
+                self.dfs(v, cur_comp)
+        self.n_components = cur_comp
+        r_l = [[k for k,v in self._color.iteritems() if v == i] for i in range(1,self.n_components+1)]
+        return r_l
+    
+    def dfs(self, s, cur_comp):
+        self._color[s] = cur_comp
+        for w in self._adjacent[s]:
+            if self._color[w] == 0 : 
+                self.dfs(w,cur_comp)
+        return 
+
+def text_grouping_by_graph_cut(docs, threshold):
+    """
+    Group similar docs based on similarity scores. Similarity score greater than the threshold means two docs are duplicates. 
+    Input docs: a list(json) of docs. Each doc has fields "id", "similar_to", "similarity_score", "rank".  
+    Return: a OrderedDict {doc_repr:[doc, doc, ...], doc_repr:[doc,doc,...]} where each item is a group; doc_repr is a representative of a group. The OrderedDict is sorted by doc_repr's rank
+    """
+    g = _Graph()
+    docs = json.loads(docs)
+    for doc in docs:
+        id0 = doc['id']
+        g.add_vertex(id0)
+        id1 = doc["similar_to"] 
+        score = doc["similarity_score"]
+        if id1 != -1 and score >= threshold: 
+            g.add_vertex(id1)
+            g.add_edge(id0, id1)
+    groups_ids = g.find_components()
+    t = {}
+    for group in groups_ids:
+        min_id = min(group, key=lambda x: docs[x]['rank'])
+        group.remove(min_id)
+        t[min_id] = group
+    return OrderedDict(sorted(t.items(),key=lambda x: docs[x[0]]['rank']))
+
+    
+    
