@@ -7,9 +7,9 @@ from nltk.tree import Tree
 from cafi_tokenizer import CAFI_Tokenizer as tkner
 
 #Shyu 's para
-PARA_CLASSPATH="/home/shiyu/cafi_main/backend/google/ner/models/"
-PARA_STANFORD_MODELS="/home/shiyu/cafi_main/backend/google/ner/models/"
-PARA_JAVAHOME="/home/shiyu/Downloads/jre1.8.0_60/bin/java"
+# PARA_CLASSPATH="/home/shiyu/cafi_main/backend/google/ner/models/"
+# PARA_STANFORD_MODELS="/home/shiyu/cafi_main/backend/google/ner/models/"
+# PARA_JAVAHOME="/home/shiyu/Downloads/jre1.8.0_60/bin/java"
 
 #AWS's para
 # PARA_CLASSPATH="/home/ubuntu/nermodel"
@@ -21,9 +21,9 @@ class CAFI_NETagger:
     def __init__(self):
         #define enviornment variables!
         import os
-        os.environ['CLASSPATH'] = PARA_CLASSPATH  #
-        os.environ['STANFORD_MODELS'] = PARA_STANFORD_MODELS
-        os.environ['JAVAHOME'] = PARA_JAVAHOME
+        # os.environ['CLASSPATH'] = PARA_CLASSPATH  #
+        # os.environ['STANFORD_MODELS'] = PARA_STANFORD_MODELS
+        # os.environ['JAVAHOME'] = PARA_JAVAHOME
 
         # self.st = StanfordNERTagger('english.muc.7class.nodistsim.crf.ser.gz')
         # self.st = StanfordNERTagger('english.all.3class.nodistsim.crf.ser.gz')
