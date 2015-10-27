@@ -36,8 +36,7 @@
     "angular-paging": "2.0.0",
     "ng-mfb": "latest",
     "ionicons": "latest",
-    "ng-tags-input": "latest",
-    "ngSticky": "latest"
+    "ng-tags-input": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"
