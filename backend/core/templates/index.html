@@ -59,7 +59,7 @@
     </div>
     </div>
     {% endverbatim %}
-
+    <script src='//maps.googleapis.com/maps/api/js?libraries=weather,geometry,visualization,places,drawing&sensor=false&language=en&v=3.17'></script>
     <script src="/static/vendor/jquery/dist/jquery.js"></script>
     <script src="/static/vendor/lodash/lodash.min.js"></script>
     <script src="/static/vendor/angular/angular.min.js"></script>
@@ -68,7 +68,7 @@
     <script src="/static/vendor/angular-resource/angular-resource.min.js"></script>
     <script src="/static/vendor/angular-route/angular-route.min.js"></script>
     <script src="/static/vendor/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
-    <script src="/static/vendor/angular-google-maps/dist/angular-google-maps.min.js"></script>
+    <script src="/static/vendor/angular-google-maps/dist/angular-google-maps.js"></script>
     <script src="/static/vendor/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="/static/vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/static/vendor/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"></script>
@@ -79,15 +79,19 @@
     <script src="/static/vendor/ng-file-upload/ng-file-upload.js"></script>
     <script src="/static/vendor/ng-mfb/src/mfb-directive.js"></script>
     <script src="/static/vendor/angular-paging/dist/paging.js"></script>
+    <script src="/static/vendor/ngSticky/dist/sticky.min.js"></script>
     <script src="/static/js/app.js"></script>
     <script src="/static/js/project-service.js"></script>
     <script src="/static/js/login-controller.js"></script>
+    <script src="/static/js/map-controller.js"></script>
     <script src="/static/js/gdoc-controller.js"></script>
     <script src="/static/js/geo-controller.js"></script>
     <script src="/static/js/search-controller.js"></script>
     <script src="/static/js/advanced-search-controller.js"></script>
     <script src="/static/js/project-list-controller.js"></script>
     <script src="/static/js/project-board-controller.js"></script>
+    <script src="/static/js/directives/highlight.js"></script>
+
   <!-- <script src="static/js/main.js"></script> -->
 <!-- THE BELOW SCRIPT IS DEV ONLY - TODO: SET DEV FLAG -->
 <!-- <script src="http://localhost:35729/livereload.js"></script> -->

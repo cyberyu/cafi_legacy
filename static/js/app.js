@@ -16,6 +16,8 @@ var cafiApp = angular.module('cafiApp', [
   'smart-table',
   'ngFileUpload',
   'bw.paging',
+  'sticky',
+  'angular-highlight',
   // 'nya.bootstrap.select',
   'projectControllers',
   'projectServices']);

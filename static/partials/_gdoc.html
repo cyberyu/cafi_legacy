@@ -1,58 +1,92 @@
-<!--<div class="modal-header">-->
-  <!--<h3 class="modal-title">{{currentDoc.title}}</h3>-->
-<!--</div>-->
-<div class="modal-body">
-
-  <article>
-    <header>
-      <h2 ng-bind-html="currentDoc.hltitle"></h2>
-    </header>
-    <aside>
-      <p ng-bind-html="currentDoc.hlsnippet"> </p>
-    </aside>
-    <p ng-bind-html="currentDoc.hltext"> </p>
-    <footer>
-      <p>Posted {{currentDoc.createdAt}}</p>
-      <div class="form-group">
-        <label>Is this article relevant?</label>
-        <label class="radio-inline">
-          <input type="radio" name="yes" value="1" ng-model="currentDoc.label"ng-click="saveEdit(currentDoc)">
-          yes
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)">
-          no
-        </label>
+<div class="modal-header">
+  <div class = "row">
+    <div class="col-md-10">
+      <small>From Search: {{displaySearch.string}} </small>
+    </div>
+    <div class="col-md-2">
+      <div class="col-lg-6">
+        <a ng-click="openPrevGdoc()" class="btn btn-default"><i class="fa fa-arrow-left"></i></a>
       </div>
-
-      <div class="form-group">
-        <label>How to label this article?</label>
-        <select  ng-model="selectedRisk">
-          <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <label>Risk</label>
-        <label>From</label>
-        <select  ng-model="selectedFromCompany">
-          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <label>To</label>
-        <select  ng-model="selectedToCompany">
-          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
-        </select>
-        <a ng-click="labelSubmit()" class="btn btn-default btn-circle"><i class="fa fa-floppy-o"></i></a>
+      <div class="col-lg-6">
+        <a ng-click="openNextGdoc()" class="btn btn-default"><i class="fa fa-arrow-right"></i></a>
       </div>
-      <!--<tags-input ng-model="currentDoc.docType"></tags-input>-->
-      <!--{{selectedRisk}}-->
-      <!--{{selectedFromCompany}}-->
-      <!--{{selectedToCompany}}-->
-      <!--{{currentDoc.id}}-->
-      <!--{{currentProject.id}}-->
-      <div class="tags clearfix" ng-repeat="tag in tags">
-        <div class="tag">{{tag}}</div>
-      </div>
-    </footer>
-  </article>
+    </div>
+  </div>
 </div>
+
+<div class="modal-body row" id="gdoc-container">
+  <div class="col-lg-2 left-panel" id="gdoc-meta-box">
+    <p ng-show ="currentDoc.url"> <a href="{{currentDoc.url}}" target="_blank">Original article</a></p>
+    <p ng-show ="currentDoc.rank"><strong>Google rank</strong>: {{currentDoc.rank}}</p>
+    <p ng-show ="currentDoc.docType"><strong>Doc type</strong>: {{currentDoc.docType}}</p>
+    <hr>
+    <div>
+      <span class="label label-primary">Organization</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.org" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-success">Location</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.location" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+    <div>
+      <span class="label label-warning">Person</span><br>
+      <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
+            ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+    </div>
+  </div>
+
+  <div class="col-lg-8 mid-panel" >
+    <header>
+      <h4 ng-bind-html="currentDoc.hltitle"></h4>
+    </header>
+    <p><em><small>Collected at {{currentDoc.createdAt}}</small></em></p>
+    <div highlight keywords="{{currentDoc.keywords}}" text="{{currentDoc.text}}" highlight-class="keywords"></div>
+    <!--<p ng-repeat="p in currentDoc.text.split('\n') track by $index">-->
+      <!--<span ng-bind-html="p"> </span>-->
+    <!--</p>-->
+  </div>
+
+  <div class="col-lg-2 right-panel" id="gdoc-label-box" >
+
+    <div class="label-div">
+          <label class="control-label">Relevant?</label>
+          <label class="radio-inline">
+            <input type="radio" name="yes" value="1" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)"> Y
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)"> N
+          </label>
+    </div>
+    <hr>
+    <form class="label-div">
+      <div class="form-group  form-group-sm">
+        <label class="control-label" for="a">Risk: </label>
+        <div>
+          <select class="form-control" id="a" ng-model="selectedRisk">
+            <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group form-group-sm">
+        <label>From: </label>
+        <select  class="form-control " ng-model="selectedFromCompany">
+          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+        </select>
+      </div>
+      <a ng-click="labelSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
+    </form>
+
+    <div class="tags clearfix" ng-repeat="tag in tags">
+      <div class="tag">{{tag}}</div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-footer">
   <!--<button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>-->
   <button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>

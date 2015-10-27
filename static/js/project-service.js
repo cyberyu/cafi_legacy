@@ -30,24 +30,6 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
       }
     }
   });
-}).factory('Gdoc', function ($resource) {
-  return $resource('/api/gdocs/:gdocId', {gdocId: '@id'}, {
-    update: {method: 'PUT'},
-    get: {
-      method: 'GET'
-      //isArray: false,
-      //transformResponse: function(data) {
-      //  return angular.fromJson(data);
-      //}
-    },
-    query: {
-      method: 'GET'
-      //isArray: false,
-      //transformResponse: function(data) {
-      //  return angular.fromJson(data);
-      //}
-    }
-  });
 }).factory('GeoSearch', function ($resource) {
   return $resource('/api/geosearch/:gsearchId', {gocId: '@id'}, {
     query: {
@@ -57,6 +39,12 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
         return angular.fromJson(data);
       }
     }
+  });
+});
+
+angular.module('projectServices').factory('Gdoc', function ($resource) {
+  return $resource('/api/gdocs/:gdocId', {gdocId: '@id'}, {
+    update: {method: 'PUT'},
   });
 });
 
