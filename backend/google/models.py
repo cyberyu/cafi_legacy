@@ -18,7 +18,7 @@ class Search(models.Model):
     project = models.ForeignKey(Project, related_name="searches")
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
-
+    last_stop = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
