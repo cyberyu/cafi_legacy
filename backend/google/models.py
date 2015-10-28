@@ -21,6 +21,10 @@ class Search(models.Model):
     last_stop = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def incr_last_stop(self):
+        self.last_stop = self.last_stop + 1
+        self.last_stop.save()
+
     def __unicode__(self):
       return self.string
 
