@@ -31,7 +31,7 @@ class GeocodingTest():
     def simple_geocode(self,query):
         results = self.client.geocode(query)
         return results
-
+"""
 def extract_text_AlchemyAPI_single(url_string):
 
     alchemyapi = AlchemyAPI()
@@ -43,24 +43,24 @@ def extract_text_AlchemyAPI_single(url_string):
             pass
     else:
         return None
+"""
 
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
 
 @shared_task(default_retry_delay=3, max_retries=3)
-def do_search(search):
+def do_search(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    start_val = 0
-    request = collection.list(
-        q=search.string,
-        # num=10, #this is the maximum & default anyway
-        # start=start_val,
+    start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
+    # Make an HTTP request object
+    request = collection.list(q=search.string,
+        num=10, #this is the maximum & default anyway
+        start=start_val,
         cx=search_engine_id
     )
     response = request.execute()
-
     for i, doc in enumerate(response['items']):
         obj = SearchResult()
         obj.search = search
