@@ -82,24 +82,6 @@ def do_download(id, url):
     obj.raw_html = data.get('raw_html')
     obj.save()
 
-"""
-Types of extractors for tasks.py --> do_search --> obj.text
-Just replace DefaultExtractor with type you wish
-Boilerpipe:
-
-    * DefaultExtractor
-    * ArticleExtractor
-    * ArticleSentencesExtractor
-    * KeepEverythingExtractor
-    * KeepEverythingWithMinKWordsExtractor # Not supported anymore
-    * LargestContentExtractor
-    * NumWordsRulesExtractor
-    * CanolaExtractor
-
-Alchemy API
-    *Alchemy
-"""
-
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_geo_search(id, address):
@@ -137,4 +119,3 @@ if __name__ == '__main__':
     search = Search(project=project, string='olympic')
     search.save()
     do_search(search, 'olympics')
-
