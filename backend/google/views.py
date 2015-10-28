@@ -29,7 +29,9 @@ class SearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         obj = serializer.save()
-        do_search.delay(obj)
+        do_search.delay(obj.string,obj.last_stop)
+        obj.last_stop= obj.last_stop + 1
+        obj.save()
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -37,7 +39,9 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save()
         for obj in objs:
-            do_search.delay(obj)
+            do_search.delay(obj.string,obj.last_stop)
+            obj.last_stop= obj.last_stop + 1
+            obj.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
