@@ -29,8 +29,13 @@ class SearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         obj = serializer.save()
-        do_search.delay(obj.string,obj.last_stop)
-        Search.incr_last_stop()
+        #do_search.delay(obj,obj.last_stop)
+        do_search.delay(obj)
+
+    def perform_update(self, serializer):
+        obj1 = serializer.save()
+        print "update: "+ obj1.search
+        do_search.delay(obj1,obj1.last_stop)
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -38,9 +43,20 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save()
         for obj in objs:
-            do_search.delay(obj.string,obj.last_stop)
-            Search.incr_last_stop()
+            do_search.delay(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class SearchUpdateViewSet(viewsets.ModelViewSet):
+    queryset = Search.objects.all()
+    serializer_class = SearchSerializer
+    pagination_class = ResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
+
+    def perform_update(self, serializer):
+        obj1 = serializer.save()
+        print "update: "+ obj1.search
+        do_search.delay(obj1, obj1.last_stop)
 
 
 
@@ -62,6 +78,26 @@ class SearchResultViewSet(viewsets.ModelViewSet):
         self.serializer_class = SimpleSearchResultSerializer
         return super(SearchResultViewSet, self).list(self, request, *args, **kwargs)
 
+class SearchResultUpdateViewSet(viewsets.ModelViewSet):
+    queryset = SearchResult.objects.all()
+    serializer_class = SearchResultSerializer
+    pagination_class = ResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('search','label')
+
+    def get_queryset(self):
+        queryset = SearchResult.objects.all()
+        project = self.request.query_params.get('project', None)
+        string = self.request.query_params.get('string', None)
+        if project is not None and string is not None:
+            queryset = queryset.filter(search__project=project)
+            queryset = queryset.filter(search__string=string)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = SimpleSearchResultSerializer
+        return super(SearchResultUpdateViewSet, self).list(self, request, *args, **kwargs)
+
 
 class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
@@ -72,12 +108,13 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         geosearch = serializer.save()
-        print geosearch
-        print "doing geo search"
+        print geosearch.address
+        print "doing geo search create"
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
+        print "update: "+ geosearch.address
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     @detail_route(methods=['POST'])

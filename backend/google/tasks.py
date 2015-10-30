@@ -3,7 +3,8 @@ from celery import shared_task
 import random
 import time
 from django.conf import settings
-
+from django.core.cache import cache
+#cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
@@ -48,11 +49,47 @@ def extract_text_AlchemyAPI_single(url_string):
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_search(search):
+    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+    search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    num_requests = 3
+    page_no = 0
+    # Make an HTTP request object
+    for i1 in range(0, num_requests):
+        # This is the offset from the beginning to start getting the results from
+        start_val = 1 + (i1 * 10)
+        # Make an HTTP request object
+        try:
+            request = collection.list(q=search.string,
+                num=10, #this is the maximum & default anyway
+                start=start_val,
+                cx=search_engine_id
+            )
+            response = request.execute()
+
+            for i, doc in enumerate(response['items']):
+                obj = SearchResult()
+                obj.search = search
+                obj.title = doc.get('title')
+                obj.snippet = doc.get('snippet')
+                obj.url = doc.get('link')
+                obj.rank = start_val + i
+                obj.save()
+                do_download.delay(obj.id, obj.url)
+                page_no = (start_val+i)/10
+        except Exception:
+            print "No more results"
+            page_no = page_no
+
+        search.last_stop = page_no + 1
+        search.save()
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_search(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    page_no = 0
     start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
     # Make an HTTP request object
     request = collection.list(q=search.string,
@@ -62,15 +99,17 @@ def do_search(search, start_page):
     )
     response = request.execute()
     for i, doc in enumerate(response['items']):
-        obj = SearchResult()
-        obj.search = search
+        obj = SearchResult.objects.get(search=search)
         obj.title = doc.get('title')
         obj.snippet = doc.get('snippet')
         obj.url = doc.get('link')
         obj.rank = start_val + i
         obj.save()
         do_download.delay(obj.id, obj.url)
+        page_no = (start_val+i)/10
 
+    search.last_stop = page_no + 1
+    search.save()
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):

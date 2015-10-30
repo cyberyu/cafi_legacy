@@ -21,9 +21,20 @@ class Search(models.Model):
     last_stop = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    #def _do_update(self, base_qs, using, pk_val, values, update_fields, forced_update):
+
     def incr_last_stop(self):
-        self.last_stop = self.last_stop + 1
-        self.last_stop.save()
+        i=1
+        """
+        print "checking value last_stop :"
+        #obj.last_stop = obj.last_stop + 2
+        #obj.save()
+
+        print "Checking 1:" + obj.last_stop
+        self.save()
+        print "Checking 2:" + self.last_stop
+        """
+
 
     def __unicode__(self):
       return self.string
