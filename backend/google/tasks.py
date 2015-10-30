@@ -4,7 +4,7 @@ import random
 import time
 from django.conf import settings
 from django.core.cache import cache
-#cache.clear()
+cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
@@ -86,7 +86,7 @@ def do_search(search):
         search.save()
 
 @shared_task(default_retry_delay=3, max_retries=3)
-def do_search(search, start_page):
+def do_search_single(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     page_no = 0

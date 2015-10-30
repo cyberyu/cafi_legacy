@@ -9,7 +9,7 @@ from djqscsv import render_to_csv_response
 
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
-from tasks import do_search, do_geo_search
+from tasks import do_search, do_geo_search, do_search_single
 from engagement.models import Project
 from celery import chain
 
@@ -35,7 +35,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         obj1 = serializer.save()
         print "update: "+ obj1.search
-        do_search.delay(obj1,obj1.last_stop)
+        do_search_single.delay(obj1,obj1.last_stop)
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -56,7 +56,7 @@ class SearchUpdateViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         obj1 = serializer.save()
         print "update: "+ obj1.search
-        do_search.delay(obj1, obj1.last_stop)
+        do_search_single.delay(obj1, obj1.last_stop)
 
 
 
