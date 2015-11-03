@@ -35,7 +35,10 @@ class SearchViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         obj1 = serializer.save()
         print "update: "+ obj1.search
-        do_search_single.delay(obj1,obj1.last_stop)
+        if obj1.flag_check == 0:
+            do_search_single.delay(obj1,obj1.last_stop)
+        else:
+            print "No results left"
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -56,7 +59,10 @@ class SearchUpdateViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         obj1 = serializer.save()
         print "update: "+ obj1.search
-        do_search_single.delay(obj1, obj1.last_stop)
+        if obj1.flag_check == 0:
+            do_search_single.delay(obj1,obj1.last_stop)
+        else:
+            print "No results left"
 
 
 

@@ -19,6 +19,7 @@ class Search(models.Model):
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     last_stop = models.IntegerField(default=0)
+    flag_check = models.IntegerField(default=0) # Flag = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
     #def _do_update(self, base_qs, using, pk_val, values, update_fields, forced_update):

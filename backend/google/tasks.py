@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import traceback
 from celery import shared_task
 import random
 import time
@@ -54,62 +55,85 @@ def do_search(search):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     num_requests = 3
-    page_no = 0
+    counter = 0
+    counter1 = 0
     # Make an HTTP request object
     for i1 in range(0, num_requests):
         # This is the offset from the beginning to start getting the results from
         start_val = 1 + (i1 * 10)
         # Make an HTTP request object
-        try:
-            request = collection.list(q=search.string,
-                num=10, #this is the maximum & default anyway
-                start=start_val,
-                cx=search_engine_id
-            )
-            response = request.execute()
 
-            for i, doc in enumerate(response['items']):
+        request = collection.list(q=search.string,
+            num=10, #this is the maximum & default anyway
+            start=start_val,
+            cx=search_engine_id
+        )
+        response = request.execute()
+
+        for i, doc in enumerate(response['items']):
+            try:
                 obj = SearchResult()
                 obj.search = search
                 obj.title = doc.get('title')
                 obj.snippet = doc.get('snippet')
                 obj.url = doc.get('link')
                 obj.rank = start_val + i
+                counter1 += 1
                 obj.save()
                 do_download.delay(obj.id, obj.url)
-                page_no = (start_val+i)/10
-        except Exception:
-            print "No more results"
-            page_no = page_no
+            except Exception :
+                print "Exception"
+                traceback.print_exc()
 
-        search.last_stop = page_no + 1
-        search.save()
+        counter =  len(response['items'])
+        if counter < 10 :
+            search.flag_check = 1
+            search.save()
+            break
+
+    search.last_stop += (counter1/10) + 1
+    search.save()
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_search_single(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    page_no = 0
-    start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
-    # Make an HTTP request object
-    request = collection.list(q=search.string,
-        num=10, #this is the maximum & default anyway
-        start=start_val,
-        cx=search_engine_id
-    )
-    response = request.execute()
-    for i, doc in enumerate(response['items']):
-        obj = SearchResult.objects.get(search=search)
-        obj.title = doc.get('title')
-        obj.snippet = doc.get('snippet')
-        obj.url = doc.get('link')
-        obj.rank = start_val + i
-        obj.save()
-        do_download.delay(obj.id, obj.url)
-        page_no = (start_val+i)/10
+    if search.flag_check == 0 :
+        start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
+        counter = 0
+        counter1 = 0
+        # Make an HTTP request object
 
-    search.last_stop = page_no + 1
-    search.save()
+        request = collection.list(q=search.string,
+            num=10, #this is the maximum & default anyway
+            start=start_val,
+            cx=search_engine_id
+        )
+        response = request.execute()
+
+        for i, doc in enumerate(response['items']):
+            try:
+                obj = SearchResult.objects.get(search=search)
+                obj.title = doc.get('title')
+                obj.snippet = doc.get('snippet')
+                obj.url = doc.get('link')
+                obj.rank = start_val + i
+                counter1 += 1
+                obj.save()
+                do_download.delay(obj.id, obj.url)
+            except Exception:
+                print "Exception"
+                traceback.print_exc()
+
+        counter =  len(response['items'])
+        if counter < 10 :
+            search.flag_check = 1
+            search.save()
+
+        search.last_stop = search.last_stop + (counter1/10) + 1
+        search.save()
+    else:
+        print "No Results"
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
