@@ -3,6 +3,7 @@ import traceback
 from celery import shared_task
 import random
 import time
+import json
 from django.conf import settings
 from django.core.cache import cache
 cache.clear()
@@ -110,7 +111,7 @@ def do_search_single(search, start_page):
             cx=search_engine_id
         )
         response = request.execute()
-
+        print response['items']
         for i, doc in enumerate(response['items']):
             try:
                 obj = SearchResult.objects.get(search=search)
@@ -134,6 +135,33 @@ def do_search_single(search, start_page):
         search.save()
     else:
         print "No Results"
+
+#@shared_task(default_retry_delay=3, max_retries=3)
+def do_demandsearch(query, start_page):
+    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+    search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
+    # Make an HTTP request object
+    result = []
+    request = collection.list(q=query,
+        num=10, #this is the maximum & default anyway
+        start=start_val,
+        cx=search_engine_id
+    )
+    response = request.execute()
+    obj_response =[]
+    for i, doc in enumerate(response['items']):
+        try:
+            title = doc.get('title')
+            snippet = doc.get('snippet')
+            url = doc.get('link')
+            rank = start_val + i
+            obj_response.append({"title":title, "snippet":snippet, "url":url, rank:"rank"})
+        except Exception:
+            print "Exception"
+            traceback.print_exc()
+    return json.dumps(obj_response)
+
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):

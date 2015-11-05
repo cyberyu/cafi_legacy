@@ -4,15 +4,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, detail_route, list_route
-import csv
+import csv,json
 from djqscsv import render_to_csv_response
-
+from django.http import Http404
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
-from tasks import do_search, do_geo_search, do_search_single
+from tasks import do_search, do_geo_search, do_search_single, do_demandsearch
 from engagement.models import Project
 from celery import chain
-
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 class ResultsSetPagination(PageNumberPagination):
     page_size = 20
@@ -28,14 +30,17 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
+        print "create"
         obj = serializer.save()
         #do_search.delay(obj,obj.last_stop)
         do_search.delay(obj)
 
-    def perform_update(self, serializer):
-        obj1 = serializer.save()
-        print "update: "+ obj1.search
+    def perform_update(self,pk):
+        obj1 = Search.objects.get(pk=pk)
+        #obj1 = SearchSerializer(obj1)
+        print "update: "+ obj1.string
         if obj1.flag_check == 0:
+            i=0
             do_search_single.delay(obj1,obj1.last_stop)
         else:
             print "No results left"
@@ -46,24 +51,8 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save()
         for obj in objs:
-            do_search.delay(obj)
+            do_search_single.delay(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-class SearchUpdateViewSet(viewsets.ModelViewSet):
-    queryset = Search.objects.all()
-    serializer_class = SearchSerializer
-    pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project',)
-
-    def perform_update(self, serializer):
-        obj1 = serializer.save()
-        print "update: "+ obj1.search
-        if obj1.flag_check == 0:
-            do_search_single.delay(obj1,obj1.last_stop)
-        else:
-            print "No results left"
-
 
 
 class SearchResultViewSet(viewsets.ModelViewSet):
@@ -71,7 +60,7 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     serializer_class = SearchResultSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('search','label')
+    filter_fields = ('search','label',)
 
     def get_queryset(self):
         queryset = SearchResult.objects.all()
@@ -83,26 +72,6 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.serializer_class = SimpleSearchResultSerializer
         return super(SearchResultViewSet, self).list(self, request, *args, **kwargs)
-
-class SearchResultUpdateViewSet(viewsets.ModelViewSet):
-    queryset = SearchResult.objects.all()
-    serializer_class = SearchResultSerializer
-    pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('search','label')
-
-    def get_queryset(self):
-        queryset = SearchResult.objects.all()
-        project = self.request.query_params.get('project', None)
-        string = self.request.query_params.get('string', None)
-        if project is not None and string is not None:
-            queryset = queryset.filter(search__project=project)
-            queryset = queryset.filter(search__string=string)
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        self.serializer_class = SimpleSearchResultSerializer
-        return super(SearchResultUpdateViewSet, self).list(self, request, *args, **kwargs)
 
 
 class GeoSearchViewSet(viewsets.ModelViewSet):
@@ -157,3 +126,29 @@ def upload(request):
 
     return Response({"items": data}, status=status.HTTP_200_OK)
 
+
+class DemandSearch(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get_object(self, pk):
+        try:
+            return Search.objects.get(pk=pk)
+        except Search.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        search = self.get_object(pk)
+        print "Demand:"
+        print search
+        search = SearchSerializer(search)
+        content = do_demandsearch(search.data.get('string'),search.data.get('last_stop'))
+        S1 = SearchViewSet()
+        S1.perform_update(pk)
+        return Response(content)
+
+class DemandSearchList(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, format=None):
+        search = Search.objects.all()
+        search = SearchSerializer(search,many=True)
+        return Response(search.data)
