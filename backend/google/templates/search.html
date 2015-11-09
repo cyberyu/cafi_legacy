@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form action="/" method="post">
+<input type="text" name="term" size="30"> <input type="submit" value="Search">
+</form><hr>
+{% if result %}
+	{% for res in result %}
+	<li>{{ res }}</li>
+	{% endfor %}
+{% endif %}
+</body>
+</html>

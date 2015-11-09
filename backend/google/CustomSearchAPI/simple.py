@@ -29,25 +29,25 @@ from googleapiclient.discovery import build
 import json, sys
 
 def main():
-  # Build a service object for interacting with the API. Visit
-  # the Google APIs Console <http://code.google.com/apis/console>
-  # to get an API key for your own application.
-  #service = build("CustomSearchAPI", "v1", developerKey="AIzaSyDkxRofVDMMrci34b9yFCePgJz2YAoDmAA")
-  service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
+    # Build a service object for interacting with the API. Visit
+    # the Google APIs Console <http://code.google.com/apis/console>
+    # to get an API key for your own application.
+    #service = build("CustomSearchAPI", "v1", developerKey="AIzaSyDkxRofVDMMrci34b9yFCePgJz2YAoDmAA")
+    service = build("customsearch", "v1", developerKey="AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA")
 
 
-  #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
 
 
-  collection = service.cse()
+    collection = service.cse()
 
-  num_requests = 2
-  search_term='Olympics'
-  search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    num_requests = 3
+    search_term=raw_input("Enter Query: ")
+    search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    counter = 0
+    #sampletext = ''
 
-  #sampletext = ''
-
-  for i in range(0, num_requests):
+    for i in range(0, num_requests):
         # This is the offset from the beginning to start getting the results from
         start_val = 1 + (i * 10)
         # Make an HTTP request object
@@ -57,33 +57,37 @@ def main():
             cx=search_engine_id
         )
         response = request.execute()
+        print len(response['items'])
         #user = json.loads(response)
         output = json.dumps(response, sort_keys=True, indent=2)
         data = json.loads(output)
         #jdict = json.load(output)
 
         for j in range(0,len(data['items'])):
-            print(data['items'][j].get('title')+'\t'+data['items'][j].get('link')+'\t'+data['items'][j].get('htmlSnippet'))
+            #print(data['items'][j].get('title')+'\t'+data['items'][j].get('link')+'\t'+data['items'][j].get('htmlSnippet'))
+            print(data['items'][j].get('title'))
+            counter += 1
 
         #print(len(response))
         #print(len(data))
         #print(output)
         #output_f.write(output)
         print('Wrote 10 search results...')
+        print counter
 
 
-  #print('Output file "{}" written.'.format(output_fname))
+    #print('Output file "{}" written.'.format(output_fname))
 
-  # res = service.cse().list(
-  #     q='Olympics',
-  #     cx='012608441591405123751:clhx3wq8jxk',
-  #     num=11,
-  #     start=20,
-  #     dateRestrict='y1',
-  #     lr='lang_ar',
-  #     #searchType='image',
-  #   ).execute()
-  # pprint.pprint(res)
+    # res = service.cse().list(
+    #     q='Olympics',
+    #     cx='012608441591405123751:clhx3wq8jxk',
+    #     num=11,
+    #     start=20,
+    #     dateRestrict='y1',
+    #     lr='lang_ar',
+    #     #searchType='image',
+    #   ).execute()
+    # pprint.pprint(res)
 
 if __name__ == '__main__':
-  main()
+    main()

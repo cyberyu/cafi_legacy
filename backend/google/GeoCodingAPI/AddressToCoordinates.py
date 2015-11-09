@@ -21,7 +21,8 @@ class GeocodingTest():
 
 query1 = GeocodingTest()
 #Input Address :
-# address = raw_input("Enter Address: ")
-address = '1600 Amphitheatre Parkway, Mountain View, CA'  #Example
+address = raw_input("Enter Address: ")
+#address = '1600 Amphitheatre Parkway, Mountain View, CA'  #Example
 results = query1.simple_geocode(address)
-print dict(results[0]["geometry"]["location"])
+print json.dumps(results,indent=2)
+#print dict(results[0]["geometry"]["location"])

@@ -32,18 +32,19 @@ class SearchViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print "create"
         obj = serializer.save()
-        #do_search.delay(obj,obj.last_stop)
         do_search.delay(obj)
 
-    def perform_update(self,pk):
-        obj1 = Search.objects.get(pk=pk)
-        #obj1 = SearchSerializer(obj1)
-        print "update: "+ obj1.string
-        if obj1.flag_check == 0:
-            i=0
-            do_search_single.delay(obj1,obj1.last_stop)
-        else:
-            print "No results left"
+
+    @detail_route(methods=['GET'])
+    def highlight(self, request, *args, **kwargs):
+
+        pk = self.kwargs['pk']
+        search = self.get_object()
+        content = do_demandsearch(search,search.last_stop)
+        #content = do_search_single(search,search.last_stop) # Download still work in progress
+        content = json.loads(content, strict = False)
+        return Response(content,status=status.HTTP_201_CREATED)
+        #return Response([{"count": "hello, world", "string":"http://time.com/2919041/the-best-moments-of-the-2014-fifa-world-cup/", "id":5}, {"string": "hello1", "count":"bazingaa1 is awesome!" , "id":5}], status=status.HTTP_201_CREATED)
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -139,10 +140,7 @@ class DemandSearch(APIView):
         search = self.get_object(pk)
         print "Demand:"
         print search
-        search = SearchSerializer(search)
-        content = do_demandsearch(search.data.get('string'),search.data.get('last_stop'))
-        S1 = SearchViewSet()
-        S1.perform_update(pk)
+        content = do_demandsearch(search,search.last_stop)
         return Response(content)
 
 class DemandSearchList(APIView):
@@ -152,3 +150,5 @@ class DemandSearchList(APIView):
         search = Search.objects.all()
         search = SearchSerializer(search,many=True)
         return Response(search.data)
+
+

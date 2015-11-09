@@ -22,19 +22,11 @@ class Search(models.Model):
     flag_check = models.IntegerField(default=0) # Flag = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
-    #def _do_update(self, base_qs, using, pk_val, values, update_fields, forced_update):
 
     def incr_last_stop(self):
         i=1
-        """
-        print "checking value last_stop :"
-        #obj.last_stop = obj.last_stop + 2
-        #obj.save()
-
-        print "Checking 1:" + obj.last_stop
-        self.save()
-        print "Checking 2:" + self.last_stop
-        """
+        # Was trying to increment last_stop here but failed to update, will try later
+        # As of now done with fetching google docs, safer
 
 
     def __unicode__(self):

@@ -95,10 +95,12 @@ def do_search(search):
     search.last_stop += (counter1/10) + 1
     search.save()
 
-@shared_task(default_retry_delay=3, max_retries=3)
+#@shared_task(default_retry_delay=3, max_retries=3)
 def do_search_single(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+    print "holla"
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
+    obj_response =[]
     if search.flag_check == 0 :
         start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
         counter = 0
@@ -111,17 +113,19 @@ def do_search_single(search, start_page):
             cx=search_engine_id
         )
         response = request.execute()
-        print response['items']
         for i, doc in enumerate(response['items']):
             try:
-                obj = SearchResult.objects.get(search=search)
+                obj = SearchResult()
+                obj.search = search
                 obj.title = doc.get('title')
                 obj.snippet = doc.get('snippet')
                 obj.url = doc.get('link')
                 obj.rank = start_val + i
                 counter1 += 1
                 obj.save()
-                do_download.delay(obj.id, obj.url)
+                #do_download.delay(obj.id, obj.url)
+                print i + " : " +json.dumps(obj)
+                obj_response.append(json.dumps(obj))
             except Exception:
                 print "Exception"
                 traceback.print_exc()
@@ -131,19 +135,20 @@ def do_search_single(search, start_page):
             search.flag_check = 1
             search.save()
 
-        search.last_stop = search.last_stop + (counter1/10) + 1
+        search.last_stop = search.last_stop + (counter1/10)
         search.save()
+        return json.dumps(obj_response)
     else:
-        print "No Results"
+        print json.dumps([])
 
 #@shared_task(default_retry_delay=3, max_retries=3)
-def do_demandsearch(query, start_page):
+def do_demandsearch(search, start_page):
     #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
     # Make an HTTP request object
     result = []
-    request = collection.list(q=query,
+    request = collection.list(q=search.string,
         num=10, #this is the maximum & default anyway
         start=start_val,
         cx=search_engine_id
@@ -156,10 +161,16 @@ def do_demandsearch(query, start_page):
             snippet = doc.get('snippet')
             url = doc.get('link')
             rank = start_val + i
-            obj_response.append({"title":title, "snippet":snippet, "url":url, rank:"rank"})
+            obj_response.append({"title":title, "snippet":snippet, "url":url, "rank":rank})
         except Exception:
             print "Exception"
             traceback.print_exc()
+    counter =  len(response['items'])
+    if counter < 10 :
+        search.flag_check = 1
+        search.save()
+    search.last_stop = search.last_stop + (counter/10)
+    search.save()
     return json.dumps(obj_response)
 
 
