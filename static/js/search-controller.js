@@ -67,18 +67,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.displaySearch = search;
     });
   };
-  //$http.get('/api/gsearch?project='+$scope.currentProject.id).then(function(response){
-  //  if(response.data.count > 0){
-  //    console.log(response.data.count)
-  //    $scope.displaySearch = response.data.results[0];
-  //    console.log($scope.displaySearch);
-  //    Gdoc.get({search:$scope.displaySearch.id}, 1).$promise.then(function(data){
-  //      $scope.displaySearchDocs = data.results;
-  //      $scope.totalSearch = data.count;
-  //      $scope.currentSearchPage = 1;
-  //    });
-  //  }
-  //});
+  
   $scope.listSearches = function (page) {
     Search.query({"project": $scope.currentProject.id, "page": page}).$promise.then(function(data){
       $scope.searches = data.results;
