@@ -67,7 +67,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.displaySearch = search;
     });
   };
-  
+
   $scope.listSearches = function (page) {
     Search.query({"project": $scope.currentProject.id, "page": page}).$promise.then(function(data){
       $scope.searches = data.results;
