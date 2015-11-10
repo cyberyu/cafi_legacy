@@ -62,6 +62,12 @@ def download(url):
             doc_type = tmp[-1]
         else:
             doc_type = None
+    try:
+        text = text.decode(encoding='unicode-escape',errors='ignore')
+        raw_html = raw_html.decode(encoding='unicode-escape',errors='ignore')
+    except UnicodeDecodeError:
+        text = text.encode('utf-8')
+        raw_html = raw_html.encode('utf-8')
 
     data = {'path': path, 'doc_type': doc_type, 'text': text, 'raw_html': raw_html}
 
