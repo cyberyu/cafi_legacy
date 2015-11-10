@@ -20,16 +20,6 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   this.showPopup = function (message) {
     return $window.confirm(message);
   }
-}).factory('Search', function ($resource) {
-  return $resource('/api/gsearch/:searchId', {searchId: '@id'}, {
-    query: {
-      method: 'GET',
-      isArray: true,
-      transformResponse: function(data) {
-        return angular.fromJson(data).results;
-      }
-    }
-  });
 }).factory('GeoSearch', function ($resource) {
   return $resource('/api/geosearch/:gsearchId', {gocId: '@id'}, {
     query: {
@@ -42,9 +32,17 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
   });
 });
 
+angular.module('projectServices').factory('Search', function($resource){
+  return $resource('/api/gsearch/:gsearchId', {gsearchId: '@id'}, {
+    update: {method: 'PUT'},
+    query: {method: 'GET', isArray: false}
+  })
+});
+
 angular.module('projectServices').factory('Gdoc', function ($resource) {
   return $resource('/api/gdocs/:gdocId', {gdocId: '@id'}, {
     update: {method: 'PUT'},
+    query: {method: 'GET', isArray: false}
   });
 });
 

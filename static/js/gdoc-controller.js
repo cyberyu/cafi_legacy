@@ -46,16 +46,17 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.currentDoc.ner.push(w);
   };
 
-  $scope.openNextGdoc = function () {
+  $scope.openNextGdoc = function (n) {
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
         break;
       }
     }
-    if (i < $scope.displayedGdocs.length -1){
-      $scope.nextID = $scope.displayedGdocs[i+1].id;
+    if (i < $scope.displayedGdocs.length-1){
+      $scope.nextID = $scope.displayedGdocs[i+n].id;
     }else{
-      $scope.nextID = null;
+      $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage+1);
+      $scope.nextID = $scope.displaySearchDocs[0];
     }
     Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
       $scope.currentDoc = data;

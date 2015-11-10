@@ -6,15 +6,28 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
                                                            $http, $uibModal, Upload, popupService,
                                                            Project, Search, Gdoc,GeoSearch, Company, Risk, RiskItem){
 
-  //Project.get({projectId:$routeParams.id}, function(data){
-  //  $scope.currentProject = data;
-  //});
-
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
   $scope.riskitems = RiskItem.query();
   $scope.predefinedCompanies = Company.query();
   $scope.predefinedRisks = Risk.query();
+
+  $scope.searchPager = {};
+  $scope.searchPager.currentPage = 1;
+  $scope.searchPager.total = null;
+
+  $scope.gdocPager = {};
+  $scope.gdocPager.currentPage = 1;
+  $scope.gdocPager.total = null;
+
+
+  $scope.currentSearch = null;
+  $scope.search = {};
+  $scope.gsearchOptions = {};
+
+  $scope.searches = [];
+
+  $scope.counter = 0;
 
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
@@ -26,41 +39,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     $rootScope.$emit('openModal', data);
   };
 
-
-  $scope.mapData = {};
-  uiGmapGoogleMapApi.then(function(maps) {
-    $scope.mapData.map = {center: {latitude: 40.1451, longitude: -99.6680 }, zoom: 4 };
-    $scope.mapData.markers = [];
-
-  });
-
-
-  $http.get('/api/gsearch?project='+$scope.currentProject.id).then(function(response){
-    if(response.data.count > 0){
-      console.log(response.data.count)
-      $scope.displaySearch = response.data.results[0];
-      console.log($scope.displaySearch);
-      Gdoc.get({search:$scope.displaySearch.id}, 1).$promise.then(function(data){
-        $scope.displaySearchDocs = data.results;
-        $scope.total = data.count;
-        $scope.currentPage = 1;
-      });
-    }
-  });
-
   $scope.getGdocs = function(search, page) {
     Gdoc.query({"search": search.id, "page": page}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
-      $scope.total = data.count;
-      $scope.currentPage = page;
+      $scope.gdocPager.total = data.count;
+      $scope.gdocPager.currentPage = page;
     });
   };
-
-  $scope.currentPage = 1;
-  $scope.currentSearch = null;
-  $scope.search = {};
-
-  $scope.counter = 0;
 
   $scope.submitSearch = function(){
     var oneSearch = {
@@ -74,19 +59,24 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       });
   };
 
-  $scope.gsearchOptions = {};
-
   $scope.setDisplaySearch = function(search){
     Gdoc.get({search:search.id}).$promise.then(function(data){
       $scope.displaySearchDocs = data.results;
-      $scope.total = data.count;
-      $scope.currentPage = 1;
+      $scope.gdocPager.total = data.count;
+      $scope.gdocPager.currentPage = 1;
       $scope.displaySearch = search;
     });
   };
 
-  $scope.listSearches = function () {
-    $scope.searches = Search.query({"project": $scope.currentProject.id});
+  $scope.listSearches = function (page) {
+    Search.query({"project": $scope.currentProject.id, "page": page}).$promise.then(function(data){
+      $scope.searches = data.results;
+      $scope.displaySearch = $scope.searches[0];
+      $scope.getGdocs($scope.displaySearch, 1);
+
+      $scope.searchPager.total = data.count;
+      $scope.searchPager.currentPage = page;
+    });
   };
 
   $scope.deleteSearch = function (search) {
@@ -186,7 +176,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       templateUrl: '/static/partials/_gen_search.html',
       controller: 'advancedSearchCtrl',
       size: size,
-      scope: $scope,
+      scope: $scope
       //windowClass: 'gen-search-modal'
     });
 
@@ -237,7 +227,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   //};
 
   $scope.isCollapsed = true;
-  $scope.listSearches();
+  $scope.listSearches(1);
   //$scope.getGdocs($scope.displaySearch, 1);
 
 });
