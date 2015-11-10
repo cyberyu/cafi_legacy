@@ -176,7 +176,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       templateUrl: '/static/partials/_gen_search.html',
       controller: 'advancedSearchCtrl',
       size: size,
-      scope: $scope,
+      scope: $scope
       //windowClass: 'gen-search-modal'
     });
 
