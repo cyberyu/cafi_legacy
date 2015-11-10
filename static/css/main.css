@@ -149,12 +149,13 @@ body  .list-container .list-header-container a.back-link:hover {
 body  .list-body-container {
     position: relative;
     left: -20%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    /*overflow-x: hidden;*/
+    /*overflow-y: auto;*/
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    height: 800px;
+    /*height: 800px;*/
+    height: auto;
     width: 115%;
 }
 body  .list-body-container ul {
