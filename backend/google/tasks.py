@@ -11,8 +11,10 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-# from google.alchemyapi_python.alchemyapi import AlchemyAPI
-# from google.Extract_Text.checkAlchemy_Tika import CheckLink
+from django.core import serializers
+
+import logging
+logger = logging.getLogger("CAFI")
 
 
 cache = settings.CACHE
@@ -34,145 +36,60 @@ class GeocodingTest():
     def simple_geocode(self,query):
         results = self.client.geocode(query)
         return results
-"""
-def extract_text_AlchemyAPI_single(url_string):
 
-    alchemyapi = AlchemyAPI()
-    response1 = alchemyapi.text('url', url_string)
-    if response1['status'] == 'OK':
-        try:
-            return unicode(response1['text'])
-        except:
-            pass
-    else:
-        return None
-"""
 
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
 @shared_task(default_retry_delay=3, max_retries=3)
-def do_search(search):
-    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+def do_search(search,num_requests):
+    # https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    num_requests = 3
     counter = 0
-    counter1 = 0
+    start_page = search.last_stop
+    logger.info("Google Search: #request:"+ str(num_requests))
     # Make an HTTP request object
     for i1 in range(0, num_requests):
-        # This is the offset from the beginning to start getting the results from
-        start_val = 1 + (i1 * 10)
-        # Make an HTTP request object
+        if search.flag_check == 0:
+            # This is the offset from the beginning to start getting the results from
+            start_val = 1 + (start_page * 10)
+            # Make an HTTP request object
 
-        request = collection.list(q=search.string,
-            num=10, #this is the maximum & default anyway
-            start=start_val,
-            cx=search_engine_id
-        )
-        response = request.execute()
+            request = collection.list(q=search.string,
+                num=10, #this is the maximum & default anyway
+                start=start_val,
+                cx=search_engine_id
+            )
+            response = request.execute()
 
-        for i, doc in enumerate(response['items']):
-            try:
-                obj = SearchResult()
-                obj.search = search
-                obj.title = doc.get('title')
-                obj.snippet = doc.get('snippet')
-                obj.url = doc.get('link')
-                obj.rank = start_val + i
-                counter1 += 1
-                obj.save()
-                do_download.delay(obj.id, obj.url)
-            except Exception :
-                print "Exception"
-                traceback.print_exc()
+            for i, doc in enumerate(response['items']):
+                try:
+                    obj = SearchResult()
+                    obj.search = search
+                    obj.title = doc.get('title')
+                    obj.snippet = doc.get('snippet')
+                    obj.url = doc.get('link')
+                    obj.rank = start_val + i
+                    obj.save()
+                    do_download.delay(obj.id, obj.url)
+                except Exception :
+                    logger.exception("Exception")
 
-        counter =  len(response['items'])
-        if counter < 10 :
-            search.flag_check = 1
-            search.save()
+            counter =  len(response['items'])
+            if counter < 10 : # Checks if the results returned are less than actual request of 10
+                search.flag_check = 1 # Flag Set no more results
+                start_page+=1
+                search.last_stop = start_page
+                search.save()
+                break
+            else:
+                start_page+=1
+                search.last_stop = start_page
+                search.save()
+        else:
             break
 
-    search.last_stop += (counter1/10) + 1
     search.save()
-
-#@shared_task(default_retry_delay=3, max_retries=3)
-def do_search_single(search, start_page):
-    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
-    print "holla"
-    search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    obj_response =[]
-    if search.flag_check == 0 :
-        start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
-        counter = 0
-        counter1 = 0
-        # Make an HTTP request object
-
-        request = collection.list(q=search.string,
-            num=10, #this is the maximum & default anyway
-            start=start_val,
-            cx=search_engine_id
-        )
-        response = request.execute()
-        for i, doc in enumerate(response['items']):
-            try:
-                obj = SearchResult()
-                obj.search = search
-                obj.title = doc.get('title')
-                obj.snippet = doc.get('snippet')
-                obj.url = doc.get('link')
-                obj.rank = start_val + i
-                counter1 += 1
-                obj.save()
-                #do_download.delay(obj.id, obj.url)
-                print i + " : " +json.dumps(obj)
-                obj_response.append(json.dumps(obj))
-            except Exception:
-                print "Exception"
-                traceback.print_exc()
-
-        counter =  len(response['items'])
-        if counter < 10 :
-            search.flag_check = 1
-            search.save()
-
-        search.last_stop = search.last_stop + (counter1/10)
-        search.save()
-        return json.dumps(obj_response)
-    else:
-        print json.dumps([])
-
-#@shared_task(default_retry_delay=3, max_retries=3)
-def do_demandsearch(search, start_page):
-    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
-    search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    start_val = 1 + (start_page * 10)  # This is the offset from the beginning to start getting the results from
-    # Make an HTTP request object
-    result = []
-    request = collection.list(q=search.string,
-        num=10, #this is the maximum & default anyway
-        start=start_val,
-        cx=search_engine_id
-    )
-    response = request.execute()
-    obj_response =[]
-    for i, doc in enumerate(response['items']):
-        try:
-            title = doc.get('title')
-            snippet = doc.get('snippet')
-            url = doc.get('link')
-            rank = start_val + i
-            obj_response.append({"title":title, "snippet":snippet, "url":url, "rank":rank})
-        except Exception:
-            print "Exception"
-            traceback.print_exc()
-    counter =  len(response['items'])
-    if counter < 10 :
-        search.flag_check = 1
-        search.save()
-    search.last_stop = search.last_stop + (counter/10)
-    search.save()
-    return json.dumps(obj_response)
-
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):

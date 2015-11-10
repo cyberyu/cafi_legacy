@@ -9,12 +9,16 @@ from djqscsv import render_to_csv_response
 from django.http import Http404
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
-from tasks import do_search, do_geo_search, do_search_single, do_demandsearch
+from tasks import do_search, do_geo_search
 from engagement.models import Project
 from celery import chain
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.core import serializers
+
+import logging
+logger = logging.getLogger("CAFI")
 
 class ResultsSetPagination(PageNumberPagination):
     page_size = 20
@@ -30,21 +34,10 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        print "create"
+        logger.info("Create")
         obj = serializer.save()
-        do_search.delay(obj)
-
-
-    @detail_route(methods=['GET'])
-    def highlight(self, request, *args, **kwargs):
-
-        pk = self.kwargs['pk']
-        search = self.get_object()
-        content = do_demandsearch(search,search.last_stop)
-        #content = do_search_single(search,search.last_stop) # Download still work in progress
-        content = json.loads(content, strict = False)
-        return Response(content,status=status.HTTP_201_CREATED)
-        #return Response([{"count": "hello, world", "string":"http://time.com/2919041/the-best-moments-of-the-2014-fifa-world-cup/", "id":5}, {"string": "hello1", "count":"bazingaa1 is awesome!" , "id":5}], status=status.HTTP_201_CREATED)
+        num_of_request = 3
+        do_search.delay(obj,num_of_request)
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -52,7 +45,7 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save()
         for obj in objs:
-            do_search_single.delay(obj)
+            do_search.delay(obj,1)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -84,13 +77,13 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         geosearch = serializer.save()
-        print geosearch.address
-        print "doing geo search create"
+        logger.info("Address :"+ geosearch.address)
+        logger.info("Geo Create")
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
-        print "update: "+ geosearch.address
+        logger.info("update: "+ geosearch.address)
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     @detail_route(methods=['POST'])
@@ -129,7 +122,7 @@ def upload(request):
 
 
 class DemandSearch(APIView):
-    renderer_classes = (JSONRenderer, )
+
     def get_object(self, pk):
         try:
             return Search.objects.get(pk=pk)
@@ -138,13 +131,26 @@ class DemandSearch(APIView):
 
     def get(self, request, pk, format=None):
         search = self.get_object(pk)
-        print "Demand:"
-        print search
-        content = do_demandsearch(search,search.last_stop)
-        return Response(content)
+        logger.info("Demand Fetch")
+        obj1 = SearchResult.objects.all().filter(search=search.pk).order_by('-rank')[0]
+        rank_last = obj1.rank
+        logger.info("Rank_Last:"+str(rank_last))
+        demo = do_search.delay(search,1)
+        demo.get() # To make it wait for response of delay function
+        search.save()
+        obj = SearchResult.objects.all().filter(search=search.pk).filter(rank__gt=rank_last).order_by('rank')
+        if len(obj)>0:
+            results = []
+            for res in obj:
+                results.append(SimpleSearchResultSerializer(res).data)
+
+            results1 = json.dumps(results)
+            results2 = json.loads(results1,strict = False)
+            return Response(results2, status=status.HTTP_201_CREATED)
+        else:
+            return Response(None,status=status.HTTP_201_CREATED)
 
 class DemandSearchList(APIView):
-    renderer_classes = (JSONRenderer, )
 
     def get(self, request, format=None):
         search = Search.objects.all()
