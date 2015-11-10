@@ -73,6 +73,7 @@ def do_search(search,num_requests):
                     obj.save()
                     do_download.delay(obj.id, obj.url)
                 except Exception :
+                    search.save()
                     logger.exception("Exception")
 
             counter =  len(response['items'])
@@ -90,6 +91,7 @@ def do_search(search,num_requests):
             break
 
     search.save()
+    return 1
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):

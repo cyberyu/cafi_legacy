@@ -39,6 +39,30 @@ class SearchViewSet(viewsets.ModelViewSet):
         num_of_request = 3
         do_search.delay(obj,num_of_request)
 
+
+    @detail_route(methods=['GET'])
+    def demand_page(self, request, *args, **kwargs):
+
+        pk = self.kwargs['pk']
+        search = self.get_object()
+        logger.info("Demand Fetch")
+        obj1 = SearchResult.objects.all().filter(search=search.pk).order_by('-rank')[0]
+        rank_last = obj1.rank
+        logger.info("Rank_Last:"+str(rank_last))
+        demo = do_search.delay(search,1)
+        demo.get()
+        obj = SearchResult.objects.all().filter(search=search.pk).filter(rank__gt=rank_last).order_by('rank')
+        if len(obj)>0:
+            results = []
+            for res in obj:
+                results.append(SimpleSearchResultSerializer(res).data)
+
+            results1 = json.dumps(results)
+            results2 = json.loads(results1,strict = False)
+            return Response(results2, status=status.HTTP_201_CREATED)
+        else:
+            return Response(None,status=status.HTTP_201_CREATED)
+
     @list_route(methods=['POST'])
     def batch(self, request):
         serializer = self.get_serializer(data=request.data, many=True)
@@ -119,42 +143,3 @@ def upload(request):
     data = list(csv.DictReader(file))
 
     return Response({"items": data}, status=status.HTTP_200_OK)
-
-
-class DemandSearch(APIView):
-
-    def get_object(self, pk):
-        try:
-            return Search.objects.get(pk=pk)
-        except Search.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        search = self.get_object(pk)
-        logger.info("Demand Fetch")
-        obj1 = SearchResult.objects.all().filter(search=search.pk).order_by('-rank')[0]
-        rank_last = obj1.rank
-        logger.info("Rank_Last:"+str(rank_last))
-        demo = do_search.delay(search,1)
-        demo.get() # To make it wait for response of delay function
-        search.save()
-        obj = SearchResult.objects.all().filter(search=search.pk).filter(rank__gt=rank_last).order_by('rank')
-        if len(obj)>0:
-            results = []
-            for res in obj:
-                results.append(SimpleSearchResultSerializer(res).data)
-
-            results1 = json.dumps(results)
-            results2 = json.loads(results1,strict = False)
-            return Response(results2, status=status.HTTP_201_CREATED)
-        else:
-            return Response(None,status=status.HTTP_201_CREATED)
-
-class DemandSearchList(APIView):
-
-    def get(self, request, format=None):
-        search = Search.objects.all()
-        search = SearchSerializer(search,many=True)
-        return Response(search.data)
-
-
