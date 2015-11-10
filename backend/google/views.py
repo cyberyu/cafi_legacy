@@ -6,16 +6,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view, detail_route, list_route
 import csv,json
 from djqscsv import render_to_csv_response
-from django.http import Http404
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
 from tasks import do_search, do_geo_search
 from engagement.models import Project
 from celery import chain
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.core import serializers
 
 import logging
 logger = logging.getLogger("CAFI")
@@ -34,21 +30,26 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        logger.info("Create")
+        logger.debug("Create")
         obj = serializer.save()
-        num_of_request = 3
-        do_search.delay(obj,num_of_request)
+        do_search.delay(obj,3)
 
 
     @detail_route(methods=['GET'])
     def demand_page(self, request, *args, **kwargs):
 
-        pk = self.kwargs['pk']
         search = self.get_object()
-        logger.info("Demand Fetch")
+        logger.debug("Demand Fetch")
+        demo = do_search.delay(search,1)
+        demo.get()
+        return Response({"Get_one_more_page": "Completed"},status=status.HTTP_201_CREATED)
+
+        """
+        # This part was for visualization of results of 10 fetched docs in the api itself:
+
         obj1 = SearchResult.objects.all().filter(search=search.pk).order_by('-rank')[0]
         rank_last = obj1.rank
-        logger.info("Rank_Last:"+str(rank_last))
+        logger.debug("Rank_Last:"+str(rank_last))
         demo = do_search.delay(search,1)
         demo.get()
         obj = SearchResult.objects.all().filter(search=search.pk).filter(rank__gt=rank_last).order_by('rank')
@@ -62,6 +63,7 @@ class SearchViewSet(viewsets.ModelViewSet):
             return Response(results2, status=status.HTTP_201_CREATED)
         else:
             return Response(None,status=status.HTTP_201_CREATED)
+        """
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -69,7 +71,7 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save()
         for obj in objs:
-            do_search.delay(obj,1)
+            do_search.delay(obj,3)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -101,13 +103,13 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         geosearch = serializer.save()
-        logger.info("Address :"+ geosearch.address)
-        logger.info("Geo Create")
+        logger.debug("Address :"+ geosearch.address)
+        logger.debug("Geo Create")
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
-        logger.info("update: "+ geosearch.address)
+        logger.debug("update: "+ geosearch.address)
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     @detail_route(methods=['POST'])

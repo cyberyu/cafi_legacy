@@ -24,8 +24,9 @@ class Search(models.Model):
 
 
     def incr_last_stop(self):
-        i=1
-        # Was trying to increment last_stop here but failed to update, will try later
+        self.last_stop+=1
+        self.save()
+        # Was trying to increment last_stop here but failed to update with HTTP 500, will try later
         # As of now done with fetching google docs, safer
 
 
@@ -43,7 +44,7 @@ class SearchResult(models.Model):
 
     search = models.ForeignKey(Search, related_name="results")
     title = models.CharField(max_length=255)
-    url = models.URLField(blank=False)
+    url = models.URLField(blank=False, max_length=300)
     snippet = models.TextField(blank=True)
     rank = models.IntegerField(blank=True, null=True)  # rank of the google search result
 

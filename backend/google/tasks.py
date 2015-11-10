@@ -47,7 +47,7 @@ def do_search(search,num_requests):
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0
     start_page = search.last_stop
-    logger.info("Google Search: #request:"+ str(num_requests))
+    logger.debug("Google Search: #request:"+ str(num_requests))
     # Make an HTTP request object
     for i1 in range(0, num_requests):
         if search.flag_check == 0:
