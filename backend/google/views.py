@@ -41,13 +41,12 @@ class SearchViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
 class SearchResultViewSet(viewsets.ModelViewSet):
     queryset = SearchResult.objects.all()
     serializer_class = SearchResultSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('search','label')
+    filter_fields = ('search','label', 'user')
 
     def get_queryset(self):
         queryset = SearchResult.objects.all()
@@ -56,10 +55,12 @@ class SearchResultViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(search__project=project)
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def list(self, request, *args, **kwargs):
         self.serializer_class = SimpleSearchResultSerializer
         return super(SearchResultViewSet, self).list(self, request, *args, **kwargs)
-
 
 class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
