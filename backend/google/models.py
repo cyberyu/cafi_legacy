@@ -70,6 +70,7 @@ class SearchResult(models.Model):
 
 class GeoSearch(models.Model):
     project = models.ForeignKey(Project, related_name="geosearches")
+    user = models.ForeignKey(User)
     name = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=1024) # search string
     lat = models.FloatField(blank=True, null=True)

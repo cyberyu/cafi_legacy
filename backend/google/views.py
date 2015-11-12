@@ -30,10 +30,8 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        logger.debug("Create")
-        obj = serializer.save()
+        obj = serializer.save(user=self.request.user)
         do_search.delay(obj,3)
-
 
     @detail_route(methods=['GET'])
     def demand_page(self, request, *args, **kwargs):
@@ -64,6 +62,7 @@ class SearchViewSet(viewsets.ModelViewSet):
         else:
             return Response(None,status=status.HTTP_201_CREATED)
         """
+
 
     @list_route(methods=['POST'])
     def batch(self, request):
