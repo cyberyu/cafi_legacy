@@ -5,6 +5,7 @@ from django.conf import settings
 
 from engagement.models import Project
 from risk.models import RiskItem
+from django.contrib.auth.models import User
 
 
 class Search(models.Model):
@@ -43,6 +44,7 @@ class SearchResult(models.Model):
     )
 
     search = models.ForeignKey(Search, related_name="results")
+    user = models.ForeignKey(User)
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False, max_length=300)
     snippet = models.TextField(blank=True)
