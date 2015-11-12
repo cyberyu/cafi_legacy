@@ -17,6 +17,7 @@ class Search(models.Model):
     )
 
     project = models.ForeignKey(Project, related_name="searches")
+    user = models.ForeignKey(User)
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
 

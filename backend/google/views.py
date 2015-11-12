@@ -25,7 +25,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     serializer_class = SearchSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project',)
+    filter_fields = ('project', 'user')
 
     def perform_create(self, serializer):
         obj = serializer.save(user=self.request.user)
@@ -70,7 +70,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project__id', 'name')
 
     def perform_create(self, serializer):
-        geosearch = serializer.save()
+        geosearch = serializer.save(user=self.request.user)
         print geosearch
         print "doing geo search"
         do_geo_search.delay(geosearch.id, geosearch.address)
