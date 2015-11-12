@@ -28,7 +28,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     def perform_create(self, serializer):
-        obj = serializer.save()
+        obj = serializer.save(user=self.request.user)
         do_search.delay(obj)
 
     @list_route(methods=['POST'])
