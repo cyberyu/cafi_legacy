@@ -50,7 +50,7 @@ def do_search(search,num_requests):
     logger.debug("Google Search: #request:"+ str(num_requests))
     # Make an HTTP request object
     for i1 in range(0, num_requests):
-        if search.flag_check == 0:
+        if search.contain_result == 0:
             # This is the offset from the beginning to start getting the results from
             start_val = 1 + (start_page * 10)
             # Make an HTTP request object
@@ -78,7 +78,7 @@ def do_search(search,num_requests):
 
             counter =  len(response['items'])
             if counter < 10 : # Checks if the results returned are less than actual request of 10
-                search.flag_check = 1 # Flag Set no more results
+                search.contain_result = 1 # Flag Set no more results
                 start_page+=1
                 search.last_stop = start_page
                 search.save()

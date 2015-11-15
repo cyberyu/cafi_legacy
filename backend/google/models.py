@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.auth.models import User
 from django.conf import settings
 
 from engagement.models import Project
@@ -20,15 +19,16 @@ class Search(models.Model):
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     last_stop = models.IntegerField(default=0)
-    flag_check = models.IntegerField(default=0) # Flag = 0 for more results, 1 for no results
+    contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
-
+    """
     def incr_last_stop(self):
         self.last_stop+=1
         self.save()
         # Was trying to increment last_stop here but failed to update with HTTP 500, will try later
         # As of now done with fetching google docs, safer
+    """
 
 
     def __unicode__(self):

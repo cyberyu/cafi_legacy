@@ -103,9 +103,9 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     filter_fields = ('project__id', 'name')
 
     def perform_create(self, serializer):
+        logger.debug("Geo Create")
         geosearch = serializer.save()
         logger.debug("Address :"+ geosearch.address)
-        logger.debug("Geo Create")
         do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
