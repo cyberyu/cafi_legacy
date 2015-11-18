@@ -16,19 +16,20 @@ class Search(models.Model):
     )
 
     project = models.ForeignKey(Project, related_name="searches")
+    user = models.ForeignKey(User)
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     last_stop = models.IntegerField(default=0)
     contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
-    """
+    
     def incr_last_stop(self):
         self.last_stop+=1
         self.save()
         # Was trying to increment last_stop here but failed to update with HTTP 500, will try later
         # As of now done with fetching google docs, safer
-    """
+    
 
 
     def __unicode__(self):
