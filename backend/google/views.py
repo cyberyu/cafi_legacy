@@ -42,28 +42,6 @@ class SearchViewSet(viewsets.ModelViewSet):
         demo.get()
         return Response({"Get_one_more_page": "Completed"},status=status.HTTP_201_CREATED)
 
-        """
-        # This part was for visualization of results of 10 fetched docs in the api itself:
-
-        obj1 = SearchResult.objects.all().filter(search=search.pk).order_by('-rank')[0]
-        rank_last = obj1.rank
-        logger.debug("Rank_Last:"+str(rank_last))
-        demo = do_search.delay(search,1)
-        demo.get()
-        obj = SearchResult.objects.all().filter(search=search.pk).filter(rank__gt=rank_last).order_by('rank')
-        if len(obj)>0:
-            results = []
-            for res in obj:
-                results.append(SimpleSearchResultSerializer(res).data)
-
-            results1 = json.dumps(results)
-            results2 = json.loads(results1,strict = False)
-            return Response(results2, status=status.HTTP_201_CREATED)
-        else:
-            return Response(None,status=status.HTTP_201_CREATED)
-        """
-
-
     @list_route(methods=['POST'])
     def batch(self, request):
         serializer = self.get_serializer(data=request.data, many=True)
@@ -104,7 +82,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         logger.debug("Geo Create")
-        geosearch = serializer.save()
+        geosearch = serializer.save(user=self.request.user)
         logger.debug("Address :"+ geosearch.address)
         do_geo_search.delay(geosearch.id, geosearch.address)
 

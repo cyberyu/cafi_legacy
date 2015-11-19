@@ -37,4 +37,3 @@ if settings.DEBUG:
             'document_root': settings.STATIC_PATH,
         }),
 )
-

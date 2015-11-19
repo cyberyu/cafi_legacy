@@ -59,4 +59,3 @@ class GeoSearchSerializer(serializers.ModelSerializer):
         model = GeoSearch
 
 
-
