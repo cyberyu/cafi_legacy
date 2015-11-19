@@ -27,3 +27,6 @@ regex==2015.10.5
 django-queryset-csv==0.3.1
 nltk==3.0.5
 dragnet==1.0.1
+Cython==0.23.4
+networkx==1.10
+https://bitbucket.org/taynaud/python-louvain/get/f56ac904d92c.zip
