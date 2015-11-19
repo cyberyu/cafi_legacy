@@ -31,14 +31,16 @@ class SearchViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         obj = serializer.save(user=self.request.user)
-        do_search.delay(obj,3)
+        user_val = self.request.user
+        logger.debug("Create Search: " +str(user_val))
+        do_search.delay(obj,3,self.request.user)
 
     @detail_route(methods=['GET'])
     def demand_page(self, request, *args, **kwargs):
 
         search = self.get_object()
         logger.debug("Demand Fetch")
-        demo = do_search.delay(search,1)
+        demo = do_search.delay(search,1,request.user)
         demo.get()
         return Response({"Get_one_more_page": "Completed"},status=status.HTTP_201_CREATED)
 
@@ -46,9 +48,9 @@ class SearchViewSet(viewsets.ModelViewSet):
     def batch(self, request):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid()
-        objs = serializer.save()
+        objs = serializer.save(user=request.user)
         for obj in objs:
-            do_search.delay(obj,3)
+            do_search.delay(obj,3,request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

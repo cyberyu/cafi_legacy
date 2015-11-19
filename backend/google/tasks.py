@@ -42,7 +42,7 @@ service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdS
 collection = service.cse()
 
 @shared_task(default_retry_delay=3, max_retries=3)
-def do_search(search,num_requests):
+def do_search(search,num_requests,user_obj):
     # https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0
@@ -70,6 +70,8 @@ def do_search(search,num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
+                    obj.user = user_obj
+                    logger.debug(obj)
                     obj.save()
                     do_download.delay(obj.id, obj.url)
                 except Exception :
