@@ -6,6 +6,7 @@ from google.ner.cafi_netagger import CAFI_NETagger
 
 
 class SearchSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.pk')
     class Meta:
         model = Search
 
@@ -22,7 +23,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchResult
-        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search')
+        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search', 'user')
 
     def get_hltitle(self, obj):
         highlighter = Highlighter()
@@ -36,6 +37,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
 
 class SearchResultSerializer(SimpleSearchResultSerializer):
+    user = serializers.ReadOnlyField(source='user.pk')
     risks = RiskObjectRelatedField(read_only=True, many=True)
     keywords = serializers.SerializerMethodField()
     nerwords = serializers.SerializerMethodField()
@@ -55,8 +57,8 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
                 "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.pk')
     class Meta:
         model = GeoSearch
-
 
 
