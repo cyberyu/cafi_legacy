@@ -8,6 +8,7 @@ from rest_framework import routers
 from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
 from engagement.views import ProjectViewSet
 from risk.views import RiskViewSet, CompanyViewSet, RiskItemViewSet
+from rest_framework.renderers import JSONRenderer, StaticHTMLRenderer
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -19,7 +20,6 @@ router.register(r'risks', RiskViewSet)
 router.register(r'companies', CompanyViewSet)
 router.register(r'geosearch', GeoSearchViewSet)
 router.register(r'risk_items', RiskItemViewSet)
-
 
 urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
@@ -37,4 +37,3 @@ if settings.DEBUG:
             'document_root': settings.STATIC_PATH,
         }),
 )
-

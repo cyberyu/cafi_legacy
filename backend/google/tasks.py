@@ -1,15 +1,20 @@
 from __future__ import absolute_import
+import traceback
 from celery import shared_task
 import random
 import time
+import json
 from django.conf import settings
-
+from django.core.cache import cache
+cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-# from google.alchemyapi_python.alchemyapi import AlchemyAPI
-# from google.Extract_Text.checkAlchemy_Tika import CheckLink
+from django.core import serializers
+
+import logging
+logger = logging.getLogger("CAFI")
 
 
 cache = settings.CACHE
@@ -32,45 +37,63 @@ class GeocodingTest():
         results = self.client.geocode(query)
         return results
 
-def extract_text_AlchemyAPI_single(url_string):
-
-    alchemyapi = AlchemyAPI()
-    response1 = alchemyapi.text('url', url_string)
-    if response1['status'] == 'OK':
-        try:
-            return unicode(response1['text'])
-        except:
-            pass
-    else:
-        return None
 
 service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
 collection = service.cse()
 
-
 @shared_task(default_retry_delay=3, max_retries=3)
-def do_search(search):
-    #  https://developers.google.com/custom-search/json-api/v1/reference/cse/list
+def do_search(search,num_requests,user_obj):
+    # https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
-    start_val = 0
-    request = collection.list(
-        q=search.string,
-        # num=10, #this is the maximum & default anyway
-        # start=start_val,
-        cx=search_engine_id
-    )
-    response = request.execute()
+    counter = 0
+    start_page = search.last_stop
+    logger.debug("Google Search: #request:"+ str(num_requests))
+    # Make an HTTP request object
+    for i1 in range(0, num_requests):
+        if search.contain_result == 0:
+            # This is the offset from the beginning to start getting the results from
+            start_val = 1 + (start_page * 10)
+            # Make an HTTP request object
 
-    for i, doc in enumerate(response['items']):
-        obj = SearchResult()
-        obj.search = search
-        obj.title = doc.get('title')
-        obj.snippet = doc.get('snippet')
-        obj.url = doc.get('link')
-        obj.rank = start_val + i
-        obj.save()
-        do_download.delay(obj.id, obj.url)
+            request = collection.list(q=search.string,
+                num=10, #this is the maximum & default anyway
+                start=start_val,
+                cx=search_engine_id
+            )
+            response = request.execute()
 
+            for i, doc in enumerate(response['items']):
+                try:
+                    obj = SearchResult()
+                    obj.search = search
+                    obj.title = doc.get('title')
+                    obj.snippet = doc.get('snippet')
+                    obj.url = doc.get('link')
+                    obj.rank = start_val + i
+                    obj.user = user_obj
+                    logger.debug(obj)
+                    obj.save()
+                    do_download.delay(obj.id, obj.url)
+                except Exception :
+                    search.save()
+                    logger.exception("Exception")
+
+            counter =  len(response['items'])
+            if counter < 10 : # Checks if the results returned are less than actual request of 10
+                search.contain_result = 1 # Flag Set no more results
+                start_page+=1
+                search.last_stop = start_page
+                search.save()
+                break
+            else:
+                start_page+=1
+                search.last_stop = start_page
+                search.save()
+        else:
+            break
+
+    search.save()
+    return 1
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
@@ -119,4 +142,3 @@ if __name__ == '__main__':
     search = Search(project=project, string='olympic')
     search.save()
     do_search(search, 'olympics')
-

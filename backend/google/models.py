@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.auth.models import User
 from django.conf import settings
 
 from engagement.models import Project
@@ -17,10 +16,21 @@ class Search(models.Model):
     )
 
     project = models.ForeignKey(Project, related_name="searches")
+    user = models.ForeignKey(User)
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
-
+    last_stop = models.IntegerField(default=0)
+    contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
+
+    
+    def incr_last_stop(self):
+        self.last_stop+=1
+        self.save()
+        # Was trying to increment last_stop here but failed to update with HTTP 500, will try later
+        # As of now done with fetching google docs, safer
+    
+
 
     def __unicode__(self):
       return self.string
@@ -37,7 +47,7 @@ class SearchResult(models.Model):
     search = models.ForeignKey(Search, related_name="results")
     user = models.ForeignKey(User)
     title = models.CharField(max_length=255)
-    url = models.URLField(blank=False)
+    url = models.URLField(blank=False, max_length=300)
     snippet = models.TextField(blank=True)
     rank = models.IntegerField(blank=True, null=True)  # rank of the google search result
 
@@ -76,5 +86,4 @@ class GeoSearch(models.Model):
 
     def __unicode__(self):
       return self.address
-
 
