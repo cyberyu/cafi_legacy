@@ -33,16 +33,14 @@ class SearchViewSet(viewsets.ModelViewSet):
         obj = serializer.save(user=self.request.user)
         user_val = self.request.user
         logger.debug("Create Search: " +str(user_val))
-        do_search.delay(obj,3,self.request.user)
+        do_search.delay(obj, 3)
 
-    @detail_route(methods=['GET'])
+    @detail_route(methods=['POST'])
     def demand_page(self, request, *args, **kwargs):
-
         search = self.get_object()
         logger.debug("Demand Fetch")
-        demo = do_search.delay(search,1,request.user)
-        demo.get()
-        return Response({"Get_one_more_page": "Completed"},status=status.HTTP_201_CREATED)
+        do_search.delay(search, 1)
+        return Response({"msg": "submitted"}, status=status.HTTP_201_CREATED)
 
     @list_route(methods=['POST'])
     def batch(self, request):
@@ -50,7 +48,7 @@ class SearchViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         objs = serializer.save(user=request.user)
         for obj in objs:
-            do_search.delay(obj,3,request.user)
+            do_search.delay(obj, 3)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -59,7 +57,7 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     serializer_class = SearchResultSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('search','label', 'user')
+    filter_fields = ('search', 'label')
 
     def get_queryset(self):
         queryset = SearchResult.objects.all()
@@ -69,7 +67,7 @@ class SearchResultViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = SimpleSearchResultSerializer

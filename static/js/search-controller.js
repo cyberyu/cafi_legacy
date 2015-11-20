@@ -59,8 +59,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       });
   };
 
+  $scope.moreSearch = function(n){
+    $http.post('/api/gsearch/'+$scope.displaySearch.id+'/demand_page');
+    console.log('get one more')
+  };
+
   $scope.setDisplaySearch = function(search){
-    Gdoc.get({search:search.id}).$promise.then(function(data){
+    Gdoc.get({search: search.id}).$promise.then(function(data){
       $scope.displaySearchDocs = data.results;
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = 1;

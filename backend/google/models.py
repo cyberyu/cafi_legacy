@@ -45,7 +45,7 @@ class SearchResult(models.Model):
     )
 
     search = models.ForeignKey(Search, related_name="results")
-    user = models.ForeignKey(User)
+    # user = models.ForeignKey(User)
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False, max_length=300)
     snippet = models.TextField(blank=True)
