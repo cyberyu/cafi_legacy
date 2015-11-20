@@ -73,7 +73,7 @@
       <nav class="text-center" ng-if="total>20">
         <paging class="small" page="currentPage" page-size="20" total="total" adjacent="{{adjacent}}" dots="{{dots}}"
                 scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
-                disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses(page)">
+                disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getAddresses({'page':page})">
         </paging>
       </nav>
 
