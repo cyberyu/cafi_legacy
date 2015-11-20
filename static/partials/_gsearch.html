@@ -101,6 +101,11 @@
                   disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getGdocs(displaySearch, page)">
           </paging>
         </nav>
+        <div class="text-center">
+          <span>total {{gdocPager.total}} results</span>
+          <button class="btn btn-primary btn-small" ng-click="moreSearch(1)"> Get next page</button>
+          <button class="btn btn-primary btn-small" ng-click="getGdocs(displaySearch, gdocPager.currentPage)"> refresh </button>
+        </div>
       </div>
     </div>
   </div>
