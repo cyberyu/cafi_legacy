@@ -23,7 +23,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchResult
-        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search', 'user')
+        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search')
 
     def get_hltitle(self, obj):
         highlighter = Highlighter()
@@ -37,7 +37,6 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
 
 class SearchResultSerializer(SimpleSearchResultSerializer):
-    user = serializers.ReadOnlyField(source='user.pk')
     risks = RiskObjectRelatedField(read_only=True, many=True)
     keywords = serializers.SerializerMethodField()
     nerwords = serializers.SerializerMethodField()
