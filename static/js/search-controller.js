@@ -3,8 +3,11 @@
  */
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
-                                                           $http, $uibModal, Upload, popupService,
+                                                           $http, $uibModal, Upload, popupService, $cookies,
                                                            Project, Search, Gdoc,GeoSearch, Company, Risk, RiskItem){
+
+  $scope.user = $cookies.get('user');
+  $scope.onlyMine = false;
 
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
@@ -73,8 +76,15 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.toggleOnlyMine = function(){
+    $scope.onlyMine = !$scope.onlyMine;
+    $scope.listSearches(1);
+  };
+
   $scope.listSearches = function (page) {
-    Search.query({"project": $scope.currentProject.id, "page": page}).$promise.then(function(data){
+    var options = {"project": $scope.currentProject.id, "page": page}
+    if ($scope.onlyMine) { options["user"] = $scope.user; }
+    Search.query(options).$promise.then(function(data){
       $scope.searches = data.results;
       $scope.displaySearch = $scope.searches[0];
       $scope.getGdocs($scope.displaySearch, 1);
