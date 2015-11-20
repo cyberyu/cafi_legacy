@@ -35,14 +35,12 @@ class SearchViewSet(viewsets.ModelViewSet):
         logger.debug("Create Search: " +str(user_val))
         do_search.delay(obj, 3)
 
-    @detail_route(methods=['GET'])
+    @detail_route(methods=['POST'])
     def demand_page(self, request, *args, **kwargs):
-
         search = self.get_object()
         logger.debug("Demand Fetch")
-        demo = do_search.delay(search, 1)
-        demo.get()
-        return Response({"Get_one_more_page": "Completed"},status=status.HTTP_201_CREATED)
+        do_search.delay(search, 1)
+        return Response({"msg": "submitted"}, status=status.HTTP_201_CREATED)
 
     @list_route(methods=['POST'])
     def batch(self, request):
