@@ -2,21 +2,24 @@
  * Created by pengfeiz on 10/20/15. Modified by tanmoypatra 11/18/15
  */
 
-projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, uiGmapIsReady){
+projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, uiGmapIsReady, GeoSearch){
   $scope.map = {center: {latitude: 40.1451, longitude: -99.6680}, zoom: 4};
   $scope.options = {scrollwheel: false};
 
   $scope.markers = [];
   uiGmapIsReady.promise().then(function(){
-    angular.forEach($scope.addresses, function(address){
-      marker = {
-        id: address.id,
-        coords: { "latitude": address.lat, "longitude": address.lng},
-        info: address.name + ': ' + address.address
-      };
-      $scope.markers.push(marker);
+    var options = {"project__id": $scope.project_id, "size":1000};
+    GeoSearch.query(options).$promise.then(function (data) {
+      $scope.allAddresses = data.results;
+      angular.forEach($scope.allAddresses, function(address){
+        marker = {
+          id: address.id,
+          coords: { "latitude": address.lat, "longitude": address.lng},
+          info: address.name + ': ' + address.address
+        };
+        $scope.markers.push(marker);
+      });
     });
-
   });
 
   $scope.locateOnMap = function(address){

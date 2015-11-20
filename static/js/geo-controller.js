@@ -33,15 +33,17 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     }
   };
 
-  $scope.getAddresses = function(page) {
-    GeoSearch.query({"project__id": $scope.project_id, "page": page}).$promise.then(function (data) {
+  $scope.getAddresses = function(option) {
+    var options = {"project__id": $scope.project_id};
+    angular.extend(options, option);
+    GeoSearch.query(options).$promise.then(function (data) {
       $scope.addresses = data.results;
       $scope.total = data.count;
-      $scope.currentPage = page;
+      if (option.page) { $scope.currentPage = option.page; }
     });
   };
 
-  $scope.getAddresses(1);
+  $scope.getAddresses({page:1});
 
   $scope.currentAddress = {};
   $scope.uploadAddressBool = false;
