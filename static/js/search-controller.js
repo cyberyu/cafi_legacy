@@ -202,24 +202,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.saveEdit = function (newDoc) {
-    $http.put('/api/gdocs/' + newDoc.id, newDoc).success(function(data) {
-      for (var i = 0; i < $scope.displaySearchDocs.length; i++) {
-        if ($scope.displaySearchDocs[i].id == newDoc.id) {
-          $scope.displaySearchDocs[i] = newDoc;
-          break;
-        }
-      }
-      for (var i = 0; i < $scope.displayedGdocs.length; i++) {
-        if ($scope.displayedGdocs[i].id == newDoc.id) {
-          $scope.displayedGdocs[i] = newDoc;
-          break;
-        }
-      }
-      //$scope.modalInstance.dismiss('cancel');
-    });
-  };
-
   $scope.status = {
     isopen: false
   };

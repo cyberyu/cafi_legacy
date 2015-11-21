@@ -37,13 +37,6 @@ class Search(models.Model):
 
 
 class SearchResult(models.Model):
-    LABEL_CHOICES = (
-        (0, ''),
-        (1, 'junk'),
-        (2, 'risk'),
-        (3, 'biz'),
-    )
-
     search = models.ForeignKey(Search, related_name="results")
     # user = models.ForeignKey(User)
     title = models.CharField(max_length=255)
@@ -58,7 +51,8 @@ class SearchResult(models.Model):
 
     risks = GenericRelation(RiskItem)
 
-    label = models.IntegerField(choices=LABEL_CHOICES, default=0)
+    label = models.CharField(max_length=100, default=0)
+    relevance = models.CharField(blank=True, max_length=1, default='')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
