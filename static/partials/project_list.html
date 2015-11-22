@@ -26,11 +26,11 @@
                         <td>{{project.client}}</td>
                         <!--<td>{{project.createdAt}}</td>-->
                         <!--<td>{{project.id}}</td>-->
-                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateProject(project)"><i class="fa fa-pencil"></i></a>
-                            <a class="btn btn-default btn-circle" ng-click="deleteProject(project)"><i class="fa fa-minus"></i></a></td>
+                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateProject(project)" uib-tooltip="Edit project"><i class="fa fa-pencil"></i></a>
+                            <a class="btn btn-default btn-circle" ng-click="deleteProject(project)" uib-tooltip="Delete project"><i class="fa fa-minus"></i></a></td>
                     </tr>
                 </table>
-                <a ng-click="editOrCreateProject()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
+                <a ng-click="editOrCreateProject()" class="btn btn-default btn-circle" uib-tooltip="Add a project"><i class="fa fa-plus"></i></a>
             </div>
         </div>
     </div>

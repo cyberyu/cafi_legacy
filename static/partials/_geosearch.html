@@ -56,15 +56,15 @@
                 <td>{{address.lat}}</td>
                 <td>{{address.lng}}</td>
                 <td>
-                  <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool"><i class="fa fa-minus"></i></a>
-                  <a class="btn btn-default btn-circle" ng-click="openGeoEdit('', address)" ng-show="!geoResultsBool"><i class="fa fa-pencil"></i></a>
-                  <a class="btn btn-default btn-circle" ng-click="getLatLon(address)"><i class="glyphicon glyphicon-play-circle"></i></a>
-                  <a class="btn btn-default btn-circle" ng-click="locateOnMap(address)"  ng-show="address.lat && address.lng"><i class="fa fa-location-arrow"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="deleteAddress(address)" ng-show="!geoResultsBool" uib-tooltip="Delete address"><i class="fa fa-minus"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="openGeoEdit('', address)" ng-show="!geoResultsBool" uib-tooltip="Edit address"><i class="fa fa-pencil"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="getLatLon(address)" uib-tooltip="Fetch its lat and lon"><i class="glyphicon glyphicon-play-circle"></i></a>
+                  <a class="btn btn-default btn-circle" ng-click="locateOnMap(address)"  ng-show="address.lat && address.lng" uib-tooltip="Locate on map"><i class="fa fa-location-arrow"></i></a>
 
                 </td>
               </tr>
             </table>
-            <a ng-click="openGeoEdit('')" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
+            <a ng-click="openGeoEdit('')" class="btn btn-default btn-circle pull-right" uib-tooltip="Add a new address"><i class="fa fa-plus"></i></a>
           </div>
         </div>
       </div>
