@@ -41,6 +41,10 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         });
   };
 
+  $scope.updateRelevance = function (newDoc) {
+    Gdoc.update({'id': newDoc.id, 'relevance': newDoc.relevance})
+  };
+
   $scope.addKeywords = function(w){
     if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
     $scope.currentDoc.ner.push(w);

@@ -32,6 +32,8 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         Existing Searches
+        <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
+        <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
       </div>
       <div class="panel-body">
         <table class="table table-striped">
