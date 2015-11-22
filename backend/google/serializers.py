@@ -6,6 +6,7 @@ from google.ner.cafi_netagger import CAFI_NETagger
 
 
 class SearchSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.pk')
     class Meta:
         model = Search
 
@@ -55,8 +56,8 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
                 "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.pk')
     class Meta:
         model = GeoSearch
-
 
 

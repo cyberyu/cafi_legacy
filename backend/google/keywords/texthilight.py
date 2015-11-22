@@ -153,7 +153,6 @@ if __name__ == "__main__":
                                  nt.get_ne_tags_MONEY())  # list of tagged money
 
     nt.flush() # flush the tagger for reuse
-
     print hi_kw_ne
 
 
