@@ -8,7 +8,7 @@ projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, ui
 
   $scope.markers = [];
   uiGmapIsReady.promise().then(function(){
-    var options = {"project__id": $scope.project_id, "size":1000};
+    var options = {"project": $scope.project_id, "size":1000};
     GeoSearch.query(options).$promise.then(function (data) {
       $scope.allAddresses = data.results;
       angular.forEach($scope.allAddresses, function(address){

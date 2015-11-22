@@ -34,7 +34,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
   };
 
   $scope.getAddresses = function(option) {
-    var options = {"project__id": $scope.project_id};
+    var options = {"project": $scope.project_id};
     angular.extend(options, option);
     GeoSearch.query(options).$promise.then(function (data) {
       $scope.addresses = data.results;
@@ -141,7 +141,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
       templateUrl: 'geoModal.html',
       controller: 'geoModalCtrl',
       size: size,
-      scope: $scope,
+      scope: $scope
     });
 
     modalInstance.result.then(function (selectedItem) {

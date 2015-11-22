@@ -78,7 +78,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project__id', 'name')
+    filter_fields = ('project', 'name', 'user')
 
     def perform_create(self, serializer):
         logger.debug("Geo Create")

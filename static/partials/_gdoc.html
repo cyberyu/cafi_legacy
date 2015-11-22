@@ -54,12 +54,15 @@
   <div class="col-lg-2 right-panel" id="gdoc-label-box" >
 
     <div class="label-div">
-          <label class="control-label">Relevant?</label>
+          <label class="control-label">Relevant?</label> <br>
           <label class="radio-inline">
-            <input type="radio" name="yes" value="1" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)"> Y
+            <input type="radio" name="yes" ng-checked="currentDoc.relevance=='y'" value="y" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> Y
           </label>
           <label class="radio-inline">
-            <input type="radio" name="no" value="2" ng-model="currentDoc.label" ng-click="saveEdit(currentDoc)"> N
+            <input type="radio" name="maybe" ng-checked="currentDoc.relevance=='m'" value="m" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> M
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="no" ng-checked="currentDoc.relevance=='n'" value="n" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> N
           </label>
     </div>
     <hr>

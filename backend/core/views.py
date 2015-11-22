@@ -51,7 +51,10 @@ def user_login(request):
         if user.is_active:
             login(request, user)
             name = '%s %s' %(user.first_name, user.last_name)
-            return Response({'username': name})
+            response = Response({'username': name}, status=status.HTTP_200_OK)
+            response.set_cookie('user', user.id)
+            response.set_cookie('username', name)
+            return response
         else:
             return Response({'error': 'Your account is disabled.'}, status=status.HTTP_400_BAD_REQUEST)
     else:
