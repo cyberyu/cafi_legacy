@@ -2,9 +2,13 @@
  * Created by yangm on 10/6/15.
  */
 
-cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location) {
+cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location, $rootScope, Flash) {
   $scope.is_login = false;
   $scope.username = 'aa';
+
+  if($rootScope.needLogin) {
+    Flash.create('danger', 'Please login to use this application', 'text-center');
+  }
 
   $scope.login = function () {
     $http.post('/login/', $scope.loginForm)
