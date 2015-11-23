@@ -1,6 +1,7 @@
 <div class="modal-header">
   <div class = "row">
     <div class="col-md-10">
+      {{predefinedCompanies}}
       <small>From Search: {{displaySearch.string}} </small>
     </div>
     <div class="col-md-2">
@@ -77,9 +78,10 @@
       </div>
       <div class="form-group form-group-sm">
         <label>From: </label>
-        <select  class="form-control " ng-model="selectedFromCompany">
-          <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
-        </select>
+        <input type="text" ng-model="selectedFromCompany" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8" class="form-control">
+        <!--<select  class="form-control " ng-model="selectedFromCompany">-->
+          <!--<option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>-->
+        <!--</select>-->
       </div>
       <a ng-click="labelSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
     </form>

@@ -21,10 +21,16 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
 
 
   $scope.labelSubmit = function () {
+    for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
+      if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany) {
+        var selectedFromCompanyID = $scope.predefinedCompanies[i].id;
+        break;
+      }
+    }
     var oneLabel = {
       project: $scope.currentProject.id,
       object_id: $scope.currentDoc.id,
-      fromCompany: $scope.selectedFromCompany,
+      fromCompany: selectedFromCompanyID,
       toCompany: $scope.selectedToCompany,
       risk:$scope.selectedRisk,
       content_type: "searchresult"
