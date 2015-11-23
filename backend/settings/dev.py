@@ -62,12 +62,15 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'core.middleware.LoginRequiredMiddleware',
+    'core.middleware.LoginRequiredMiddleware',
 )
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '^$'
 LOGIN_EXEMPT_URLS = (
         r'^register/',
+        r'^login/',
+        r'^static/',
+        r'^me/'
 )
 
 LOG_PATHS = (

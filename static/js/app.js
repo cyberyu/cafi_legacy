@@ -52,3 +52,20 @@ cafiApp.config(['$routeProvider',
     libraries: 'weather,geometry,visualization'
   });
 });
+
+cafiApp.factory('myHttpInterceptor', ['$q','$location', '$rootScope', function ($q, $location, $rootScope) {
+    return {
+        response: function (response) {
+          return response;
+        },
+        responseError: function (response) {
+          $rootScope.needLogin = true;
+          $location.path('/');
+          return $q.reject(response);
+        }
+    };
+}]);
+
+cafiApp.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('myHttpInterceptor');
+});
