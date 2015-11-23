@@ -71,6 +71,7 @@ def do_search(search, num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
+                    logger.debug(obj.url)
                     logger.debug(obj)
                     obj.save()
                     do_download.delay(obj.id, obj.url)
@@ -97,7 +98,12 @@ def do_search(search, num_requests):
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
-    data = download(url)
+    try:
+        data = download(url)
+    except Exception, err:
+        logger.debug(traceback.format_exc())
+        logger.debug("Connection Error :Search id " + str(id))
+        data = {'path': None, 'doc_type': 'txt', 'text': "Connection Error!", 'raw_html': None}
     obj = SearchResult.objects.get(pk=id)
     obj.raw_file.name = data.get('path')
     obj.doc_type = data.get('doc_type')
