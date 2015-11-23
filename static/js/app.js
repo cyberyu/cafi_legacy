@@ -12,6 +12,7 @@ var cafiApp = angular.module('cafiApp', [
   'ngCookies',
   'ngTagsInput',
   'ng-mfb',
+  'flash',
   'ui.bootstrap',
   'uiGmapgoogle-maps',
   'smart-table',
@@ -61,6 +62,7 @@ cafiApp.factory('myHttpInterceptor', ['$q','$location', '$rootScope', function (
         responseError: function (response) {
           $rootScope.needLogin = true;
           $location.path('/');
+          //$rootScope.$apply();
           return $q.reject(response);
         }
     };
