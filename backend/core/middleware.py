@@ -1,5 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.http import JsonResponse
+from rest_framework import status
 from re import compile
 
 EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
@@ -26,4 +28,5 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated():
             path = request.path_info.lstrip('/')
             if not any(m.match(path) for m in EXEMPT_URLS):
-                return HttpResponseRedirect(settings.LOGIN_URL)
+                return JsonResponse({"error": "access unauthorized. You must login"}, status=status.HTTP_401_UNAUTHORIZED)
+                # return HttpResponseRedirect(settings.LOGIN_URL)
