@@ -70,7 +70,8 @@ LOGIN_EXEMPT_URLS = (
         r'^register/',
         r'^login/',
         r'^static/',
-        r'^me/'
+        r'^me/',
+        r'^admin/'
 )
 
 LOG_PATHS = (
