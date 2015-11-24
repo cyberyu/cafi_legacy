@@ -51,6 +51,10 @@ class SearchResult(models.Model):
     doc_type = models.CharField(blank=True, max_length=20)
     raw_file = models.FileField(blank=True, null=True)
 
+    ner_person = models.CharField(max_length=200, blank=True, default='')
+    ner_org = models.CharField(max_length=200, blank=True, default='')
+    ner_location = models.CharField(max_length=200, blank=True, default='')
+
     risks = GenericRelation(RiskItem)
 
     label = models.CharField(max_length=100, default=0)

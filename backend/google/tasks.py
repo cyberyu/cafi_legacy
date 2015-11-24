@@ -11,7 +11,8 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from django.core import serializers
+from google.ner.cafi_netagger import CAFI_NETagger
+
 
 import logging
 logger = logging.getLogger("CAFI")
@@ -94,6 +95,15 @@ def do_search(search, num_requests):
     search.save()
     return 1
 
+
+def get_nerwords(text):
+    nt = CAFI_NETagger()  # intialize the tagger
+    nt.get_ne_tags_all(text)  # tag the text
+    return {"person": set(nt.get_ne_tags_PERSON()),
+            "org": set(nt.get_ne_tags_ORGANIZATION()),
+            "location": set(nt.get_ne_tags_LOCATION())}
+
+
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
     data = download(url)
@@ -101,6 +111,12 @@ def do_download(id, url):
     obj.raw_file.name = data.get('path')
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
+
+    ner_words = get_nerwords(obj.text)
+    obj.ner_person = ner_words['person']
+    obj.ner_org = ner_words['org']
+    obj.ner_location = ner_words['location']
+
     obj.raw_html = data.get('raw_html')
     obj.save()
 

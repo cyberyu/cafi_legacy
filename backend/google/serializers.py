@@ -39,7 +39,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 class SearchResultSerializer(SimpleSearchResultSerializer):
     risks = RiskObjectRelatedField(read_only=True, many=True)
     keywords = serializers.SerializerMethodField()
-    nerwords = serializers.SerializerMethodField()
+    # nerwords = serializers.SerializerMethodField()
 
     class Meta:
         model = SearchResult
@@ -48,12 +48,12 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
         parser = SearchQueryParser()
         return parser.Parse(obj.search.string)
 
-    def get_nerwords(self, obj):
-        nt = CAFI_NETagger()  # intialize the tagger
-        nt.get_ne_tags_all(obj.text)  # tag the text
-        return {"person": set(nt.get_ne_tags_PERSON()),
-                "org": set(nt.get_ne_tags_ORGANIZATION()),
-                "location": set(nt.get_ne_tags_LOCATION())}
+    # def get_nerwords(self, obj):
+    #     nt = CAFI_NETagger()  # intialize the tagger
+    #     nt.get_ne_tags_all(obj.text)  # tag the text
+    #     return {"person": set(nt.get_ne_tags_PERSON()),
+    #             "org": set(nt.get_ne_tags_ORGANIZATION()),
+    #             "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.pk')
