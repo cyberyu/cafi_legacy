@@ -36,10 +36,19 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
         return highlighter.highlight(obj.snippet, istring)
 
 
+class JSONSerializerField(serializers.Field):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        return data
+    def to_representation(self, value):
+        return value
+
+
 class SearchResultSerializer(SimpleSearchResultSerializer):
     risks = RiskObjectRelatedField(read_only=True, many=True)
     keywords = serializers.SerializerMethodField()
     # nerwords = serializers.SerializerMethodField()
+    nerwords = JSONSerializerField(required=False)
 
     class Meta:
         model = SearchResult

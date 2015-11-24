@@ -6,6 +6,9 @@ from engagement.models import Project
 from risk.models import RiskItem
 from django.contrib.auth.models import User
 
+from google.ner.cafi_netagger import CAFI_NETagger
+from jsonfield import JSONField
+
 
 class Search(models.Model):
     STATUS_CHOICES = (
@@ -51,9 +54,7 @@ class SearchResult(models.Model):
     doc_type = models.CharField(blank=True, max_length=20)
     raw_file = models.FileField(blank=True, null=True)
 
-    ner_person = models.CharField(max_length=200, blank=True, default='')
-    ner_org = models.CharField(max_length=200, blank=True, default='')
-    ner_location = models.CharField(max_length=200, blank=True, default='')
+    nerwords = JSONField(blank=True)
 
     risks = GenericRelation(RiskItem)
 
@@ -70,6 +71,16 @@ class SearchResult(models.Model):
 
     def __unicode__(self):
        return self.title
+
+    def get_nerwords(self):
+        nt = CAFI_NETagger()  # intialize the tagger
+        nt.get_ne_tags_all(self.text)  # tag the text
+
+        self.nerwords = {
+            "person": set(nt.get_ne_tags_PERSON()),
+            "org": set(nt.get_ne_tags_ORGANIZATION()),
+            "location": set(nt.get_ne_tags_LOCATION())
+        }
 
 
 class GeoSearch(models.Model):
