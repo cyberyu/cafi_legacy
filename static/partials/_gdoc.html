@@ -54,7 +54,10 @@
   <div class="col-lg-2 right-panel" id="gdoc-label-box" >
 
     <div>
-      <button class="btn btn-primary btn-sm" ng-click="save4later(currentDoc)">Save for later review</button>
+      <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
+        <span ng-if="!currentDoc.reviewLater">Save for later review</span>
+        <span ng-if="currentDoc.reviewLater">Remove from later review</span>
+      </button>
     </div>
     <div class="label-div">
           <label class="control-label">Relevant?</label> <br>
