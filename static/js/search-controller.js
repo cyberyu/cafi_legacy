@@ -51,6 +51,16 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.getReviewLater = function(page){
+    Gdoc.query({review_later: 'True', page: page}).$promise.then(function(data){
+      $scope.displaySearchDocs = data.results;
+      $scope.gdocPager.total = data.count;
+      $scope.gdocPager.currentPage = page;
+      $scope.displaySearch = null;
+      $scope.reviewLaterActive = true;
+    })
+  };
+
   $scope.submitSearch = function(){
     var oneSearch = {
       project: $scope.currentProject.id,
@@ -74,6 +84,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = 1;
       $scope.displaySearch = search;
+      $scope.reviewLaterActive = false;
     });
   };
 
@@ -240,6 +251,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.isCollapsed = true;
   $scope.listSearches(1);
+  //$scope.getReviewLater(1);
   //$scope.getGdocs($scope.displaySearch, 1);
 
 });
