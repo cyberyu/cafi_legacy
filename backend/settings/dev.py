@@ -164,10 +164,14 @@ from settings.local import *
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format' : "[%(levelname)s] %(message)s",
+            'format' : "{%(asctime)s}[%(levelname)s] %(message)s",
+        },
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
     'handlers': {
@@ -176,20 +180,26 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './debug1.log',
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django': {
-            'handlers':['console'],
+            'handlers':['console','file'],
             'propagate': True,
             'level':'WARN',
         },
         'django.db.backends': {
-            'handlers': ['console'],
+            'handlers': ['console','file'],
             'level': 'WARN',
             'propagate': True,
         },
         'CAFI': {
-            'handlers': ['console'],
+            'handlers': ['console','file'],
             'level': 'DEBUG',
         },
     }
