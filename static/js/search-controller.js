@@ -52,7 +52,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.getReviewLater = function(page){
-    Gdoc.query({review_later: 'True', page: page}).$promise.then(function(data){
+    Gdoc.query({search__project: $scope.currentProject.id, review_later: 'True', page: page}).$promise.then(function(data){
       $scope.displaySearchDocs = data.results;
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
