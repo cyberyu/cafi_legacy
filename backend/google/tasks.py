@@ -38,12 +38,11 @@ class GeocodingTest():
         return results
 
 
-# the search API key is now separated from AutoCafi account, and stay as a trial version
-service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
-collection = service.cse()
-
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_search(search, num_requests):
+    # the search API key is now separated from AutoCafi account, and stay as a trial version
+    service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
+    collection = service.cse()
     # https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0

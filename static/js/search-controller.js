@@ -8,6 +8,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.user = $cookies.get('user');
   $scope.onlyMine = false;
+  $scope.onlyRelevant = true;
 
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
@@ -82,8 +83,10 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.listSearches = function (page) {
-    var options = {"project": $scope.currentProject.id, "page": page}
+    var options = {"project": $scope.currentProject.id, "page": page};
     if ($scope.onlyMine) { options["user"] = $scope.user; }
+    if ($scope.onlyRelevant) {options['is_relevant'] = 'True'; }
+
     Search.query(options).$promise.then(function(data){
       $scope.searches = data.results;
       $scope.displaySearch = $scope.searches[0];
@@ -116,6 +119,11 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     } else {
       $scope.createSearch(newSearch);
     }
+  };
+
+  $scope.markSearchJunk = function(search){
+    Search.update({id: search.id, is_relevant: false});
+    $scope.searches.splice($scope.searches.indexOf(search),1);
   };
 
   $scope.editOrCreateSearch = function (search) {

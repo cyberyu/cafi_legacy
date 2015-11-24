@@ -19,11 +19,13 @@ class Search(models.Model):
     user = models.ForeignKey(User)
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+
+    is_relevant = models.BooleanField(default=True)
+
     last_stop = models.IntegerField(default=0)
     contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
-    
     def incr_last_stop(self):
         self.last_stop+=1
         self.save()
