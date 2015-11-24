@@ -121,9 +121,16 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     }
   };
 
-  $scope.markSearchJunk = function(search){
-    Search.update({id: search.id, is_relevant: false});
-    $scope.searches.splice($scope.searches.indexOf(search),1);
+  $scope.toggleSearchJunk = function(search){
+    if (search.isRelevant) {
+      Search.update({id: search.id, is_relevant: false}).$promise.then(function(search){
+        $scope.searches.splice($scope.searches.indexOf(search),1);
+      });
+    } else {
+      Search.update({id: search.id, is_relevant: true}).$promise.then(function(search){
+        console.log('mark as relevant')
+      });
+    }
   };
 
   $scope.editOrCreateSearch = function (search) {
