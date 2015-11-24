@@ -8,6 +8,7 @@ cafiApp.controller('loginCtrl', function ($scope, $routeParams, $http, $location
 
   if($rootScope.needLogin) {
     Flash.create('danger', 'Please login to use this application', 'text-center');
+    $rootScope.needLogin = false;
   }
 
   $scope.login = function () {
