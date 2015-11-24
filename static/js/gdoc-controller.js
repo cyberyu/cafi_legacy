@@ -56,8 +56,10 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
 
     if($scope.noResults){
       $http.post('/api/companies', oneCompany)
-           .success(function(postedCompany){
-            createTag(postedCompany.id);
+        .success(function(postedCompany){
+          createTag(postedCompany.id);
+          $scope.predefinedCompanies.push(postedCompany);
+          console.log($scope.predefinedCompanies);
       });
     } else {
         createTag(selectedFromCompanyID)
