@@ -16,9 +16,9 @@
               <div class="panel-body">
                 <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedSearchNames" ng-options="c.name for c in availableSearchNames">
                 </select>
-                <a ng-click="addSearchName()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-                <a ng-click="editSearchName(gsearchOptions.selectedSearchNames)" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-edit"></i></a>
-                <a ng-click="deleteSearchNames(gsearchOptions.selectedSearchNames)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
+                <a ng-click="addSearchName()" class="btn btn-default btn-circle" uib-tooltip="Add search name"><i class="fa fa-plus"></i></a>
+                <a ng-click="editSearchName(gsearchOptions.selectedSearchNames)" class="btn btn-default btn-circle" uib-tooltip="Edit search name"><i class="glyphicon glyphicon-edit"></i></a>
+                <a ng-click="deleteSearchNames(gsearchOptions.selectedSearchNames)" class="btn btn-default btn-circle" uib-tooltip="Delete search name"><i class="fa fa-minus"></i></a>
               </div>
             </div>
           </div>
@@ -54,10 +54,10 @@
             <div class="panel-body">
               <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedCompanyNames" ng-options="c.name for c in companyNames">
               </select>
-              <a ng-click="addCompany()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-              <a ng-click="editCompany(gsearchOptions.selectedCompanyNames)" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-edit"></i></a>
-              <a ng-click="deleteCompanies(gsearchOptions.selectedCompanyNames)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
-              <a type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-default btn-circle"
+              <a ng-click="addCompany()" class="btn btn-default btn-circle" uib-tooltip="Add company"><i class="fa fa-plus"></i></a>
+              <a ng-click="editCompany(gsearchOptions.selectedCompanyNames)" class="btn btn-default btn-circle" uib-tooltip="Edit company"><i class="glyphicon glyphicon-edit"></i></a>
+              <a ng-click="deleteCompanies(gsearchOptions.selectedCompanyNames)" class="btn btn-default btn-circle" uib-tooltip="Delete company"><i class="fa fa-minus"></i></a>
+              <a type="file" ngf-select="uploadFiles($file, $invalidFiles)" class="btn btn-default btn-circle" uib-tooltip="Upload csv company list"
                      accept=".csv" ngf-max-height="1000" ngf-max-size="1MB"><i class="glyphicon glyphicon-upload"></i> </a>
             </div>
           </div>
@@ -70,8 +70,8 @@
             <div class="panel-body">
               <select multiple class="form-control" size = "10" ng-multiple="true" ng-model="gsearchOptions.selectedVariations" ng-options="c for c in gsearchOptions.selectedCompanyNames[0].variations">
               </select>
-              <a ng-click="addVariation()" class="btn btn-default btn-circle"><i class="fa fa-plus"></i></a>
-              <a ng-click="deleteVariations(gsearchOptions.selectedVariations)" class="btn btn-default btn-circle"><i class="fa fa-minus"></i></a>
+              <a ng-click="addVariation()" class="btn btn-default btn-circle" uib-tooltip="Add company variation"><i class="fa fa-plus"></i></a>
+              <a ng-click="deleteVariations(gsearchOptions.selectedVariations)" class="btn btn-default btn-circle" uib-tooltip="Delete company variation"><i class="fa fa-minus"></i></a>
             </div>
           </div>
         </div>
