@@ -8,7 +8,7 @@ import csv,json
 from djqscsv import render_to_csv_response
 from models import Search, SearchResult,GeoSearch
 from serializers import SearchSerializer, SearchResultSerializer, GeoSearchSerializer, SimpleSearchResultSerializer
-from tasks import do_search, do_geo_search
+from tasks import do_search, do_geo_search, do_active_filter
 from engagement.models import Project
 from celery import chain
 from rest_framework.response import Response
@@ -124,3 +124,8 @@ def upload(request):
     data = list(csv.DictReader(file))
 
     return Response({"items": data}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def relevancefilter(request):
+    do_active_filter.delay()
+    return Response({"Hello": "World"}, status=status.HTTP_200_OK)

@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^', include('core.urls', namespace="core")),
     url(r'^api/', include(router.urls)),
     url(r'^api/upload', 'google.views.upload', name="upload"),
+    url(r'^api/relevancefilter', 'google.views.relevancefilter', name="relevancefilter"),
     url(r'^', include('engagement.urls', namespace="project")),
     # url(r'^auth/', include('djoser.urls')),
 )

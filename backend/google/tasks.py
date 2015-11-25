@@ -5,8 +5,8 @@ import random
 import time
 import json
 from django.conf import settings
-from django.core.cache import cache
-cache.clear()
+#from django.core.cache import cache
+#cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
@@ -130,6 +130,11 @@ def do_geo_search(id, address):
             obj.save()
     except Exception, exc:
         raise do_geo_search.retry(exc=exc)
+
+
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_active_filter():
+    print "Hello World"
 
 
 if __name__ == '__main__':
