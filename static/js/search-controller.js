@@ -62,6 +62,18 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       });
   };
 
+  $scope.activeSearch = function(){
+    var actSearch = {
+      project: $scope.currentProject.id,
+      string: $scope.search.string
+    };
+    $http.post('/api/relevancefilter', actSearch)
+      .success(function(data) {
+        console.log(data);
+      });
+    console.log(actSearch);
+  };
+
   $scope.moreSearch = function(n){
     $http.post('/api/gsearch/'+$scope.displaySearch.id+'/demand_page');
     console.log('get one more')
