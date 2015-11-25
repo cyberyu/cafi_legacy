@@ -158,6 +158,9 @@ CELERY_ROUTES = {
     },
     'google.tasks.do_geo_search': {
         'queue': 'geo_q'
+    },
+    'google.tasks.do_active_filter':{
+        'queue': 'act_q'
     }
 }
 
