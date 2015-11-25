@@ -89,6 +89,16 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
       $http.delete('/api/geosearch/' + address.id);
     }
   };
+  $scope.deleteAllGeoSearch = function(){
+    for (var i = 0; i < $scope.addresses.length; i++) {
+      console.log($scope.addresses[i].name);
+      if($scope.addresses[i].id) {
+        $http.delete('/api/geosearch/' + $scope.addresses[i].id);
+      }
+    }
+    $scope.addAddressBool = false;
+
+  };
 
   $scope.getAddressClass = function(address){
     if (address.lat && address.lng){
