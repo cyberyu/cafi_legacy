@@ -1,7 +1,7 @@
 projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi,
                                                            $routeParams, $http,$timeout, $uibModal,
                                                            $interval, Upload, popupService, Project,
-                                                           Search, Gdoc,GeoSearch){
+                                                           Search, Gdoc,GeoSearch,$window){
 
   $scope.project_id = $routeParams.id;
   $scope.currentProject = {};
@@ -90,13 +90,17 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     }
   };
   $scope.deleteAllGeoSearch = function(){
-    for (var i = 0; i < $scope.addresses.length; i++) {
-      console.log($scope.addresses[i].name);
-      if($scope.addresses[i].id) {
-        $http.delete('/api/geosearch/' + $scope.addresses[i].id);
+    var deleteAll = $window.confirm('This would delete all Geo.');
+    if (deleteAll) {
+      for (var i = 0; i < $scope.addresses.length; i++) {
+        console.log($scope.addresses[i].name);
+        if ($scope.addresses[i].id) {
+          $http.delete('/api/geosearch/' + $scope.addresses[i].id);
+        }
       }
+      $scope.addAddressBool = false;
+      $scope.geoRefresh();
     }
-    $scope.addAddressBool = false;
 
   };
 
