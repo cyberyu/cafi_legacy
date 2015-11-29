@@ -23,7 +23,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.gdocPager.currentPage = 1;
   $scope.gdocPager.total = null;
 
-
   $scope.currentSearch = null;
   $scope.search = {};
   $scope.gsearchOptions = {};
@@ -171,6 +170,17 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     Gdoc.delete({"gdocId": gdoc.id}).$promise.then(function(){
       $scope.displaySearchDocs.splice($scope.displaySearchDocs.indexOf(gdoc), 1);
     });
+  };
+
+  $scope.updateRelevance = function (gdoc, relevance) {
+    Gdoc.update({'id': gdoc.id, 'relevance': relevance}).$promise.then(function(data){
+            $scope.relevance = data.relevance;
+            console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
+          });
+    /*x = (Gdoc.get({"gdocId": gdoc.id}).$promise.then(function(data){
+            $scope.relevance = data.relevance;
+            console.log($scope.relevance);
+          }));*/
   };
 
   // modal stuff

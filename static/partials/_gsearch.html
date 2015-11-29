@@ -73,18 +73,27 @@
               <!--<th style="width: 30px;"></th>-->
               <th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
               <th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
-              <th> </th>
+              <th></th>
               <th style="width: 30px;"></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">
+            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank" >
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
+              <td><label class="radio-inline">
+                <input type="radio" name="{{ gdoc }}" ng-checked="gdoc.relevance=='y'" value="y" ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'y')" uib-tooltip="Relevant"> Y
+              </label></td>
+              <td><label class="radio-inline">
+                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='m'" value="m"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'m')" uib-tooltip="Probably Relevant"> M
+              </label></td>
+              <td><label class="radio-inline">
+                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='n'" value="n"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'n')" uib-tooltip="Not Relevant"> N
+              </label></td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)" uib-tooltip="Delete article"><i class="fa fa-close"></i></a></td>
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
