@@ -173,6 +173,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.updateRelevance = function (gdoc, relevance) {
+    //console.log(gdoc);
     Gdoc.update({'id': gdoc.id, 'relevance': relevance}).$promise.then(function(data){
             $scope.relevance = data.relevance;
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);

@@ -85,15 +85,18 @@
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
-              <td><label class="radio-inline">
+              <td>
+              <div ng-show="gdoc.predictedScore != null">
+                  <p style="color:forestgreen" ng-if="gdoc.predictedScore >0.6"><b>Relevance:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#ff9900" ng-if="gdoc.predictedScore >=0.4 && gdoc.predictedScore<=0.6"><b>Relevance:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#cc3300" ng-if="gdoc.predictedScore <0.4"><b>Irrelevance:</b>{{gdoc.predictedScore}}</p>
+              </div>
+              <td>
+              <td><nobr>
                 <input type="radio" name="{{ gdoc }}" ng-checked="gdoc.relevance=='y'" value="y" ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'y')" uib-tooltip="Relevant"> Y
-              </label></td>
-              <td><label class="radio-inline">
                 <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='m'" value="m"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'m')" uib-tooltip="Probably Relevant"> M
-              </label></td>
-              <td><label class="radio-inline">
                 <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='n'" value="n"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'n')" uib-tooltip="Not Relevant"> N
-              </label></td>
+              </nobr></td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)" uib-tooltip="Delete article"><i class="fa fa-close"></i></a></td>
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
