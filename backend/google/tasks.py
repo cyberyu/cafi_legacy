@@ -13,7 +13,7 @@ from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
 from django.core import serializers
 import psycopg2
-
+from celery import task
 import logging
 from google.relevance import db, doc_to_label, active_learn, features
 logger = logging.getLogger("CAFI")
@@ -137,7 +137,7 @@ def do_geo_search(id, address):
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_active_filter():
     print "Start Relevance Filter"
-    conn_string = "host='localhost' dbname='cafi' user='cafi' password='cafi'"
+    conn_string = "host='localhost' dbname='cafi' user='cafi' password='awesome'"
     conn = psycopg2.connect(conn_string)
 
     #Define data columns
@@ -149,7 +149,7 @@ def do_active_filter():
     print "Prepared Model Ready Data"
 
     #Apply Classifier and Obtain Ids to be confirmed
-    ids_to_confrim = doc_to_label(conn, text_file, textfield = tf)
+    ids_to_confrim = doc_to_label.doc_to_label(conn, text_file, textfield = tf)
 
     #print ids_to_confrim['srids']
 
