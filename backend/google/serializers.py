@@ -23,7 +23,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchResult
-        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search','relevance')
+        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search','relevance', 'predicted_relevance', 'predicted_score')
 
     def get_hltitle(self, obj):
         highlighter = Highlighter()

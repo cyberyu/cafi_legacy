@@ -54,7 +54,7 @@ class SearchResult(models.Model):
     label = models.CharField(max_length=100, default=0)
     relevance = models.CharField(blank=True, max_length=1, default='')
 
-    predicted_relevance = models.CharField(blank=True, max_length=1, default='')
+    predicted_relevance = models.CharField(blank=True, max_length=1, null=True)
     predicted_score = models.FloatField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
