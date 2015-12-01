@@ -11,7 +11,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from django.core import serializers
+
 
 import logging
 logger = logging.getLogger("CAFI")
@@ -38,12 +38,11 @@ class GeocodingTest():
         return results
 
 
-# the search API key is now separated from AutoCafi account, and stay as a trial version
-service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
-collection = service.cse()
-
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_search(search, num_requests):
+    # the search API key is now separated from AutoCafi account, and stay as a trial version
+    service = build("customsearch", "v1", developerKey="AIzaSyBeoj7no9n3EfELeBGujKdSdn1ydR5Jc00")
+    collection = service.cse()
     # https://developers.google.com/custom-search/json-api/v1/reference/cse/list
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0
@@ -103,6 +102,7 @@ def do_download(id, url):
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
     obj.raw_html = data.get('raw_html')
+    obj.get_nerwords(obj.text)
     obj.save()
 
 

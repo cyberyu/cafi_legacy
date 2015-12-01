@@ -36,10 +36,19 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
         return highlighter.highlight(obj.snippet, istring)
 
 
+class JSONSerializerField(serializers.Field):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        return data
+    def to_representation(self, value):
+        return value
+
+
 class SearchResultSerializer(SimpleSearchResultSerializer):
     risks = RiskObjectRelatedField(read_only=True, many=True)
     keywords = serializers.SerializerMethodField()
-    nerwords = serializers.SerializerMethodField()
+    # nerwords = serializers.SerializerMethodField()
+    nerwords = JSONSerializerField(required=False)
 
     class Meta:
         model = SearchResult
@@ -48,12 +57,12 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
         parser = SearchQueryParser()
         return parser.Parse(obj.search.string)
 
-    def get_nerwords(self, obj):
-        nt = CAFI_NETagger()  # intialize the tagger
-        nt.get_ne_tags_all(obj.text)  # tag the text
-        return {"person": set(nt.get_ne_tags_PERSON()),
-                "org": set(nt.get_ne_tags_ORGANIZATION()),
-                "location": set(nt.get_ne_tags_LOCATION())}
+    # def get_nerwords(self, obj):
+    #     nt = CAFI_NETagger()  # intialize the tagger
+    #     nt.get_ne_tags_all(obj.text)  # tag the text
+    #     return {"person": set(nt.get_ne_tags_PERSON()),
+    #             "org": set(nt.get_ne_tags_ORGANIZATION()),
+    #             "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.pk')

@@ -6,6 +6,9 @@ from engagement.models import Project
 from risk.models import RiskItem
 from django.contrib.auth.models import User
 
+from google.ner.cafi_netagger import CAFI_NETagger
+from jsonfield import JSONField
+
 
 class Search(models.Model):
     STATUS_CHOICES = (
@@ -19,11 +22,13 @@ class Search(models.Model):
     user = models.ForeignKey(User)
     string = models.CharField(max_length=1024) # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+
+    is_relevant = models.BooleanField(default=True)
+
     last_stop = models.IntegerField(default=0)
     contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
     created_at = models.DateTimeField(auto_now_add=True)
 
-    
     def incr_last_stop(self):
         self.last_stop+=1
         self.save()
@@ -49,10 +54,13 @@ class SearchResult(models.Model):
     doc_type = models.CharField(blank=True, max_length=20)
     raw_file = models.FileField(blank=True, null=True)
 
+    nerwords = JSONField(blank=True)
+
     risks = GenericRelation(RiskItem)
 
     label = models.CharField(max_length=100, default=0)
     relevance = models.CharField(blank=True, max_length=1, default='')
+    review_later = models.BooleanField(blank=True, default=False)
 
     predicted_relevance = models.CharField(blank=True, max_length=1, default='')
     predicted_score = models.FloatField(blank=True, null=True)
@@ -64,6 +72,16 @@ class SearchResult(models.Model):
 
     def __unicode__(self):
        return self.title
+
+    def get_nerwords(self):
+        nt = CAFI_NETagger()  # intialize the tagger
+        nt.get_ne_tags_all(self.text)  # tag the text
+
+        self.nerwords = {
+            "person": set(nt.get_ne_tags_PERSON()),
+            "org": set(nt.get_ne_tags_ORGANIZATION()),
+            "location": set(nt.get_ne_tags_LOCATION())
+        }
 
 
 class GeoSearch(models.Model):
