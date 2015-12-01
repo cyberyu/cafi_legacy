@@ -5,20 +5,13 @@ import random
 import time
 import json
 from django.conf import settings
-#from django.core.cache import cache
-#cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
 from google.relevance import db, doc_to_label
-import psycopg2
-<<<<<<< HEAD
-
 from django.core import serializers
-=======
-from celery import task
->>>>>>> 139b081166c5cb1c1e57d72b42b9a06bf248341e
+import psycopg2
 import logging
 logger = logging.getLogger("CAFI")
 
@@ -141,13 +134,8 @@ def do_geo_search(id, address):
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_active_filter():
     print "Start Relevance Filter"
-<<<<<<< HEAD
-
-    conn_string = "host='localhost' dbname='cafi' user='cafi' password='cafi'"
-=======
-    conn_string = "host='localhost' dbname='cafi' user='cafi' password='awesome'"
->>>>>>> 139b081166c5cb1c1e57d72b42b9a06bf248341e
-    conn = psycopg2.connect(conn_string)
+    #CONN_STRING = "host='localhost' dbname='cafi' user='cafi' password='awesome'" #Add this line to local.py
+    conn = psycopg2.connect(settings.CONN_STRING)
 
     #Define data columns
     tf=["text", "title", "snippet"]
@@ -158,14 +146,8 @@ def do_active_filter():
     print "Prepared Model Ready Data"
 
     #Apply Classifier and Obtain Ids to be confirmed
-<<<<<<< HEAD
     ids_to_confrim = doc_to_label.classify(conn, text_file, textfield = tf)
-    print ids_to_confrim['srids']
-=======
-    ids_to_confrim = doc_to_label.doc_to_label(conn, text_file, textfield = tf)
-
     #print ids_to_confrim['srids']
->>>>>>> 139b081166c5cb1c1e57d72b42b9a06bf248341e
 
     print "Finished Relevance Filter"
 
