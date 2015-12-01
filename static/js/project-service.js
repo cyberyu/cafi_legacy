@@ -34,7 +34,7 @@ angular.module('projectServices', []).factory('Project', function ($resource) {
 
 angular.module('projectServices').factory('Search', function($resource){
   return $resource('/api/gsearch/:gsearchId', {gsearchId: '@id'}, {
-    update: {method: 'PUT'},
+    update: {method: 'PATCH'},
     query: {method: 'GET', isArray: false}
   })
 });

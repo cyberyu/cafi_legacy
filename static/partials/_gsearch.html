@@ -43,11 +43,22 @@
               <input type="text" class="form-control" ng-model="searchQuery" placeholder="Looking for a search?"/>
             </th>
           </thead>
+          <tr ng-class="{warning: reviewLaterActive == true}">
+            <td>
+              <a ng-click="getReviewLater(1)"  class="list-link">
+                <span class="list-link-label small">Items saved</span>
+              </a>
+            </td>
+            <td> </td>
+          </tr>
           <tr ng-class="{warning: displaySearch.id == search.id}" ng-repeat="search in searches | filter:searchQuery">
             <td>
               <a ng-click="setDisplaySearch(search)" class="list-link">
                 <span class="list-link-label small">{{search.string}}</span>
               </a>
+            </td>
+            <td>
+              <a class="btn btn-default btn-circle" ng-click="toggleSearchJunk(search)" uib-tooltip="mark this search as irrelevant"><i class="fa fa-close"></i></a>
             </td>
           </tr>
         </table>
@@ -125,10 +136,10 @@
         <nav class="text-center" ng-if="gdocPager.total>20">
           <paging class="small" page="gdocPager.currentPage" page-size="20" total="gdocPager.total" adjacent="{{adjacent}}" dots="{{dots}}"
                   scroll-top="{{scrollTop}}" hide-if-empty="{{hideIfEmpty}}" ul-class="{{ulClass}}" active-class="{{activeClass}}"
-                  disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="getGdocs(displaySearch, page)">
+                  disabled-class="{{disabledClass}}" show-prev-next="{{showPrevNext}}" paging-action="reviewLaterActive? getReviewLater(page): getGdocs(displaySearch, page)">
           </paging>
         </nav>
-        <div class="text-center">
+        <div class="text-center" ng-if="!reviewLaterActive">
           <span>total {{gdocPager.total}} results</span>
           <button class="btn btn-primary btn-small" ng-click="moreSearch(1)"> Get next page</button>
           <button class="btn btn-primary btn-small" ng-click="getGdocs(displaySearch, gdocPager.currentPage)"> refresh </button>

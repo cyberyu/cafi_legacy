@@ -70,6 +70,12 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     Gdoc.update({'id': newDoc.id, 'relevance': newDoc.relevance})
   };
 
+  $scope.toggleSave4later = function(newDoc){
+    Gdoc.update({id: newDoc.id, review_later: !newDoc.reviewLater}).$promise.then(function(data){
+      $scope.currentDoc = data;
+    });
+  };
+
   $scope.addKeywords = function(w){
     if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
     $scope.currentDoc.ner.push(w);

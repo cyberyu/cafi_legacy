@@ -8,6 +8,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.user = $cookies.get('user');
   $scope.onlyMine = false;
+  $scope.onlyRelevant = true;
 
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
@@ -49,6 +50,16 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+  $scope.getReviewLater = function(page){
+    Gdoc.query({search__project: $scope.currentProject.id, review_later: 'True', page: page}).$promise.then(function(data){
+      $scope.displaySearchDocs = data.results;
+      $scope.gdocPager.total = data.count;
+      $scope.gdocPager.currentPage = page;
+      $scope.displaySearch = null;
+      $scope.reviewLaterActive = true;
+    })
+  };
+
   $scope.submitSearch = function(){
     var oneSearch = {
       project: $scope.currentProject.id,
@@ -84,6 +95,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = 1;
       $scope.displaySearch = search;
+      $scope.reviewLaterActive = false;
     });
   };
 
@@ -93,8 +105,10 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.listSearches = function (page) {
-    var options = {"project": $scope.currentProject.id, "page": page}
+    var options = {"project": $scope.currentProject.id, "page": page};
     if ($scope.onlyMine) { options["user"] = $scope.user; }
+    if ($scope.onlyRelevant) {options['is_relevant'] = 'True'; }
+
     Search.query(options).$promise.then(function(data){
       $scope.searches = data.results;
       $scope.displaySearch = $scope.searches[0];
@@ -126,6 +140,18 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.updateSearch(newSearch);
     } else {
       $scope.createSearch(newSearch);
+    }
+  };
+
+  $scope.toggleSearchJunk = function(search){
+    if (search.isRelevant) {
+      Search.update({id: search.id, is_relevant: false}).$promise.then(function(search){
+        $scope.searches.splice($scope.searches.indexOf(search),1);
+      });
+    } else {
+      Search.update({id: search.id, is_relevant: true}).$promise.then(function(search){
+        console.log('mark as relevant')
+      });
     }
   };
 
@@ -248,6 +274,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.isCollapsed = true;
   $scope.listSearches(1);
+  //$scope.getReviewLater(1);
   //$scope.getGdocs($scope.displaySearch, 1);
 
 });
