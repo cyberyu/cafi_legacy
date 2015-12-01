@@ -9,8 +9,6 @@ Created on Wed Nov 18 21:23:40 2015
 import numpy as np
 import StringIO
 import os
-import sys
-import shutil
 import logging
 
 
@@ -18,6 +16,9 @@ import logging
 
 _DBTABLE_ = 'google_searchresult'
 _DBFIELDS_ = ['id', 'title', 'snippet', 'text', 'relevance', 'predicted_relevance', 'predicted_score']
+_RELEVANCE_LABEL_POS_ = 'y'
+_RELEVANCE_LABEL_NEG_ = 'n'
+
 
 
 def remove_control_characters(s):

@@ -19,7 +19,7 @@ import logging
 
 IFDEBUG=1
 
-def doc_to_label(conn, out, **kwargs):
+def classify(conn, out, **kwargs):
     """
     Apply active learning classifier to predict relevance labels.
 
@@ -71,8 +71,10 @@ def doc_to_label(conn, out, **kwargs):
 
     # based on whether the label is NULL or Not NULL,  to split training and test data
 
-    trainInd = [i for i, e in enumerate(label) if (e != None and len(e)!=0)]  # index of training data
-    testInd = [i for i, e in enumerate(label) if (e == None or len(e)==0) ]   # index of test data
+    #trainInd = [i for i, e in enumerate(label) if (e != None and len(e)!=0)]  # index of training data
+    trainInd = [i for i, e in enumerate(label) if (e==db._RELEVANCE_LABEL_NEG_ or e==db._RELEVANCE_LABEL_POS_ )]  # index of training data
+
+    testInd = [i for i, e in enumerate(label) if (e!=db._RELEVANCE_LABEL_NEG_ and e!= db._RELEVANCE_LABEL_POS_) ]   # index of test data
 
     logging.info('%s number of samples is used to train model, %s number of samples for testing', len(trainInd), len(testInd))
     logging.debug('train data indices are: ' + ','.join(map(str, trainInd)))
@@ -140,6 +142,9 @@ def doc_to_label(conn, out, **kwargs):
     return({"scores": ToConfirmScore, "srids":ToConfirm_Id})
 
 
+def debug():
+    print 'Start Debugging'
+
 def main(arg=None):
     """
     The main example code of how to invoke active learning procedure
@@ -156,7 +161,7 @@ def main(arg=None):
     text_file = db.readDB(conn, textfield = tf)
 
     #Apply Classifier and Obtain Ids to be confirmed
-    ids_to_confrim = doc_to_label(conn, text_file, textfield = tf)
+    ids_to_confrim = classify(conn, text_file, textfield = tf)
 
     #print out recommended doc ids and scores
 

@@ -11,11 +11,11 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from django.core import serializers
+from google.relevance import db, doc_to_label
 import psycopg2
 
+from django.core import serializers
 import logging
-from google.relevance import db, doc_to_label, active_learn, features
 logger = logging.getLogger("CAFI")
 
 
@@ -137,6 +137,7 @@ def do_geo_search(id, address):
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_active_filter():
     print "Start Relevance Filter"
+
     conn_string = "host='localhost' dbname='cafi' user='cafi' password='cafi'"
     conn = psycopg2.connect(conn_string)
 
@@ -145,15 +146,13 @@ def do_active_filter():
 
     #Retrieve data
     text_file = db.readDB(conn, textfield = tf)
-    
+
     print "Prepared Model Ready Data"
 
     #Apply Classifier and Obtain Ids to be confirmed
-    ids_to_confrim = doc_to_label(conn, text_file, textfield = tf)
+    ids_to_confrim = doc_to_label.classify(conn, text_file, textfield = tf)
+    print ids_to_confrim['srids']
 
-    #print ids_to_confrim['srids']
-
-    #print ids_to_confrim['scores']
     print "Finished Relevance Filter"
 
 if __name__ == '__main__':
