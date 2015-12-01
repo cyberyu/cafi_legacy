@@ -30,7 +30,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.searches = [];
 
   $scope.counter = 0;
-
+  $scope.filterOptions = ["General", "Relevance", "Irrelevance"];
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
   $scope.selectDataSource = function(src){

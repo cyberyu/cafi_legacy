@@ -64,13 +64,21 @@
   <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-heading">
-        {{total}} search results: {{displaySearch.string}}
+      <table style="width:100%">
+      <tr>
+          <td>{{total}} search results: {{displaySearch.string}}</td>
+          <td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="filterOptions">
+            <option ng-repeat="opt in filterOptions" value="{{ opt }}">{{opt}}</option>
+        </select></td>
+      </tr></table>
       </div>
+
       <div class="panel-body">
           <table st-table="displayedGdocs" st-safe-src="displaySearchDocs" class="table table-striped">
             <thead>
             <tr>
               <!--<th style="width: 30px;"></th>-->
+              <th></th>
               <th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
               <th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
               <th></th>
@@ -83,6 +91,7 @@
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
+              <td><br><span class="label" ng-class="{'label-warning': gdoc.relevance=='n'||gdoc.relevance==null, 'label-info': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance}}</span></td>
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
@@ -93,12 +102,14 @@
               </nobr></td>
               <td>
               <div ng-show="gdoc.predictedScore != null">
-                  <p style="color:forestgreen" ng-if="gdoc.predictedScore >0.6"><b>Relevance:</b>{{gdoc.predictedScore}}</p>
-                  <p style="color:#ff9900" ng-if="gdoc.predictedScore >=0.4 && gdoc.predictedScore<=0.6"><b>Relevance:</b>{{gdoc.predictedScore}}</p>
-                  <p style="color:#cc3300" ng-if="gdoc.predictedScore <0.4"><b>Irrelevance:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#0B3B17" ng-if="gdoc.predictedScore >=1.0"><b>Relevance Score:</b>{{1}}</p>
+                  <p style="color:forestgreen" ng-if="gdoc.predictedScore >0.6 && gdoc.predictedScore<1.0"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#ff9900" ng-if="gdoc.predictedScore >=0.4 && gdoc.predictedScore<=0.6"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#cc3300" ng-if="gdoc.predictedScore <0.4 && gdoc.predictedScore>0.0"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
+                  <p style="color:#8A0808" ng-if="gdoc.predictedScore <0.0"><b>Relevance Score:</b>{{0}}</p>
               </div>
-              <td>
-              <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)" uib-tooltip="Delete article"><i class="fa fa-close"></i></a></td>
+              </td>
+
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
               <!--<td colspan="5">{{gdoc.text}}</p></td>-->
