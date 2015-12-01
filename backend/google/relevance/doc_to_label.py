@@ -7,11 +7,11 @@ Created on Wed Nov 18 09:14:18 2015
 """
 #__package__="activeLearning"
 
-
-from features import build_features
-import active_learn as AL
+from google.relevance import features
+from google.relevance.features import build_features
+import google.relevance.active_learn as AL
 import psycopg2
-import db
+from google.relevance import db
 import sys
 import numpy as np
 import logging
@@ -46,9 +46,9 @@ def classify(conn, out, **kwargs):
     """
     
     logging.info('start the recommendation process')
-    
 
-    
+
+
     # reading the input parameters
     Nwords = kwargs.pop('Nwords', 5000)
     Nrecommendations = kwargs.pop('Nrecommendations', 20)
@@ -79,7 +79,7 @@ def classify(conn, out, **kwargs):
     logging.info('%s number of samples is used to train model, %s number of samples for testing', len(trainInd), len(testInd))
     logging.debug('train data indices are: ' + ','.join(map(str, trainInd)))
     logging.debug('test data indices are: ' + ','.join(map(str, testInd)))
- 
+
 #    Nsamp = len(label)
 #    trainInd = [i for i,j in enumerate(label) if j!=None]
 #    testInd = list(set(range(Nsamp))-set(trainInd))
@@ -101,11 +101,11 @@ def classify(conn, out, **kwargs):
 
     ToConfirm_Id = [id_test[idx] for idx in IDtoLabel.keys()]
     ToConfirmScore = IDtoLabel.values()
-    
+
     logging.info('recommend %s documents for labeling', Nrecommendations)
     logging.debug('id and relevance scores of recommended documents for labeling are: ' + ','.join(map(str, zip(ToConfirm_Id, ToConfirmScore))))
 
-    
+
     # predicted label
     classifier = prediction['classifier']
     y_test_predicted = classifier.predict(X_test)
@@ -135,7 +135,7 @@ def classify(conn, out, **kwargs):
     #db.updateDB(conn, value = ToConfirmScore, idlist = ToConfirm_Id, type = 'relevanceScore', dbtable=db._DBTABLE_, dbfields=db._DBFIELDS_)
     # close connection to database
     conn.close()
-    
+
     logging.info('finish saving the recommendation results to database')
     logging.info('finish the recommendation process')
 
@@ -151,7 +151,7 @@ def main(arg=None):
     """
 
     #establish connection
-    conn_string = "host='localhost' dbname='cafi' user='cafi' password='cafi'"
+    conn_string = "host='localhost' dbname='cafi' user='cafi' password='awesome'"
     conn = psycopg2.connect(conn_string)
 
     #Define data columns
