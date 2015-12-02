@@ -7,11 +7,19 @@ Created on Wed Nov 18 09:14:18 2015
 """
 #__package__="activeLearning"
 
-from google.relevance import features
-from google.relevance.features import build_features
-import google.relevance.active_learn as AL
+# from google.relevance import features
+# from google.relevance.features import build_features
+# import google.relevance.active_learn as AL
+# import psycopg2
+# from google.relevance import db
+# import sys
+# import numpy as np
+# import logging
+
+from features import build_features
+import active_learn as AL
 import psycopg2
-from google.relevance import db
+import db
 import sys
 import numpy as np
 import logging
@@ -151,7 +159,7 @@ def main(arg=None):
     """
 
     #establish connection
-    conn_string = "host='localhost' dbname='cafi' user='cafi' password='awesome'"
+    conn_string = "host='localhost' dbname='cafi' user='cafi' password='cafi'"
     conn = psycopg2.connect(conn_string)
 
     #Define data columns
