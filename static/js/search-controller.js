@@ -74,10 +74,9 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.activeSearch = function(){
     var actSearch = {
-      project: $scope.currentProject.id,
-      string: $scope.search.string
+      project: $scope.currentProject.id
     };
-    $http.post('/api/relevancefilter', actSearch)
+    $http.post('/api/Relevancefilter', actSearch)
       .success(function(data) {
         console.log(data);
       });

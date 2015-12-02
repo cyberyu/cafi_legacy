@@ -15,7 +15,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     $scope.errFile = errFiles && errFiles[0];
     if (file) {
       file.upload = Upload.upload({
-        url: '/api/upload',
+        url: '/api/Upload',
         data: {file: file}
       });
 
