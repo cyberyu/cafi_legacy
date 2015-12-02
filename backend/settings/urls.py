@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework import routers
 # from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, upload
+from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, Upload, Relevancefilter
 from engagement.views import ProjectViewSet
 from risk.views import RiskViewSet, CompanyViewSet, RiskItemViewSet
 from rest_framework.renderers import JSONRenderer, StaticHTMLRenderer
@@ -26,8 +26,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('core.urls', namespace="core")),
     url(r'^api/', include(router.urls)),
-    url(r'^api/upload', 'google.views.upload', name="upload"),
-    url(r'^api/relevancefilter', 'google.views.relevancefilter', name="relevancefilter"),
+    url(r'^api/Upload', Upload.as_view(), name="upload"),
+    url(r'^api/Relevancefilter', Relevancefilter.as_view(), name="Relevancefilter"),
     url(r'^', include('engagement.urls', namespace="project")),
     # url(r'^auth/', include('djoser.urls')),
 )

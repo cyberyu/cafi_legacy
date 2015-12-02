@@ -105,8 +105,10 @@ def do_download(id, url):
     obj.raw_file.name = data.get('path')
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
+    obj.save()
     obj.raw_html = data.get('raw_html')
-    obj.get_nerwords(obj.text)
+    #logger.debug(obj.text)
+    obj.get_nerwords()
     obj.save()
 
 

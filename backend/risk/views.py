@@ -7,6 +7,7 @@ from rest_framework import filters
 from models import Company, Risk, RiskItem
 from engagement.models import Project
 import csv
+from google.validAuthentication import ValidateSessionAuthentication
 
 from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
 
@@ -14,6 +15,7 @@ from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
 class RiskViewSet(viewsets.ModelViewSet):
     queryset = Risk.objects.all()
     serializer_class = RiskSerializer
+    authentication_classes = (ValidateSessionAuthentication,)
 
     
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -21,6 +23,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
     serializer_class = CompanySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('project',)
+    authentication_classes = (ValidateSessionAuthentication,)
 
     def get_queryset(self):
         project_id = self.request.query_params.get('project', None)
@@ -54,3 +57,4 @@ class CompanyViewSet(viewsets.ModelViewSet):
 class RiskItemViewSet(viewsets.ModelViewSet):
     queryset = RiskItem.objects.all()
     serializer_class = RiskItemSerializer
+    authentication_classes = (ValidateSessionAuthentication,)
