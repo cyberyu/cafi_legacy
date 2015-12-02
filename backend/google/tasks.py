@@ -107,7 +107,6 @@ def do_download(id, url):
     obj.text = data.get('text')
     obj.save()
     obj.raw_html = data.get('raw_html')
-    #logger.debug(obj.text)
     obj.get_nerwords()
     obj.save()
 
