@@ -102,7 +102,7 @@
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
-              <td><br><span class="label" ng-class="{'label-warning': gdoc.relevance=='n'||gdoc.relevance==null, 'label-info': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance}}</span></td>
+              <td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance}}</span></td>
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
@@ -113,11 +113,7 @@
               </nobr></td>
               <td>
               <div ng-show="gdoc.predictedScore != null">
-                  <p style="color:#0B3B17" ng-if="gdoc.predictedScore >=1.0"><b>Relevance Score:</b>{{1}}</p>
-                  <p style="color:forestgreen" ng-if="gdoc.predictedScore >0.6 && gdoc.predictedScore<1.0"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
-                  <p style="color:#ff9900" ng-if="gdoc.predictedScore >=0.4 && gdoc.predictedScore<=0.6"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
-                  <p style="color:#cc3300" ng-if="gdoc.predictedScore <0.4 && gdoc.predictedScore>0.0"><b>Relevance Score:</b>{{gdoc.predictedScore}}</p>
-                  <p style="color:#8A0808" ng-if="gdoc.predictedScore <0.0"><b>Relevance Score:</b>{{0}}</p>
+              <h5><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">Relevance:{{gdoc.predictedScore}}</span></h5>
               </div>
               </td>
 
