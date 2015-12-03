@@ -1,5 +1,4 @@
-
-<ol class="breadcrumb">
+<ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
   <li><a href="/#/projects">Projects</a></li>
   <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
   <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
@@ -113,7 +112,10 @@
               </nobr></td>
               <td>
               <div ng-show="gdoc.predictedScore != null">
-              <h5><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">Relevance:{{gdoc.predictedScore}}</span></h5>
+                  <div ng-if="gdoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
+                  <div ng-if="gdoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
+                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">Relevance:{{gdoc.predictedScore}}</span></h5></div>
+
               </div>
               </td>
 
