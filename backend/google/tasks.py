@@ -9,7 +9,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from google.relevance import ClassifierAPI
+from google.relevance import classifierAPI
 import psycopg2
 import logging
 logger = logging.getLogger("CAFI")
@@ -143,7 +143,7 @@ def do_active_filter():
     tf=["text", "title", "snippet"]
 
     # initial class
-    myClf = ClassifierAPI.Classifier(Tfidf=True, Nwords=5000, classifierMethod='LR')
+    myClf = classifierAPI.Classifier(Tfidf=True, Nwords=5000, classifierMethod='LR')
 
     # read data from data base
     myClf.readDB(conn, tf)
