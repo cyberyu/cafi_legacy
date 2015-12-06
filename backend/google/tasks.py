@@ -9,7 +9,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from google.relevance import db, doc_to_label
+from google.relevance import ClassifierAPI
 import psycopg2
 import logging
 logger = logging.getLogger("CAFI")
@@ -134,20 +134,56 @@ def do_geo_search(id, address):
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_active_filter():
     print "Start Relevance Filter"
-    #CONN_STRING = "host='localhost' dbname='cafi' user='cafi' password='awesome'" #Add this line to local.py
-    conn = psycopg2.connect(settings.CONN_STRING)
 
-    #Define data columns
+    # data base connection
+    conn_string = "host='localhost' dbname='cafi' user='postgres' password='postgres'"
+    conn = psycopg2.connect(conn_string)
+
+    # text string to read data
     tf=["text", "title", "snippet"]
 
-    #Retrieve data
-    text_file = db.readDB(conn, textfield = tf)
+    # initial class
+    myClf = ClassifierAPI.Classifier(Tfidf=True, Nwords=5000, classifierMethod='LR')
 
-    print "Prepared Model Ready Data"
+    # read data from data base
+    myClf.readDB(conn, tf)
 
-    #Apply Classifier and Obtain Ids to be confirmed
-    ids_to_confrim = doc_to_label.classify(conn, text_file, textfield = tf)
-    #print ids_to_confrim['srids']
+
+    # build feature
+    features = myClf.buildFeature()
+
+    # show feature ranked by TF
+    topWords = myClf.showFeatures()
+
+    print topWords
+
+    # save the feature, TF vectorizer
+    myClf.save(saveFileName='featureFile', saveType='featurefile', memo='')
+
+
+    # prepare train&test data for model training
+    myClf.prepareData()
+
+
+    # train a model
+    myClf.train()
+
+    # save the classifier
+    myClf.save(saveFileName='classifierFile', saveType='classifile', memo='')
+
+
+    # prediction on the test data, calculate relevance score
+    predictOut = myClf.predict()
+
+    # make recomendation for labeling
+    recom = myClf.recommend(predictOut, Nrecommendations=5)
+
+    print recom
+
+    # update database to store the predicted label and relevance score
+    myClf.updateDB(conn)
+
+
 
     print "Finished Relevance Filter"
 

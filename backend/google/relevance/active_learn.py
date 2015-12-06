@@ -51,11 +51,45 @@ def train_classifier(X, y, method='SVM'):
     except Exception:
         logging.error('Failed to train the model', exc_info=True)
     
-    logging.info('finish training the model')
+    logging.info('finish training the model')   
     
     return classifier
     
+
+
+
+def calc_newdoc_relevance(X, classifier, method = 'least confident'):
+    # caluclate the relevance score for a new document
+    # X is the feature vector corresponding to the document    
     
+    # calculate relevance score
+    logging.info('start to calculate relevance score for a new doc') 
+    
+    # prediction confidence score
+    y_score = classifier.predict_proba(X)       
+    if(method=='least confident'):
+	      distance = np.amax(y_score, axis=1)
+    elif(method=='margin'):	   
+		 y_score[:,::-1].sort(axis=1)
+		 distance = y_score[:,0]-y_score[:,1]
+    elif(method=='entropy'):
+		 distance = np.apply_along_axis(lambda x: np.dot(x, np.log(x)), 1, y_score)
+    else:
+		logging.error('undefined uncertainty ranking method to rank relevance score')
+    logging.info('finish calculating relevance score for a new doc')
+    
+    
+    # predict label    
+    logging.info('start to predict class label for a new doc')
+    try:
+        y = classifier.predict(X)
+    except Exception:
+        logging.error('failed to predict class label for a new doc')
+    logging.info('finish predicting class label for a new doc')
+    
+    return {'relevanceScore':y_score[:,1], 'label':y, 'confidenceScore': distance}
+
+
 
 def rank_candidate(X, classifier, Nrecs=None, rankMethod='least confident'):
     # rank the test data sample and make recommendations
@@ -63,22 +97,17 @@ def rank_candidate(X, classifier, Nrecs=None, rankMethod='least confident'):
     logging.info('start calculating relevance score') 
 
     # prediction confidence score
-    y_score = classifier.decision_function(X)
-    
-    # distance to separation hyper-plane
-    if(len(y_score.shape)==1):
-        distance = abs(y_score)
+    y_score = classifier.predict_proba(X)  
+    # calculate certainty/distance: the 3 method will be equivalent for 2 classes case     
+    if(rankMethod=='least confident'):
+        distance = np.amax(y_score, axis=1)
+    elif(rankMethod=='margin'):	   
+        y_score[:,::-1].sort(axis=1)
+        distance = y_score[:,0]-y_score[:,1]
+    elif(rankMethod=='entropy'):
+        distance = np.apply_along_axis(lambda x: np.dot(x, np.log(x)), 1, y_score)
     else:
-        y_score = classifier.predict_proba(X)       
-        if(rankMethod=='least confident'):
-	      distance = np.amax(y_score, axis=1)
-        elif(rankMethod=='margin'):	   
-		 y_score[:,::-1].sort(axis=1)
-		 distance = y_score[:,0]-y_score[:,1]
-        elif(rankMethod=='entropy'):
-		 distance = np.apply_along_axis(lambda x: np.dot(x, np.log(x)), 1, y_score)
-        else:
-		logging.error('undefined uncertainty ranking method to rank relevance score')
+        logging.error('undefined uncertainty ranking method to rank relevance score')
 
     logging.info('finish calculating relevance score') 
     logging.info('start to rank the relevance score')
