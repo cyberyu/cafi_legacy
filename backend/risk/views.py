@@ -15,6 +15,8 @@ from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
 class RiskViewSet(viewsets.ModelViewSet):
     queryset = Risk.objects.all()
     serializer_class = RiskSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('name',)
     authentication_classes = (ValidateSessionAuthentication,)
 
     

@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
+import time
 
 import logging
 logger = logging.getLogger("CAFI")
@@ -94,12 +95,26 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         logger.debug("Geo Create")
         geosearch = serializer.save(user=self.request.user)
         logger.debug("Address :"+ geosearch.address)
-        do_geo_search.delay(geosearch.id, geosearch.address)
+        result = do_geo_search.delay(geosearch.id, geosearch.address)
+
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
         logger.debug("update: "+ geosearch.address)
-        do_geo_search.delay(geosearch.id, geosearch.address)
+        result = do_geo_search.delay(geosearch.id, geosearch.address)
+        time.sleep(5)
+        if result.ready():
+            print "Task has run"
+            if result.successful():
+                print "Result was: %s" % result.result
+            else:
+                if isinstance(result.result, Exception):
+                    print "Task failed due to raising an exception"
+                    raise result.result
+                else:
+                    print "Task failed without raising exception"
+        else:
+            print "Task has not yet run"
 
     @detail_route(methods=['POST'])
     def batch(self, request, *args, **kwargs):
