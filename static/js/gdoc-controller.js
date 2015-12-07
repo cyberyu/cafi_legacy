@@ -1,4 +1,4 @@
-projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, Gdoc) {
+projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, Gdoc, Risk) {
 
   $scope.currentDoc = currentDoc;
   $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
@@ -40,6 +40,13 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         }
       });
   }
+  $scope.CompanyA="CompanyA";
+  $scope.CompanyB="CompanyB";
+  $scope.selectedBuyerCompany = $scope.predefinedCompanies;
+  $scope.selectedSupplierCompany = $scope.predefinedCompanies;
+  $scope.majorRisk = $scope.predefinedRisks;
+  $scope.secondaryRisk = $scope.predefinedRisks;
+  $scope.tertiaryRisk = $scope.predefinedRisks;
 
   $scope.labelSubmit = function () {
     for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
@@ -79,6 +86,17 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.addKeywords = function(w){
     if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
     $scope.currentDoc.ner.push(w);
+  };
+
+  $scope.addRisks = function(w){
+    console.log(w.id);
+    Risk.get({riskId: w.id}).$promise.then(function(data){
+      $scope.searchString = data.searchString;
+      console.log($scope.searchString);
+    });
+    //WIP
+    /*if (!$scope.currentDoc.risk) $scope.currentDoc.risk = [];
+    $scope.currentDoc.risk.push(w);*/
   };
 
   $scope.openNextGdoc = function (n) {

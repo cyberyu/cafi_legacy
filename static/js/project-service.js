@@ -55,6 +55,11 @@ angular.module('projectServices').factory('Company', function ($resource) {
 angular.module('projectServices').factory('Risk', function ($resource) {
   return $resource('/api/risks/:riskId', {riskId: '@id'}, {
     update: {method: 'PUT'},
+    get: {method: 'GET',
+      transformResponse: function(data) {
+        return angular.fromJson(data);
+      }
+    },
   });
 });
 
@@ -62,5 +67,6 @@ angular.module('projectServices').factory('Risk', function ($resource) {
 angular.module('projectServices').factory('RiskItem', function ($resource) {
   return $resource('/api/risk_items/:riskItemId', {riskItemId: '@id'}, {
     update: {method: 'PUT'},
+
   });
 });
