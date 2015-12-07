@@ -9,17 +9,18 @@ Created on Wed Nov 18 21:23:40 2015
 import numpy as np
 import StringIO
 import os
+import sys
+import shutil
 import logging
 
 
-#__package__="CAFI.activelearning"
-
 _DBTABLE_ = 'google_searchresult'
-_DBFIELDS_ = ['id', 'title', 'snippet', 'text', 'relevance', 'predicted_relevance', 'predicted_score']
+_DBFIELDS_ = ['id', 'tile', 'snippet', 'text', 'relevance', 'predicted_relevance', 'predicted_score']
 _RELEVANCE_LABEL_POS_ = 'y'
 _RELEVANCE_LABEL_NEG_ = 'n'
 
 
+#__package__="CAFI.activelearning"
 
 def remove_control_characters(s):
     """
@@ -59,10 +60,8 @@ def readDB(conn, **kwargs):
     """
 
     logging.info('prepare to read database')     
-    
-    
 
-    # conn.cursor will return a cursor object, you can use this cursor to perform queries
+    # conn.cursor will return a cursor object, you can use this cursor to perform querie
     cursor = conn.cursor()
 
     # reading the input parameters
@@ -166,26 +165,20 @@ def readDB(conn, **kwargs):
                         _DBFIELDS_[4], _DBFIELDS_[0]
                         )                       
 
-
    
     logging.info('start to read the data base')    
     logging.debug('data query is: %s', data_Query)    
-
-    #print data_Query
+    
     
     # excute data_Query
     try:   
         cursor.execute(data_Query)
     except Exception:
         logging.error('Failed to excute data query', exc_info=True)
-
-
     logging.info('finish reading the database')    
 
     # fetch records
     records = cursor.fetchall()
-
-
 
     logging.info('total number of records read from database is: %s', len(records))
     #logging.debug('records are: %s', records)    
@@ -195,12 +188,8 @@ def readDB(conn, **kwargs):
     label = [item[0] for item in records]
     label = np.array(label)
 
-    #print label
     # get all the ids for the records, the srids should be one-to-one mapped to the training data
     srids = [item[1] for item in records]
-
-    #print srids
-
     docs = [" ".join(filter(None,item[2:])) for item in records]
 
 
@@ -238,14 +227,9 @@ def updateDB(conn, **kwargs):
     @returns: null
     """
 
-    dbtable = kwargs.pop('dbtable', 'tblsearchresults')
-    dbfields = kwargs.pop('dbfields', ['srid', 'srtitle', 'srsnippet', 'srtext', 'relevanceflag', 'predictflag', 'sqrelevancescore'])
-
     # get the recommended or test ids
     idlist = kwargs.pop('idlist',None)
     value = kwargs.pop('value',None)
-
-
     type = kwargs.pop('type', None)
 
     logging.info('prepare to update database column of %s with %s ids and %s values', 'predictionLabel' if type is 'label' else type, len(idlist), len(value)) 
@@ -261,21 +245,16 @@ def updateDB(conn, **kwargs):
         cursor = conn.cursor()
         if (type=='label'):
             # reset to NULL before update
-            cursor.execute("UPDATE %s set %s=NULL WHERE %s is not NULL" %(_DBTABLE_, dbfields[5], dbfields[5]))
-            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[5], '%s', dbfields[0], '%s'), zip(value, idlist))
-            #print "UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[5], '%s', dbfields[0], '%s'), zip(value, idlist)
-
+            cursor.execute("UPDATE %s set %s=NULL WHERE %s is not NULL" %(_DBTABLE_, _DBFIELDS_[5], _DBFIELDS_[5]))
+            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, _DBFIELDS_[5], '%s', _DBFIELDS_[0], '%s'), zip(value, idlist))
         elif (type=='relevanceScore'):
             #cursor.execute("UPDATE tblsearchresults set sqrelevancescore=NULL WHERE sqrelevanceScore is not NULL")
             #cursor.executemany("UPDATE tblsearchresults set sqrelevancescore=%s WHERE srid=%s", zip(value, idlist))
-            cursor.execute("UPDATE %s set %s=NULL WHERE %s is not NULL" %(_DBTABLE_, dbfields[6], dbfields[6]))
-            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[6], '%s', dbfields[0], '%s'), zip(value, idlist))
-            #print "UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[6], '%s', dbfields[0], '%s'), zip(value, idlist)
+            cursor.execute("UPDATE %s set %s=NULL WHERE %s is not NULL" %(_DBTABLE_, _DBFIELDS_[6], _DBFIELDS_[6]))
+            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, _DBFIELDS_[6], '%s', _DBFIELDS_[0], '%s'), zip(value, idlist))
         elif (type=='relevanceFlag'):
             #cursor.executemany("UPDATE tblsearchresults set relevanceflag=%s WHERE srid=%s", zip(value, idlist))
-            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[4], '%s', dbfields[0], '%s'), zip(value, idlist))
-            #print "UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, dbfields[4], '%s', dbfields[0], '%s'), zip(value, idlist)
-
+            cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, _DBFIELDS_[4], '%s', _DBFIELDS_[0], '%s'), zip(value, idlist))
         conn.commit()
         cursor.close()
         logging.info('finish updating %s with %s records in database', type, len(value))                        
@@ -321,7 +300,7 @@ def ingestDB(conn, dir, label, **kwargs):
                         _DBFIELDS_[3],
                         _DBFIELDS_[4],
                         _DBFIELDS_[5],
-                        _DBFIELDS_[6]
+                        _DBFIELDS_[6]                        
                         )
         
         logging.info('start creating table %s with field names of %s,%s,%s,%s,%s,%s,%s ', _DBTABLE_, _DBFIELDS_[0],

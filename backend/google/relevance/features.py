@@ -13,6 +13,36 @@ import string
 from bs4 import BeautifulSoup  
 import re
 import logging
+from scipy.sparse import vstack
+
+
+def build_features_for_newdoc(doc, featureObj, ifTfidf):
+
+    # laod object 
+    tf_mdl = featureObj['vectorizer']
+    tfMtxTrain = featureObj['tfMtx'] 
+    
+    # vectorize the new document
+    logging.info('start to vectorize the new document')
+    try:
+        features = tf_mdl.transform(doc)
+    except Exception:
+        logging.error('Fail to vectorize the new text data', exc_info=True)
+    
+    if ifTfidf:
+        tfidf_mdl = TfidfTransformer(norm = "l2", sublinear_tf=True, smooth_idf=True)
+        try:
+            tfidf_mdl = tfidf_mdl.fit(vstack([tfMtxTrain, features]))
+            features = tfidf_mdl.transform(features)
+        except Exception:
+            logging.error('Fail to convert to tf-idf for the new doc', exc_info=True)
+    
+    # convert the result to an array
+    features = features.toarray()        
+    
+    logging.info('finish vectorizing the new document')        
+    
+    return features
 
 def build_features(docs, keyWords=None, max_words=5000, Stem=True, Bigram=True, Tfidf=True, stopwords=True, Preprocess=True):
     # build features: return features only consist of keyWords    
@@ -30,7 +60,9 @@ def build_features(docs, keyWords=None, max_words=5000, Stem=True, Bigram=True, 
         colInd = [terms.index(key) for key in keyWords]
         features = features[:,colInd]
         terms = keyWords
-        out = {"TDM": features, "terms": terms}
+        # only output features matching the keywords
+        out['TDM'] = features
+        out['terms'] = terms
     
     logging.info('finish building %s number of predictors', max_words)
     
@@ -67,7 +99,7 @@ def bag_of_words(docs, max_words=5000, Stem=True, Bigram=True, Tfidf=True, stopw
 
 
     # Initialize the "CountVectorizer" object
-    vectorizer = CountVectorizer(analyzer = "word",   \
+    tf_mdl = CountVectorizer(analyzer = "word",   \
                              tokenizer = tokenize,    \
                              preprocessor = processor, \
                              stop_words = stopwords,   \
@@ -76,23 +108,27 @@ def bag_of_words(docs, max_words=5000, Stem=True, Bigram=True, Tfidf=True, stopw
 
     # transforms our training data into feature vectors
     try:
-        features = vectorizer.fit_transform(docs)
+        tf_mdl = tf_mdl.fit(docs)
+        features = tf_mdl.transform(docs)
     except Exception:
         logging.error('Fail to vectorize the text data', exc_info=True)
 
-    # the result to an array
-    features = features.toarray()
+    # save TF matrix
+    tfMtx = features
 
     # tf-idf 
     if Tfidf:
-        transformer = TfidfTransformer()
+        tfidf_mdl = TfidfTransformer(norm = "l2", sublinear_tf=True, smooth_idf=True)
         try:
-            features = transformer.fit_transform(features)
+            tfidf_mdl = tfidf_mdl.fit(features)
+            features = tfidf_mdl.transform(features)
         except Exception:
             logging.error('Fail to convert to tf-idf', exc_info=True)
-        features = features.toarray()
+        
+    # convert the result to an array
+    features = features.toarray()
 
-    return {'TDM': features, 'terms': vectorizer.get_feature_names()}
+    return {'TDM': features, 'terms': tf_mdl.get_feature_names(), 'tfMtx': tfMtx, 'vectorizer': tf_mdl}
     
     
     
