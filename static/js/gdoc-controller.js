@@ -42,6 +42,12 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       });
   }
 
+  function createTag1(companyId) {
+    //$scope.tags = [];
+    $scope.tags.push( "Company Created: " + companyId);
+  }
+
+
   $scope.selectedBuyerCompany = null;
   $scope.selectedSupplierCompany = null;
   $scope.majorRisk = null;
@@ -82,6 +88,30 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         createTag(selectedFromCompanyID)
     }
   };
+  $scope.companySubmit = function () {
+    for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
+      if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany1) {
+        var selectedFromCompanyID = $scope.predefinedCompanies[i].id;
+        break;
+      }
+    }
+    var oneCompany = {
+      name:$scope.selectedFromCompany1,
+      variations: [$scope.selectedFromCompany1],
+      project:$scope.currentProject.id
+    };
+
+    if($scope.noResults){
+      $http.post('/api/companies', oneCompany)
+        .success(function(postedCompany){
+          createTag1(postedCompany.name);
+          $scope.predefinedCompanies.push(postedCompany);
+          console.log($scope.predefinedCompanies);
+      });
+    } else {
+    }
+  };
+
 
   $scope.updateRelevance = function (newDoc) {
     Gdoc.update({'id': newDoc.id, 'relevance': newDoc.relevance})
