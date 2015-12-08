@@ -15,7 +15,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.riskitems = RiskItem.query();
   $scope.predefinedCompanies = Company.query();
   $scope.predefinedRisks = Risk.query();
-
+  $scope._relevanceScore=1;
   $scope.searchPager = {};
   $scope.searchPager.currentPage = 1;
   $scope.searchPager.total = null;

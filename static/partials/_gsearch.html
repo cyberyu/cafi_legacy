@@ -93,6 +93,7 @@
               <th> <input st-search="hlsnippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
               <th></th>
               <th>User Review</th>
+              <th ng-show="_relevanceScore==1">Relevance</th>
               <th style="width: 30px;"></th>
             </tr>
             </thead>
@@ -112,9 +113,9 @@
               </nobr></td>
               <td>
               <div ng-show="gdoc.predictedScore != null">
-                  <div ng-if="gdoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
-                  <div ng-if="gdoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
-                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">Relevance:{{gdoc.predictedScore}}</span></h5></div>
+                  <div ng-if="gdoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
+                  <div ng-if="gdoc.predictedScore>1"><h4><span class="label label-success">{{1}}</span></h4></div>
+                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">{{gdoc.predictedScore}}</span></h4></div>
 
               </div>
               </td>
