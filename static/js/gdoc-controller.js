@@ -18,6 +18,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   }else{
     $scope.nextID = null;
   }
+  //Code for trial of pool
 
 
   function createTag(companyId) {
@@ -40,13 +41,22 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         }
       });
   }
-  $scope.CompanyA="CompanyA";
-  $scope.CompanyB="CompanyB";
-  $scope.selectedBuyerCompany = $scope.predefinedCompanies;
-  $scope.selectedSupplierCompany = $scope.predefinedCompanies;
-  $scope.majorRisk = $scope.predefinedRisks;
-  $scope.secondaryRisk = $scope.predefinedRisks;
-  $scope.tertiaryRisk = $scope.predefinedRisks;
+
+  $scope.selectedBuyerCompany = null;
+  $scope.selectedSupplierCompany = null;
+  $scope.majorRisk = null;
+  $scope.secondaryRisk = null;
+  $scope.tertiaryRisk = null;
+
+  $scope.labelItemSubmit = function () {
+    //WIP
+    console.log("Item API is to be created");
+  };
+
+  $scope.labelRiskSubmit = function () {
+    //WIP
+    console.log("Major,Secondary ..Risk API is to be created");
+  };
 
   $scope.labelSubmit = function () {
     for (var i = 0; i < $scope.predefinedCompanies.length; i++) {

@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="col-lg-7 mid-panel" >
+  <div class="col-lg-6 mid-panel" >
     <header>
       <h4 ng-bind-html="currentDoc.hltitle"></h4>
     </header>
@@ -61,7 +61,7 @@
     <!--</p>-->
   </div>
 
-  <div class="col-lg-3 right-panel" id="gdoc-label-box" >
+  <div class="col-lg-4 right-panel" id="gdoc-label-box" >
       <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
         <span ng-if="!currentDoc.reviewLater">Save for later review</span>
         <span ng-if="currentDoc.reviewLater">Remove from later review</span>
@@ -111,8 +111,8 @@
             <tbody>
             <tr>
                 <td>
-                    <p>{{ CompanyA }}</p><br>
-                    <p>{{ CompanyB }}</p>
+                    <div class="alert alert-success" ng-show="selectedBuyerCompany!=null"><strong>{{ selectedBuyerCompany}}</strong></div>
+                    <div class="alert alert-success" ng-show="selectedSupplierCompany!=null"><strong>{{ selectedSupplierCompany}}</strong></div>
                 </td>
                 <td>
                   <table>
@@ -120,7 +120,7 @@
                         <td><label class="control-label" for="a">Buyer: </label>
                             <div>
                                 <select class="form-control" ng-model="selectedBuyerCompany" style="width:100px;">
-                                <option ng-repeat="option in predefinedCompanies" value="{{option.id}}" >{{option.name}}</option>
+                                <option ng-repeat="option in predefinedCompanies" value="{{option.name}}" >{{option.name}}</option>
                                 </select>
                             </div>
                         </td>
@@ -129,7 +129,7 @@
                         <td><label class="control-label" for="a">Supplier: </label>
                         <div>
                             <select class="form-control" ng-model="selectedSupplierCompany" style="width:100px;">
-                                <option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>
+                                <option ng-repeat="option in predefinedCompanies" value="{{option.name}}">{{option.name}}</option>
                             </select>
                         </div>
                         </td>
@@ -146,7 +146,9 @@
             </thead>
             <tbody>
             <tr>
-                <td><p>Oil, Gas, Weapons</p></td>
+                <td><input type="text" ng-model="selectedItems" uib-typeahead="item.name for item in predefinedItems | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noResults"></td>
+                <td><a ng-click="labelItemSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a></td>
             </tr>
             </tbody>
         </table>
@@ -167,34 +169,41 @@
             <td>Primary</td>
             <td>
                 <div>
-                <select class="form-control" id="a" ng-model="majorRisk" style="width:100px;">
-                <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+                <select class="form-control" id="a" ng-model="majorRisk" ng-options="option as option.name for option in predefinedRisks"  style="width:100px;">
+                  <option value="">--</option>
+                <!--option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option-->
                 </select>
                 </div>
             </td>
-            <td></td>
+            <td><input type="text" ng-model="subRisk1" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noResults"></td>
         </tr>
-        <tr>
+        <tr ng-show="majorRisk!=null">
             <td>Secondary</td>
             <td>
-                <div>
-                <select class="form-control" id="a" ng-model="secondaryRisk" style="width:100px;">
-                <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+                <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option as option.name for option in predefinedRisks" style="width:100px;">
+                    <option value="">--</option>
                 </select>
-                </div>
+
             </td>
-            <td></td>
+            <td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noResults"></td>
         </tr>
-        <tr>
+        <tr ng-show="majorRisk!=null && secondaryRisk!=null">
             <td>Tertiary</td>
             <td>
-                <div>
-                <select class="form-control" id="a" ng-model="TertiaryRisk" style="width:100px;">
-                <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
+                <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option as option.name for option in predefinedRisks" style="width:100px;">
+                    <option value="">--</option>
                 </select>
-                </div>
+
             </td>
+            <td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noResults"></td>
+        </tr>
+        <tr>
             <td></td>
+            <td></td>
+            <td><a ng-click="labelRiskSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a></td>
         </tr>
         </tbody>
     </table>
