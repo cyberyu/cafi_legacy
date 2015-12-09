@@ -124,8 +124,8 @@
                     </tr>
                     <tr>
                       <td>
-                          <div class="label label-info" ng-show="selectedBuyerCompany!=null"><strong>{{ selectedBuyerCompany}}</strong></div>
-                          <div class="label label-info" ng-show="selectedSupplierCompany!=null"><strong>{{ selectedSupplierCompany}}</strong></div>
+                          <span ng-show="selectedBuyerCompany!=null" ng-repeat="tag in selectedBuyerCompany"><span class="label label-info"><strong>{{ tag }}</strong></span> </span><br><br>
+                          <span ng-show="selectedSupplierCompany!=null" ng-repeat="tag in selectedSupplierCompany"><span class="label label-primary"><strong>{{ tag }}</strong></span> </span>
                       </td>
                     </tr>
                   </table>
@@ -135,7 +135,7 @@
                     <tr>
                         <td><label class="control-label" for="a">Buyer: </label>
                             <div>
-                                <select class="form-control" ng-model="selectedBuyerCompany" style="width:100px;">
+                                <select multiple class="form-control" ng-model="selectedBuyerCompany" style="width:100px;">
                                 <option ng-repeat="option in predefinedCompanies" value="{{option.name}}" >{{option.name}}</option>
                                 </select>
                             </div>
@@ -144,7 +144,7 @@
                     <tr>
                         <td><br><label class="control-label" for="a">Supplier: </label>
                         <div>
-                            <select class="form-control" ng-model="selectedSupplierCompany" style="width:100px;">
+                            <select multiple class="form-control" ng-model="selectedSupplierCompany" style="width:100px;">
                                 <option ng-repeat="option in predefinedCompanies" value="{{option.name}}">{{option.name}}</option>
                             </select>
                         </div>
