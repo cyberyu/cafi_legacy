@@ -1,7 +1,6 @@
 projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, Gdoc, Risk) {
 
   $scope.currentDoc = currentDoc;
-  $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
   $scope.tags = [];
   for (var i = 0; i < $scope.riskitems.length; i++) {
     if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
@@ -153,7 +152,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     }
     Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
       $scope.currentDoc = data;
-      //$scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt); //Bug
       $scope.tags = [];
     });
   };

@@ -118,10 +118,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.FormatDate = function(createdAt){
-    return createdAt;
-  };
-
   $scope.deleteSearch = function (search) {
     if (popupService.showPopup('Really delete this Search?')) {
       search.$delete().then(function () {
