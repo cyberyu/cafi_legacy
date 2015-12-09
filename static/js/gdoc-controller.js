@@ -153,7 +153,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     }
     Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
       $scope.currentDoc = data;
-      $scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt);
+      //$scope.currentDoc.createdAt = Date($scope.currentDoc.createdAt); //Bug
       $scope.tags = [];
     });
   };

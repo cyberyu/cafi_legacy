@@ -54,7 +54,7 @@
     <header>
       <h4 ng-bind-html="currentDoc.hltitle"></h4>
     </header>
-    <p><em><small>Collected at {{currentDoc.createdAt}}</small></em></p>
+    <p><em><small>Collected at {{currentDoc.createdAt| date:'dd-MMMM-yyyy HH:mm' : 'GMT' }}</small></em></p>
     <div highlight keywords="{{currentDoc.keywords}}" text="{{currentDoc.text}}" highlight-class="keywords"></div>
     <!--<p ng-repeat="p in currentDoc.text.split('\n') track by $index">-->
       <!--<span ng-bind-html="p"> </span>-->
