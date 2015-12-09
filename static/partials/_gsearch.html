@@ -51,7 +51,7 @@
           <tr ng-class="{warning: displaySearch.id == search.id}" ng-repeat="search in searches | filter:searchQuery">
             <td>
               <a ng-click="setDisplaySearch(search)" class="list-link">
-                <span class="list-link-label small">{{search.string}}</span>
+                <span class="list-link-label small" uib-tooltip="{{ FormatDate(search.createdAt) }}"><span class="label label-default"> {{ search.username }}</span>  {{search.string}}</span>
               </a>
             </td>
             <td>

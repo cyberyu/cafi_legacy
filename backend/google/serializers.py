@@ -6,7 +6,8 @@ from google.ner.cafi_netagger import CAFI_NETagger
 
 
 class SearchSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.pk')
+    user = serializers.ReadOnlyField(source='user.id')
+    username = serializers.ReadOnlyField(source = 'user.username')
     class Meta:
         model = Search
 
