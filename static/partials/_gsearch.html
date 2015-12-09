@@ -1,10 +1,8 @@
 <ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
-  <li><a href="/#/projects">Projects</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
+  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
 </ol>
-
-
 
 <div id="gsearch-box" class="text-center">
   <form class="form-inline">
@@ -22,7 +20,7 @@
       <input id="gsearch-input" type="text" class="form-control" ng-model="search.string" placeholder="Search something"/>
       <button class="btn btn-primary" ng-click="submitSearch()">search</button>
       <button type="button" class="btn btn-default" ng-click="openGenSearch('gensearch')">Advanced search</button>
-      <button type="button" class="btn btn-success" ng-click="activeSearch() ">Relevance Filter</button>
+      <button type="button" class="btn btn-success" ng-click="activeSearch() "><span class="glyphicon glyphicon-filter"></span> Relevance Filter </button>
     </div>
   </form>
 </div>
@@ -102,7 +100,7 @@
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
-              <td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance}}</span></td>
+              <td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance| uppercase}}</span></td>
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
@@ -119,6 +117,7 @@
 
               </div>
               </td>
+              <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)" uib-tooltip="Delete article"><i class="fa fa-close"></i></a></td>
 
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
