@@ -163,4 +163,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+
+  $scope.major_risk = ["Capacity Constraints", "Financial Distress", "Labor Unrest", "IP Loss", "Conflict Mineral Sourcing", "Import/Export Violations", "Counterfeit/Non-MIL SPEC Parts",
+  "Legal", "Counterfeit","Conflict Minerals", "Financial", "Capacity", "Specialty Metals"];
 });
