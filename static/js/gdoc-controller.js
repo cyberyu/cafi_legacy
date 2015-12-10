@@ -154,6 +154,8 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       $scope.currentDoc = data;
       $scope.tags = [];
     });
+    $scope.selectedBuyerCompany = null;
+    $scope.selectedSupplierCompany = null;
   };
 
   $scope.ok = function () {

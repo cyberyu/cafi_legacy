@@ -125,7 +125,7 @@
                     <tr>
                       <td>
                           <span ng-show="selectedBuyerCompany!=null" ng-repeat="tag in selectedBuyerCompany"><span class="label label-info"><strong>{{ tag }}</strong></span> </span><br>
-                          <span class="glyphicon glyphicon-triangle-bottom" ng-show="true"></span><br>
+                          <div style="text-align: center;"><span class="glyphicon glyphicon-arrow-down" ng-show="true"></span><br></div>
                           <span ng-show="selectedSupplierCompany!=null" ng-repeat="tag in selectedSupplierCompany"><span class="label label-primary"><strong>{{ tag }}</strong></span> </span>
                       </td>
                     </tr>
@@ -136,8 +136,9 @@
                     <tr>
                         <td><label class="control-label" for="a">Buyer: </label>
                             <div>
-                                <select multiple class="form-control" ng-model="selectedBuyerCompany" style="width:100px;">
-                                <option ng-repeat="option in predefinedCompanies" value="{{option.name}}" >{{option.name}}</option>
+                                <select multiple class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org" style="width:100px;">
+                                    <option value="">--</option>
+                                <!--option ng-repeat="option in currentDoc.nerwords.org" value="{{option}}" >{{option}}</option-->
                                 </select>
                             </div>
                         </td>
@@ -145,8 +146,9 @@
                     <tr>
                         <td><br><label class="control-label" for="a">Supplier: </label>
                         <div>
-                            <select multiple class="form-control" ng-model="selectedSupplierCompany" style="width:100px;">
-                                <option ng-repeat="option in predefinedCompanies" value="{{option.name}}">{{option.name}}</option>
+                            <select multiple class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org" style="width:100px;">
+                                <option value="">--</option>
+                                <!--option ng-repeat="option in currentDoc.nerwords.org" value="{{option}}">{{option}}</option-->
                             </select>
                         </div>
                         </td>
