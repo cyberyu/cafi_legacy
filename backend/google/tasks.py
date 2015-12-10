@@ -169,7 +169,7 @@ def do_active_filter():
     myClf.train()
 
     # save the classifier
-    myClf.save(saveFileName='classifierFile', saveType='classifile', memo='')
+    #myClf.save(saveFileName='classifierFile', saveType='classifile', memo='')
 
 
     # prediction on the test data, calculate relevance score
