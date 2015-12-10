@@ -5,7 +5,6 @@ import numpy as np
 from elasticsearch import Elasticsearch
 from sklearn.datasets import fetch_20newsgroups
 from elasticsearch.helpers import bulk, scan
-<<<<<<< HEAD
 from text_util import text_similarity_scores, \
     text_similarity_score_by_content, \
     text_similarity_score_by_id, \

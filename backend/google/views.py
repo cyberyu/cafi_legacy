@@ -13,11 +13,8 @@ from engagement.models import Project
 from celery import chain
 from rest_framework.response import Response
 from google.validAuthentication import ValidateSessionAuthentication
-from django.core.context_processors import csrf
 from rest_framework.permissions import IsAuthenticated
-#from django.contrib.auth import authenticate
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 import time
 

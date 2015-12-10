@@ -136,8 +136,8 @@ def do_active_filter():
     print "Start Relevance Filter"
 
     # data base connection
-    conn_string = "host='localhost' dbname='cafi' user='postgres' password='postgres'"
-    conn = psycopg2.connect(conn_string)
+    #CONN_STRING = "host='localhost' dbname='cafi' user='cafi' password='awesome'" #Add this line to local.py
+    conn = psycopg2.connect(settings.CONN_STRING)
 
     # text string to read data
     tf=["text", "title", "snippet"]
