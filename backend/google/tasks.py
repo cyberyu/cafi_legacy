@@ -158,7 +158,7 @@ def do_active_filter():
     print topWords
 
     # save the feature, TF vectorizer
-    myClf.save(saveFileName='featureFile', saveType='featurefile', memo='')
+    #myClf.save(saveFileName='featureFile', saveType='featurefile', memo='')
 
 
     # prepare train&test data for model training
