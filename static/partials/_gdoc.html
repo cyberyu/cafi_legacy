@@ -188,9 +188,9 @@
             <td><span class="label label-success" uib-tooltip="Primary Risk">P</span></td>
             <td>
                 <div>
-                <select class="form-control" id="a" ng-model="majorRisk" ng-options="option as option.name for option in predefinedRisks"  style="width:100px;">
+                <select class="form-control" id="a" ng-model="majorRisk" ng-options="option for option in major_risk"  style="width:150px;">
                   <option value="">--</option>
-                <!--option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option-->
+                  <!--option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option-->
                 </select>
                 </div>
             </td>
@@ -200,10 +200,9 @@
         <tr ng-show="majorRisk!=null">
             <td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>
             <td>
-                <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option as option.name for option in predefinedRisks" style="width:100px;">
+                <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk" style="width:150px;">
                     <option value="">--</option>
                 </select>
-
             </td>
             <td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
                class="form-control" typeahead-no-results="noResults"></td>
@@ -211,10 +210,9 @@
         <tr ng-show="majorRisk!=null && secondaryRisk!=null">
             <td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>
             <td>
-                <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option as option.name for option in predefinedRisks" style="width:100px;">
+                <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk" style="width:100px;">
                     <option value="">--</option>
                 </select>
-
             </td>
             <td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
                class="form-control" typeahead-no-results="noResults"></td>
