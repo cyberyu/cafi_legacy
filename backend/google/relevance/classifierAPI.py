@@ -10,7 +10,6 @@ import features as ft
 import active_learn as al
 import numpy as np
 import logging
-import pickle
 
         
 
@@ -58,49 +57,49 @@ class Classifier:
         
 
 
-    def load(self, filename):
-        """
-        load pick object from file
+    # def load(self, filename):
+    #     """
+    #     load pick object from file
+    #
+    #     @type  filename:  string object
+    #     @param filename:  file name
+    #     """
+    #
+    #     logging.info('load training data feature vectorizer from: %s', filename)
+    #     try:
+    #         fileObj = open(filename, 'r')
+    #         obj = pickle.load(fileObj)
+    #     except Exception:
+    #         logging.error('fail to read file and load pickle obj', exc_info=True)
+    #     return obj
 
-        @type  filename:  string object
-        @param filename:  file name 
-        """ 
-        
-        logging.info('load training data feature vectorizer from: %s', filename)
-        try:   
-            fileObj = open(filename, 'r')
-            obj = pickle.load(fileObj)
-        except Exception:
-            logging.error('fail to read file and load pickle obj', exc_info=True)           
-        return obj    
 
 
-
-    def save(self, saveFileName, saveType, memo): 
-        """
-        save pickle object
-
-        @type  saveFileName:  string object
-        @param saveFileName:  file name 
-        
-        @type  saveType:  string object
-        @param saveType:  either 'featurefile' or 'classifile'
-        
-        @type  memo:  string object
-        @param memo:  description of the object saving
-        """ 
-        
-        fileObj = open(saveFileName, 'wb')
- 
-        if (saveType == 'classifile'):
-            pickle.dump(self.classifierObj, fileObj)
-        elif (saveType == 'featurefile'):
-            pickle.dump(self.featureObj, fileObj) 
-        else:
-            logging.error('undefined saveType')
-            
-        fileObj.close()  
-        logging.info('saved pickle obj to %s ', saveFileName)
+    # def save(self, saveFileName, saveType, memo):
+    #     """
+    #     save pickle object
+    #
+    #     @type  saveFileName:  string object
+    #     @param saveFileName:  file name
+    #
+    #     @type  saveType:  string object
+    #     @param saveType:  either 'featurefile' or 'classifile'
+    #
+    #     @type  memo:  string object
+    #     @param memo:  description of the object saving
+    #     """
+    #
+    #     fileObj = open(saveFileName, 'wb')
+    #
+    #     if (saveType == 'classifile'):
+    #         pickle.dump(self.classifierObj, fileObj)
+    #     elif (saveType == 'featurefile'):
+    #         pickle.dump(self.featureObj, fileObj)
+    #     else:
+    #         logging.error('undefined saveType')
+    #
+    #     fileObj.close()
+    #     logging.info('saved pickle obj to %s ', saveFileName)
 
 
 

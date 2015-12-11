@@ -157,19 +157,12 @@ def do_active_filter():
 
     print topWords
 
-    # save the feature, TF vectorizer
-    #myClf.save(saveFileName='featureFile', saveType='featurefile', memo='')
-
-
     # prepare train&test data for model training
     myClf.prepareData()
 
 
     # train a model
     myClf.train()
-
-    # save the classifier
-    #myClf.save(saveFileName='classifierFile', saveType='classifile', memo='')
 
 
     # prediction on the test data, calculate relevance score
