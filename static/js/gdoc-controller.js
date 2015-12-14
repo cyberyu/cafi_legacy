@@ -2,6 +2,15 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
 
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
+
+  $scope.shouldShow = function (item) {
+    return item!=$scope.majorRisk;
+  };
+
+  $scope.shouldShow1= function (item) {
+    return item!=$scope.majorRisk && item!=$scope.secondaryRisk;
+  };
+
   for (var i = 0; i < $scope.riskitems.length; i++) {
     if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
       $scope.tags.push( $scope.riskitems[i].risk + " Risk from " +  $scope.riskitems[i].fromCompany + " to " + $scope.riskitems[i].toCompany)

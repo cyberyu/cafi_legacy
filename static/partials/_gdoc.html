@@ -193,7 +193,7 @@
                     <tr ng-show="majorRisk!=null">
                         <td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>
                         <td>
-                            <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk" >
+                            <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk| filter:shouldShow" >
                                 <option value="">--</option>
                             </select>
                         </td>
@@ -203,7 +203,7 @@
                     <tr ng-show="majorRisk!=null && secondaryRisk!=null">
                         <td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>
                         <td>
-                            <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk">
+                            <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk| filter:shouldShow1">
                                 <option value="">--</option>
                             </select>
                         </td>
