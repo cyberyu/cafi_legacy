@@ -85,7 +85,7 @@
       <div ng-show="currentDoc.predictedScore != null">
               <div ng-if="currentDoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
               <div ng-if="currentDoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
-              <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">Relevance:{{currentDoc.predictedScore}}</span></h5></div>
+              <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">Relevance:{{currentDoc.predictedScore| number:3}}</span></h5></div>
 
       </div>
     </td>

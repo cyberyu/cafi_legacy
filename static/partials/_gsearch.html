@@ -114,7 +114,7 @@
               <div ng-show="gdoc.predictedScore != null">
                   <div ng-if="gdoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
                   <div ng-if="gdoc.predictedScore>1"><h4><span class="label label-success">{{1}}</span></h4></div>
-                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">{{gdoc.predictedScore}}</span></h4></div>
+                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">{{gdoc.predictedScore| number:3}}</span></h4></div>
 
               </div>
               </td>
