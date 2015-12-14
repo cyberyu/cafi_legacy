@@ -93,137 +93,129 @@
     </tbody>
     </table>
     <hr>
-    <table>
-    <thead>
-      <tr>
-          <th><label class="control-label" for="a">Risk Tagging</label></th>
-      </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Companies</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                  <table>
+      <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Supply Chain Relation</strong>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
                     <tr>
-                      <td>
-                          <div class="form-group form-group-sm">
-                            <label> Add Company: </label>
-                            <input type="text" ng-model="selectedFromCompany1" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-                                class="form-control" typeahead-no-results="noResults">
-                          </div>
-                          <a ng-click="companySubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
-                      </td>
+                        <th>Buyer</th>
+                        <th>Supplier</th>
+                        <th>Item</th>
                     </tr>
-                    <tr>
-                      <td>
-                          <span ng-show="selectedBuyerCompany!=null" ng-repeat="tag in selectedBuyerCompany"><span class="label label-info"><strong>{{ tag }}</strong></span> </span><br>
-                          <div style="text-align: center;"><span class="glyphicon glyphicon-arrow-down" ng-show="true"></span><br></div>
-                          <span ng-show="selectedSupplierCompany!=null" ng-repeat="tag in selectedSupplierCompany"><span class="label label-primary"><strong>{{ tag }}</strong></span> </span>
-                      </td>
+                    </thead>
+                    <tr ng-repeat="relation in relations | filter:query | orderBy:orderProp">
+                        <td>{{relation.buyer}}</td>
+                        <td>{{relation.supplier}}</td>
+                        <td>{{address.items}}</td>
+                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateRelation(relation)" uib-tooltip="Edit Supply Chain Relation"><i class="fa fa-pencil"></i></a>
+                            <a class="btn btn-default btn-circle" ng-click="deleteRelation(relation)" uib-tooltip="Delete Supply Chain Relation"><i class="fa fa-minus"></i></a></td>
                     </tr>
-                  </table>
-                </td>
-                <td>
-                  <table>
-                    <tr>
-                        <td><label class="control-label" for="a">Buyer: </label>
-                            <div>
-                                <select multiple class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org" style="width:100px;">
+                </table>
+                <a ng-click="editOrCreateRelation()" class="btn btn-default btn-circle" uib-tooltip="Add a Buyer-Supplier Relation"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+        <div ng-show="displayMode == 'edit'">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <form class="form-horizontal" role="form" ng-submit="saveEdit(currentRelation)">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">Buyer </label>
+                            <div class="col-sm-offset-1 col-sm-9">
+                                <select class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org">
                                     <option value="">--</option>
-                                <!--option ng-repeat="option in currentDoc.nerwords.org" value="{{option}}" >{{option}}</option-->
                                 </select>
                             </div>
-                        </td>
+                        </div>
+                        <div class="form-group">
+                            <label for="client" class="col-sm-2 control-label">Supplier </label>
+
+                            <div class="col-sm-offset-1 col-sm-9">
+                                <select class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org">
+                                <option value="">--</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="client" class="col-sm-2 control-label">Item </label>
+
+                            <div class="col-sm-offset-1 col-sm-9">
+                                <input type="text" ng-model="currentProject.client" class="form-control" id="client" placeholder="Items/Components"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-offset-2 col-xs-10">
+                                <input type="submit" class="btn btn-primary" value="Save"/>
+                                <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <hr>
+      <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Risk Tagging</strong>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <label> Add Company: </label>
+                        <input type="text" ng-model="selectedFromCompany1" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                                class="form-control" typeahead-no-results="noResults">
                     </tr>
                     <tr>
-                        <td><br><label class="control-label" for="a">Supplier: </label>
-                        <div>
-                            <select multiple class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org" style="width:100px;">
-                                <option value="">--</option>
-                                <!--option ng-repeat="option in currentDoc.nerwords.org" value="{{option}}">{{option}}</option-->
-                            </select>
-                        </div>
-                        </td>
+                        <th></th>
+                        <th>Major Risk</th>
+                        <th>Sub Risk</th>
                     </tr>
-                   </table>
-                </td>
-            </tr>
-            </tbody>
-            <thead>
-            <tr>
-                <th><label class="control-label" for="a">Item/Components</label></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><input type="text" ng-model="selectedItems" uib-typeahead="item.name for item in predefinedItems | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults"></td>
-                <td><a ng-click="labelItemSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a></td>
-            </tr>
-            </tbody>
-        </table>
-    </tr>
-    </tbody>
-    </table>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="label label-success" uib-tooltip="Primary Risk">P</span></td>
+                        <td>
+                            <div>
+                            <select class="form-control" id="a" ng-model="majorRisk" ng-options="option for option in major_risk" >
+                              <option value="">--</option>
+                            </select>
+                            </div>
+                        </td>
+                        <td><input type="text" ng-model="subRisk1" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+                           class="form-control" typeahead-no-results="noResults"></td>
+                    </tr>
+                    <tr ng-show="majorRisk!=null">
+                        <td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>
+                        <td>
+                            <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk" >
+                                <option value="">--</option>
+                            </select>
+                        </td>
+                        <td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+                           class="form-control" typeahead-no-results="noResults"></td>
+                    </tr>
+                    <tr ng-show="majorRisk!=null && secondaryRisk!=null">
+                        <td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>
+                        <td>
+                            <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk">
+                                <option value="">--</option>
+                            </select>
+                        </td>
+                        <td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
+                           class="form-control" typeahead-no-results="noResults"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a ng-click="labelRiskSubmit()" class="btn btn-default btn-circle" uib-tooltip="Submit Risk Tagging"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
     <hr>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th></th>
-            <th>Major Risk</th>
-            <th>Sub Risk</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><span class="label label-success" uib-tooltip="Primary Risk">P</span></td>
-            <td>
-                <div>
-                <select class="form-control" id="a" ng-model="majorRisk" ng-options="option for option in major_risk"  style="width:150px;">
-                  <option value="">--</option>
-                  <!--option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option-->
-                </select>
-                </div>
-            </td>
-            <td><input type="text" ng-model="subRisk1" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults"></td>
-        </tr>
-        <tr ng-show="majorRisk!=null">
-            <td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>
-            <td>
-                <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk" style="width:150px;">
-                    <option value="">--</option>
-                </select>
-            </td>
-            <td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults"></td>
-        </tr>
-        <tr ng-show="majorRisk!=null && secondaryRisk!=null">
-            <td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>
-            <td>
-                <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk" style="width:100px;">
-                    <option value="">--</option>
-                </select>
-            </td>
-            <td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td><a ng-click="labelRiskSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
 
     <form class="label-div">
       <div class="form-group  form-group-sm">

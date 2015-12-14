@@ -18,7 +18,59 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.nextID = null;
   }
   //Code for trial of pool
+  $scope.displayMode = "list";
+  $scope.currentRelation = null;
 
+  $scope.listRelations = function () {
+    $scope.relations = Relation.query();
+  };
+
+  $scope.deleteRelation = function (relation) {
+    if (popupService.showPopup('Really delete this Supply Chain?')) {
+      Relation.$delete().then(function () {
+        $scope.relations.splice($scope.relations.indexOf(relation), 1);
+      });
+    }
+  };
+
+  $scope.editOrCreateRelation = function (relation) {
+    $scope.currentRelation =
+      relation ? angular.copy(relation) : {};
+    $scope.displayMode = "edit";
+  };
+
+  $scope.createRelation = function (relation) {
+    new Relation(relation).$save().then(function(newRelation) {
+      $scope.relations.push(newRelation);
+      $scope.displayMode = "list";
+    });
+  };
+
+  $scope.saveEdit = function (newRelation) {
+    if (angular.isDefined(newRelation.id)) {
+      $scope.updateRelation(newRelation);
+    } else {
+      $scope.createRelation(newRelation);
+    }
+  };
+
+  $scope.updateRelation = function (relation) {
+    relation.$update(function(){
+      for (var i = 0; i < $scope.relations.length; i++) {
+        if ($scope.relations[i].id == relation.id) {
+          $scope.relations[i] = relation;
+          break;
+        } }
+      $scope.displayMode = "list";
+    });
+  };
+
+  $scope.cancelEdit = function () {
+    $scope.currentRelation = {};
+    $scope.displayMode = "list";
+  };
+
+  //$scope.listRelations(); //have to creation a supply chain backend relation
 
   function createTag(companyId) {
     var oneLabel = {
@@ -53,10 +105,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.secondaryRisk = null;
   $scope.tertiaryRisk = null;
 
-  $scope.labelItemSubmit = function () {
-    //WIP
-    console.log("Item API is to be created");
-  };
 
   $scope.labelRiskSubmit = function () {
     //WIP
