@@ -7,7 +7,7 @@ from rest_framework import routers
 
 from google.views import SearchViewSet, SearchResultViewSet, GeoSearchViewSet, Upload, Relevancefilter
 from engagement.views import ProjectViewSet
-from risk.views import RiskViewSet, CompanyViewSet, RiskItemViewSet
+from risk.views import RiskViewSet, CompanyViewSet, RiskItemViewSet, RelationViewSet
 from rest_framework.renderers import JSONRenderer, StaticHTMLRenderer
 
 
@@ -20,6 +20,7 @@ router.register(r'risks', RiskViewSet)
 router.register(r'companies', CompanyViewSet)
 router.register(r'geosearch', GeoSearchViewSet)
 router.register(r'risk_items', RiskItemViewSet)
+router.register(r'relations', RelationViewSet)
 
 urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),

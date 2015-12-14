@@ -62,8 +62,10 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     queryset = SearchResult.objects.all()
     serializer_class = SearchResultSerializer
     pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend,filters.OrderingFilter,)
     filter_fields = ('search', 'label', 'review_later', 'search__project')
+    ordering_fields = ('rank', 'predicted_score')
+    #ordering =('predicted_score')
     authentication_classes = (ValidateSessionAuthentication,)
 
     def get_queryset(self):

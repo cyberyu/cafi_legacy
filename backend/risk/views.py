@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 
-from models import Company, Risk, RiskItem
+from models import Company, Risk, RiskItem, Relation
 from engagement.models import Project
 import csv
 from google.validAuthentication import ValidateSessionAuthentication
 
-from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
+from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer, RelationSerializer
 
 
 class RiskViewSet(viewsets.ModelViewSet):
@@ -55,8 +55,13 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class RiskItemViewSet(viewsets.ModelViewSet):
     queryset = RiskItem.objects.all()
     serializer_class = RiskItemSerializer
+    authentication_classes = (ValidateSessionAuthentication,)
+
+
+class RelationViewSet(viewsets.ModelViewSet):
+    queryset = Relation.objects.all()
+    serializer_class = RelationSerializer
     authentication_classes = (ValidateSessionAuthentication,)
