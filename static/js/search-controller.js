@@ -31,23 +31,32 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.searches = [];
 
   $scope.counter = 0;
-  $scope.filterOptions = ["General", "Relevance", "Irrelevance"];
+  $scope.filterOptions = ["rank", "predicted_score", "-predicted_score"];
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
   $scope.selectDataSource = function(src){
     $scope.currentSource = src;
   };
-
+  $scope.sortOption=null;
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
 
-  $scope.getGdocs = function(search, page) {
-    Gdoc.query({"search": search.id, "page": page}).$promise.then(function (data) {
+  $scope.getGdocs = function(search, page,option) {
+    console.log($scope.sortOption);
+    Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
+      //console.log($scope.displaySearchDocs);
+      console.log("hello");
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
     });
+  };
+
+  $scope.sortOptionChanged = function(search){
+    //console.log($scope.sortOption);
+    //console.log(search);
+    $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
   $scope.getReviewLater = function(page){
