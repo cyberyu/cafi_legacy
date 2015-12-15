@@ -53,12 +53,12 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.sortBy = function(method){
-    console.log($scope.sortOption);
     if(method=='relevance'){
-      $scope.sortOption = $scope.sortOption && $scope.sortOption[10] != '-' ? 'relevance,-predicted_score': 'relevance,predicted_score'
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[11] != '-' ? '-relevance,-predicted_score': 'relevance,predicted_score'
     } else {
       $scope.sortOption = 'rank';
     }
+    console.log($scope.sortOption);
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
