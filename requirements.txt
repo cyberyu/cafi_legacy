@@ -11,7 +11,7 @@ djoser==0.3.1
 djangorestframework-camel-case==0.2.0
 google-api-python-client==1.4.2
 pyparsing==2.0.3
-BeautifulSoup==3.2.1
+BeautifulSoup4==4.4.1
 googlemaps==2.3
 ipython==4.0.0
 tika==1.10
