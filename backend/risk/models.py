@@ -4,9 +4,19 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
+class PredefinedSearch(models.Model):
+    name = models.CharField(max_length=100)
+    search_string = models.TextField(blank=True) # search keywords related to this risk
+    is_global = models.BooleanField(default=True)  # show to all users
+    description = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Risk(models.Model):
     name = models.CharField(max_length=100)
-    search_string = models.TextField(blank=True)  # search keywords related to this risk
+    search_string = models.TextField(blank=True)
     description = models.TextField(blank=True)
 
     def __unicode__(self):

@@ -51,7 +51,7 @@ class SearchResult(models.Model):
 
     raw_html = models.TextField(blank=True, null=True)
     text = models.TextField(blank=True, null=True)
-    doc_type = models.CharField(blank=True, max_length=20)
+    doc_type = models.CharField(blank=True, max_length=20, default='')
     raw_file = models.FileField(blank=True, null=True, max_length=255)
 
     nerwords = JSONField(blank=True)

@@ -12,14 +12,17 @@ from text_util import text_similarity_scores, \
     index_text, text_similarity_clustering, get_map_document, map_cluster_document, \
     text_grouping_by_graph_cut
 
+
 def random_sample_by_pct(a,pct):
     """
     randomly pct(<= 1.0)  sample without replacement from the list a
     """
     n = len(a)
     np.random.seed(4)
-    idx = np.random.random(n) < pct 
+    idx = np.random.random(n) < pct
+
     return [a[i] for i in range(n) if idx[i]]
+
 
 class TextDuplicationTestCase(TestCase):
     @classmethod

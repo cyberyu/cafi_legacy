@@ -2,7 +2,8 @@ from rest_framework import viewsets
 
 from models import Project
 from serializers import ProjectSerializer
-from google.validAuthentication import ValidateSessionAuthentication
+from google.permissions import ValidateSessionAuthentication
+
 
 def home(request):
 	return render_to_response('home.html')

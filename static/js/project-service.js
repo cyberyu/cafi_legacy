@@ -59,7 +59,18 @@ angular.module('projectServices').factory('Risk', function ($resource) {
       transformResponse: function(data) {
         return angular.fromJson(data);
       }
-    },
+    }
+  });
+});
+
+angular.module('projectServices').factory('PredefinedSearch', function ($resource) {
+  return $resource('/api/predefined_searchs/:id', {id: '@id'}, {
+    update: {method: 'PUT'},
+    get: {method: 'GET',
+      transformResponse: function(data) {
+        return angular.fromJson(data);
+      }
+    }
   });
 });
 

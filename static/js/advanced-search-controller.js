@@ -1,5 +1,6 @@
 projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $interval, $timeout, $modalInstance,
-                                                              $routeParams, Upload, Search, Company, Risk) {
+                                                              $routeParams, Upload, Search, Company, Risk,
+                                                              PredefinedSearch) {
   $scope.project_id = $routeParams.id;
 
   $scope.newSearches = [];
@@ -14,7 +15,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.searchedStrings = [];
 
-  $http.get('/api/risks').then(function(response){
+  $http.get('/api/predefined_searchs').then(function(response){
     $scope.availableSearchNames = response.data;
   });
 
@@ -125,9 +126,9 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
   $scope.saveEditSearchName = function(newSearchName){
     if(newSearchName.name && newSearchName.searchString) {
       if(newSearchName.id) {
-        var newSearch = Risk.update(newSearchName);
+        var newSearch = PredefinedSearch.update(newSearchName);
       } else {
-        var newSearch = Risk.save(newSearchName);
+        var newSearch = PredefinedSearch.save(newSearchName);
         $scope.availableSearchNames.push(newSearch);
       }
     }
@@ -137,7 +138,7 @@ projectControllers.controller('advancedSearchCtrl', function ($scope, $http, $in
 
   $scope.deleteSearchNames = function(selected){
     for(var i =0; i <selected.length; i++){
-      if(selected[i].id) Risk.delete({"riskId": selected[i].id});
+      if(selected[i].id) PredefinedSearch.delete({"id": selected[i].id});
       $scope.availableSearchNames.pop(selected[i]);
     }
   };

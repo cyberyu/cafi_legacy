@@ -3,13 +3,13 @@ from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
-
-from models import Company, Risk, RiskItem, Relation
+from models import Company, Risk, RiskItem, Relation, PredefinedSearch
 from engagement.models import Project
 import csv
-from google.validAuthentication import ValidateSessionAuthentication
+from google.permissions import ValidateSessionAuthentication
 
-from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer, RelationSerializer
+from serializers import CompanySerializer, RiskSerializer, \
+    RiskItemSerializer, RelationSerializer, PredefinedSearchSerializer
 
 
 class RiskViewSet(viewsets.ModelViewSet):
@@ -17,6 +17,14 @@ class RiskViewSet(viewsets.ModelViewSet):
     serializer_class = RiskSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('name',)
+    authentication_classes = (ValidateSessionAuthentication,)
+
+
+class PredefinedSearchViewSet(viewsets.ModelViewSet):
+    queryset = PredefinedSearch.objects.all()
+    serializer_class = PredefinedSearchSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('name','is_global')
     authentication_classes = (ValidateSessionAuthentication,)
 
     

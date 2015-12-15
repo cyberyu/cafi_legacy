@@ -4,7 +4,8 @@
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
                                                            $http, $uibModal, Upload, popupService, $cookies,
-                                                           Project, Search, Gdoc,GeoSearch, Company, Risk, RiskItem){
+                                                           Project, Search, Gdoc,GeoSearch, Company, Risk,
+                                                           PredefinedSearch, RiskItem){
 
   $scope.user = $cookies.get('user');
   $scope.onlyMine = false;

@@ -1,6 +1,6 @@
 __author__ = 'tanmoy'
 from rest_framework.authentication import SessionAuthentication
-from django.contrib.auth import authenticate
+
 
 class ValidateSessionAuthentication(SessionAuthentication):
 

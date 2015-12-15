@@ -12,7 +12,7 @@ from tasks import do_search, do_geo_search, do_active_filter
 from engagement.models import Project
 from celery import chain
 from rest_framework.response import Response
-from google.validAuthentication import ValidateSessionAuthentication
+from google.permissions import ValidateSessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.views import APIView
