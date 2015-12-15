@@ -7,7 +7,7 @@ from rest_framework import filters
 from models import Company, Risk, RiskItem, Relation
 from engagement.models import Project
 import csv
-from google.validAuthentication import ValidateSessionAuthentication
+from google.permissions import ValidateSessionAuthentication
 
 from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer, RelationSerializer
 
