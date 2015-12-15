@@ -4,6 +4,7 @@ from models import Project
 from serializers import ProjectSerializer
 from google.permissions import ValidateSessionAuthentication
 
+
 def home(request):
 	return render_to_response('home.html')
 

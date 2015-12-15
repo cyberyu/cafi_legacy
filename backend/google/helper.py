@@ -53,11 +53,12 @@ def download(url):
         text = extract_from_file(r.content)
         raw_html = None
         tmp = url.split('.')
+        #TODO: find more appropriate way to determine doc type
         if len(tmp) >= 2 and len(tmp[-1])<20: #Checks models.py limit set to 20 for doc_type
             doc_type = tmp[-1]
         else:
             logger.debug(tmp)
-            doc_type = "txt" #Issue resolved, set it to txt, cannot be None
+            doc_type = ''
 
     data = {'path': path, 'doc_type': doc_type, 'text': text, 'raw_html': raw_html}
 
