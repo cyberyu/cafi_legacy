@@ -48,15 +48,17 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
       //console.log($scope.displaySearchDocs);
-      console.log("hello");
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
     });
   };
 
-  $scope.sortOptionChanged = function(search){
-    //console.log($scope.sortOption);
-    //console.log(search);
+  $scope.sortBy = function(method){
+    if(method=='relevance'){
+      $scope.sortOption = $scope.sortOption && $scope.sortOption[0] != '-' ? '-predicted_score': 'predicted_score'
+    } else {
+      $scope.sortOption = 'rank';
+    }
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
@@ -213,6 +215,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
             $scope.relevance = data.relevance;
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
           });
+    gdoc.relevance = relevance;
     /*x = (Gdoc.get({"gdocId": gdoc.id}).$promise.then(function(data){
             $scope.relevance = data.relevance;
             console.log($scope.relevance);
@@ -285,7 +288,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.listSearches(1);
   //$scope.getReviewLater(1);
   //$scope.getGdocs($scope.displaySearch, 1);
-
 });
 
 

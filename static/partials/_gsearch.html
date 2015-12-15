@@ -29,10 +29,12 @@
 <div class="row content-container">
   <div class="col-md-3" >
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Existing Searches
-        <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
-        <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
+      <div class="panel-heading col-md-12">
+        <div class="col-md-9"> Existing Searches</div>
+        <div class="col-md-3">
+          <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
+          <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
+        </div>
       </div>
       <div class="panel-body">
         <table class="table table-striped">
@@ -72,13 +74,21 @@
 
   <div class="col-md-9">
     <div class="panel panel-default">
-      <div class="panel-heading">
-      <table style="width:100%">
-      <tr>
-          <td>{{total}} search results: {{displaySearch.string}}</td>
-          <td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="sortOption" ng-init="sortOption='rank'" ng-options="option for option in filterOptions" ng-change="sortOptionChanged(displaySearch)">
-        </select></td>
-      </tr></table>
+      <div class="panel-heading col-md-12">
+        <div class="col-md-11">
+          {{total}} search results: {{displaySearch.string}}
+        </div>
+        <!--<td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="sortOption" ng-init="sortOption='rank'" ng-options="option for option in filterOptions" ng-change="sortOptionChanged(displaySearch)">-->
+        <!--</select></td>-->
+        <div class="btn-group col-md-1" uib-dropdown>
+          <button id="sort-button" type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+            sort by <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="sort-button">
+            <li role="menuitem"><a href ng-click='sortBy("rank")'>google rank</a></li>
+            <li role="menuitem"><a href ng-click='sortBy("relevance")'>relevance</a></li>
+          </ul>
+        </div>
       </div>
 
       <div class="panel-body">
@@ -90,7 +100,7 @@
               <th> <input st-search="hltitle" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
               <th> <input st-search="hlsnippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
               <th></th>
-              <th>User Review</th>
+              <!--<th>User Review</th>-->
               <th ng-show="_relevanceScore==1">Relevance</th>
               <th style="width: 30px;"></th>
             </tr>
@@ -100,15 +110,30 @@
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
-              <td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance| uppercase}}</span></td>
+              <!--<td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance| uppercase}}</span></td>-->
+              <td>
+                <div class="btn-group col-md-1" uib-dropdown>
+                  <span id="relevance-button" uib-tooltip="mark relevance"
+                          type="button"
+                          ng-class="{'label-danger': gdoc.relevance=='n', '': gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}"
+                          class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                    {{gdoc.relevance|uppercase}} <span class="caret"></span>
+                  </span>
+                  <ul class="uib-dropdown-menu" role="menu" aria-labelledby="relevance-button">
+                    <li role="menuitem"><a href ng-click="updateRelevance(gdoc,'y')">yes</a></li>
+                    <li role="menuitem"><a href ng-click="updateRelevance(gdoc,'m')">maybe</a></li>
+                    <li role="menuitem"><a href ng-click="updateRelevance(gdoc,'n')">no</a></li>
+                  </ul>
+                </div>
+              </td>
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
-              <td><nobr>
-                <input type="radio" name="{{ gdoc }}" ng-checked="gdoc.relevance=='y'" value="y" ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'y')" uib-tooltip="Relevant"> Y
-                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='m'" value="m"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'m')" uib-tooltip="Probably Relevant"> M
-                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='n'" value="n"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'n')" uib-tooltip="Not Relevant"> N
-              </nobr></td>
+              <!--<td><nobr>-->
+                <!--<input type="radio" name="{{ gdoc }}" ng-checked="gdoc.relevance=='y'" value="y" ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'y')" uib-tooltip="Relevant"> Y-->
+                <!--<input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='m'" value="m"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'m')" uib-tooltip="Probably Relevant"> M-->
+                <!--<input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='n'" value="n"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'n')" uib-tooltip="Not Relevant"> N-->
+              <!--</nobr></td>-->
               <td>
               <div ng-show="gdoc.predictedScore != null">
                   <div ng-if="gdoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
