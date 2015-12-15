@@ -1,5 +1,13 @@
 @import "../vendor/bootstrap/dist/css/bootstrap.css";
 
+.st-sort-ascent:before{
+    content: '\25B2';
+}
+
+.st-sort-descent:before{
+    content: '\25BC';
+}
+
 .sidebar-right {
     /*width:33.33%;*/
     /*float:right;*/
@@ -275,7 +283,7 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 }
 
 select {
-    margin-top: 10px;
+    margin-top: 1px;
 }
 
 /*.row {*/
@@ -393,9 +401,9 @@ word-wrap: break-word;
     /*display: table-cell;*/
 /*}*/
 
-/*.right-panel {*/
-    /*display: table-cell;*/
-/*}*/
+.right-panel {
+    display: table-cell;
+}
 
 .label-div {
     margin-bottom: 10px;
@@ -416,5 +424,17 @@ word-wrap: break-word;
 }
 
 .ner-words {
+    font-size: 11px;
+}
+
+.risk {
+    background-color: #00FF00;
+}
+
+.risk-clicked {
+    background-color: #00FF00;
+}
+
+.risk-words {
     font-size: 11px;
 }

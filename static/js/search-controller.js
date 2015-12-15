@@ -15,7 +15,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.riskitems = RiskItem.query();
   $scope.predefinedCompanies = Company.query();
   $scope.predefinedRisks = Risk.query();
-
+  $scope._relevanceScore=1;
   $scope.searchPager = {};
   $scope.searchPager.currentPage = 1;
   $scope.searchPager.total = null;
@@ -24,7 +24,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.gdocPager.currentPage = 1;
   $scope.gdocPager.total = null;
 
-
   $scope.currentSearch = null;
   $scope.search = {};
   $scope.gsearchOptions = {};
@@ -32,23 +31,32 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.searches = [];
 
   $scope.counter = 0;
-
+  $scope.filterOptions = ["rank", "predicted_score", "-predicted_score"];
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
   $scope.selectDataSource = function(src){
     $scope.currentSource = src;
   };
-
+  $scope.sortOption=null;
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
 
-  $scope.getGdocs = function(search, page) {
-    Gdoc.query({"search": search.id, "page": page}).$promise.then(function (data) {
+  $scope.getGdocs = function(search, page,option) {
+    console.log($scope.sortOption);
+    Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
+      //console.log($scope.displaySearchDocs);
+      console.log("hello");
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
     });
+  };
+
+  $scope.sortOptionChanged = function(search){
+    //console.log($scope.sortOption);
+    //console.log(search);
+    $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
   $scope.getReviewLater = function(page){
@@ -71,6 +79,17 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       .success(function(data) {
         $scope.searches.push(data);
       });
+  };
+
+  $scope.activeSearch = function(){
+    var actSearch = {
+      project: $scope.currentProject.id
+    };
+    $http.post('/api/Relevancefilter', actSearch)
+      .success(function(data) {
+        console.log(data);
+      });
+    console.log(actSearch);
   };
 
   $scope.moreSearch = function(n){
@@ -185,6 +204,18 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     Gdoc.delete({"gdocId": gdoc.id}).$promise.then(function(){
       $scope.displaySearchDocs.splice($scope.displaySearchDocs.indexOf(gdoc), 1);
     });
+  };
+
+  $scope.updateRelevance = function (gdoc, relevance) {
+    //console.log(gdoc);
+    Gdoc.update({'id': gdoc.id, 'relevance': relevance}).$promise.then(function(data){
+            $scope.relevance = data.relevance;
+            console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
+          });
+    /*x = (Gdoc.get({"gdocId": gdoc.id}).$promise.then(function(data){
+            $scope.relevance = data.relevance;
+            console.log($scope.relevance);
+          }));*/
   };
 
   // modal stuff

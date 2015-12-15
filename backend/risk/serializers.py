@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.contenttypes.models import ContentType
 
-from models import Risk, Company
+from models import Risk, Company, Relation
 from models import RiskItem
 from google.models import SearchResult
 from google.serializers import SearchResultSerializer
@@ -73,3 +73,8 @@ class RiskItemSerializer(serializers.ModelSerializer):
             'id': obj.id,
             'to_company': to_company,
         }
+
+
+class RelationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Relation

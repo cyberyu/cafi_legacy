@@ -1,7 +1,7 @@
 projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi,
                                                            $routeParams, $http,$timeout, $uibModal,
                                                            $interval, Upload, popupService, Project,
-                                                           Search, Gdoc,GeoSearch){
+                                                           Search, Gdoc,GeoSearch,$window){
 
   $scope.project_id = $routeParams.id;
   $scope.currentProject = {};
@@ -15,7 +15,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     $scope.errFile = errFiles && errFiles[0];
     if (file) {
       file.upload = Upload.upload({
-        url: '/api/upload',
+        url: '/api/Upload',
         data: {file: file}
       });
 
@@ -88,6 +88,20 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     if(address.id) {
       $http.delete('/api/geosearch/' + address.id);
     }
+  };
+  $scope.deleteAllGeoSearch = function(){
+    var deleteAll = $window.confirm('This would delete all Geo.');
+    if (deleteAll) {
+      for (var i = 0; i < $scope.addresses.length; i++) {
+        console.log($scope.addresses[i].name);
+        if ($scope.addresses[i].id) {
+          $http.delete('/api/geosearch/' + $scope.addresses[i].id);
+        }
+      }
+      $scope.addAddressBool = false;
+      $scope.geoRefresh();
+    }
+
   };
 
   $scope.getAddressClass = function(address){

@@ -1,11 +1,9 @@
-
-<ol class="breadcrumb">
-  <li><a href="/#/projects">Projects</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
+<ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
 </ol>
-
-
+<!--div ng-dropdown-multiselect="" search-filter="customFilter" options="example15data" selected-model="example15model" extra-settings="example15settings"></div-->
 
 <div id="gsearch-box" class="text-center">
   <form class="form-inline">
@@ -23,6 +21,7 @@
       <input id="gsearch-input" type="text" class="form-control" ng-model="search.string" placeholder="Search something"/>
       <button class="btn btn-primary" ng-click="submitSearch()">search</button>
       <button type="button" class="btn btn-default" ng-click="openGenSearch('gensearch')">Advanced search</button>
+      <button type="button" class="btn btn-success" ng-click="activeSearch() "><span class="glyphicon glyphicon-filter"></span> Relevance Filter </button>
     </div>
   </form>
 </div>
@@ -53,7 +52,7 @@
           <tr ng-class="{warning: displaySearch.id == search.id}" ng-repeat="search in searches | filter:searchQuery">
             <td>
               <a ng-click="setDisplaySearch(search)" class="list-link">
-                <span class="list-link-label small">{{search.string}}</span>
+                <span class="list-link-label small" uib-tooltip="{{search.createdAt| date:'dd-MMMM-yyyy HH:mm Z' }}"><span class="label label-default"> {{ search.username }}</span>  {{search.string}}</span>
               </a>
             </td>
             <td>
@@ -74,28 +73,52 @@
   <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-heading">
-        {{total}} search results: {{displaySearch.string}}
+      <table style="width:100%">
+      <tr>
+          <td>{{total}} search results: {{displaySearch.string}}</td>
+          <td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="sortOption" ng-init="sortOption='rank'" ng-options="option for option in filterOptions" ng-change="sortOptionChanged(displaySearch)">
+        </select></td>
+      </tr></table>
       </div>
+
       <div class="panel-body">
           <table st-table="displayedGdocs" st-safe-src="displaySearchDocs" class="table table-striped">
             <thead>
             <tr>
               <!--<th style="width: 30px;"></th>-->
-              <th> <input st-search="title" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
-              <th> <input st-search="snippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
-              <th> </th>
+              <th></th>
+              <th> <input st-search="hltitle" placeholder="filter by title" class="input-sm form-control" type="search"/> </th>
+              <th> <input st-search="hlsnippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/> </th>
+              <th></th>
+              <th>User Review</th>
+              <th ng-show="_relevanceScore==1">Relevance</th>
               <th style="width: 30px;"></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank">
+            <tr ng-repeat-start="gdoc in displayedGdocs | orderBy:rank" >
               <!--<td>-->
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
+              <td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance| uppercase}}</span></td>
               <td><a href="" ng-click="openGdoc('gdoc', gdoc)" ng-bind-html="gdoc.hltitle"> </a></td>
               <td ng-bind-html="gdoc.hlsnippet"></td>
               <td><a href="{{gdoc.url}}" target="_blank">link</a></td>
+              <td><nobr>
+                <input type="radio" name="{{ gdoc }}" ng-checked="gdoc.relevance=='y'" value="y" ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'y')" uib-tooltip="Relevant"> Y
+                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='m'" value="m"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'m')" uib-tooltip="Probably Relevant"> M
+                <input type="radio" name="{{ gdoc }}"  ng-checked="gdoc.relevance=='n'" value="n"  ng-model="gdoc.relevance" ng-click="updateRelevance(gdoc,'n')" uib-tooltip="Not Relevant"> N
+              </nobr></td>
+              <td>
+              <div ng-show="gdoc.predictedScore != null">
+                  <div ng-if="gdoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
+                  <div ng-if="gdoc.predictedScore>1"><h4><span class="label label-success">{{1}}</span></h4></div>
+                  <div ng-if="gdoc.predictedScore>=0 && gdoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': gdoc.predictedScore<0.1, 'label-danger': gdoc.predictedScore>=0.10 && gdoc.predictedScore<0.3, 'label-warning': gdoc.predictedScore>=0.3 && gdoc.predictedScore<0.5, 'label-info': gdoc.predictedScore>=0.5 && gdoc.predictedScore<0.6,'label-primary': gdoc.predictedScore>=0.6 && gdoc.predictedScore<0.8, 'label-success': gdoc.predictedScore>=0.8}" ng-show="gdoc.predictedScore">{{gdoc.predictedScore| number:3}}</span></h4></div>
+
+              </div>
+              </td>
               <td><a class="btn btn-default btn-circle" ng-click="deleteGdoc(gdoc)" uib-tooltip="Delete article"><i class="fa fa-close"></i></a></td>
+
             </tr>
             <tr ng-if="gdoc.expanded" ng-repeat-end="">
               <!--<td colspan="5">{{gdoc.text}}</p></td>-->

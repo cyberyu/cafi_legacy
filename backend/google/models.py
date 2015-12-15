@@ -52,7 +52,7 @@ class SearchResult(models.Model):
     raw_html = models.TextField(blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     doc_type = models.CharField(blank=True, max_length=20)
-    raw_file = models.FileField(blank=True, null=True)
+    raw_file = models.FileField(blank=True, null=True, max_length=255)
 
     nerwords = JSONField(blank=True)
 
@@ -62,7 +62,7 @@ class SearchResult(models.Model):
     relevance = models.CharField(blank=True, max_length=1, default='')
     review_later = models.BooleanField(blank=True, default=False)
 
-    predicted_relevance = models.CharField(blank=True, max_length=1, default='')
+    predicted_relevance = models.CharField(blank=True, max_length=1, null=True)
     predicted_score = models.FloatField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

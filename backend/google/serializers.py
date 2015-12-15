@@ -6,14 +6,16 @@ from google.ner.cafi_netagger import CAFI_NETagger
 
 
 class SearchSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.pk')
+    user = serializers.ReadOnlyField(source='user.id')
+    username = serializers.ReadOnlyField(source = 'user.username')
     class Meta:
         model = Search
 
 
 class RiskObjectRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        return {"risk": value.risk.name,
+        return {"id": value.risk.id,
+                "risk": value.risk.name,
                 "from": value.from_company.name}
 
 
@@ -23,7 +25,7 @@ class SimpleSearchResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SearchResult
-        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search')
+        fields = ('id', 'hltitle', 'hlsnippet', 'url', 'search','relevance', 'predicted_relevance', 'predicted_score')
 
     def get_hltitle(self, obj):
         highlighter = Highlighter()

@@ -146,8 +146,12 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 20
 }
 
+#python manage.py celery beat : Starting celerybeat is similar to starting a worker. Start another window, set up your Django environment
+
 CACHE = redis.Redis(host='localhost', port=6379)
 TIKA_SERVER = 'http://localhost:9998'
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler' #storing the schedules in a Django database table
 
 CELERY_ROUTES = {
     'google.tasks.do_search': {
@@ -158,6 +162,9 @@ CELERY_ROUTES = {
     },
     'google.tasks.do_geo_search': {
         'queue': 'geo_q'
+    },
+    'google.tasks.do_active_filter':{
+        'queue': 'act_q'
     }
 }
 

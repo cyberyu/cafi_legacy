@@ -5,14 +5,12 @@ import random
 import time
 import json
 from django.conf import settings
-from django.core.cache import cache
-cache.clear()
 import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-
-
+from google.relevance import classifierAPI
+import psycopg2
 import logging
 logger = logging.getLogger("CAFI")
 
@@ -70,6 +68,7 @@ def do_search(search, num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
+                    logger.debug(obj.url)
                     logger.debug(obj)
                     obj.save()
                     do_download.delay(obj.id, obj.url)
@@ -96,13 +95,19 @@ def do_search(search, num_requests):
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
-    data = download(url)
+    try:
+        data = download(url)
+    except Exception, err:
+        logger.debug(traceback.format_exc())
+        logger.debug("Connection Error :Search id " + str(id))
+        data = {'path': None, 'doc_type': 'txt', 'text': "Connection Error!", 'raw_html': None}
     obj = SearchResult.objects.get(pk=id)
     obj.raw_file.name = data.get('path')
     obj.doc_type = data.get('doc_type')
     obj.text = data.get('text')
+    obj.save()
     obj.raw_html = data.get('raw_html')
-    obj.get_nerwords(obj.text)
+    obj.get_nerwords()
     obj.save()
 
 
@@ -125,6 +130,55 @@ def do_geo_search(id, address):
     except Exception, exc:
         raise do_geo_search.retry(exc=exc)
 
+
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_active_filter():
+    print "Start Relevance Filter"
+
+    # data base connection
+    #CONN_STRING = "host='localhost' dbname='cafi' user='cafi' password='awesome'" #Add this line to local.py
+    conn = psycopg2.connect(settings.CONN_STRING)
+
+    # text string to read data
+    tf=["text", "title", "snippet"]
+
+    # initial class
+    myClf = classifierAPI.Classifier(Tfidf=True, Nwords=5000, classifierMethod='LR')
+
+    # read data from data base
+    myClf.readDB(conn, tf)
+
+
+    # build feature
+    features = myClf.buildFeature()
+
+    # show feature ranked by TF
+    topWords = myClf.showFeatures()
+
+    print topWords
+
+    # prepare train&test data for model training
+    myClf.prepareData()
+
+
+    # train a model
+    myClf.train()
+
+
+    # prediction on the test data, calculate relevance score
+    predictOut = myClf.predict()
+
+    # make recomendation for labeling
+    recom = myClf.recommend(predictOut, Nrecommendations=5)
+
+    print recom
+
+    # update database to store the predicted label and relevance score
+    myClf.updateDB(conn)
+
+
+
+    print "Finished Relevance Filter"
 
 if __name__ == '__main__':
     import os, sys

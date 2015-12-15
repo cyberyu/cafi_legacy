@@ -43,3 +43,11 @@ class RiskItem(models.Model):
     def __unicode__(self):
         return "%s : %s : %s" % (self.risk.name, self.from_company.name, self.project.client)
 
+
+class Relation(models.Model):
+    evidence = models.ForeignKey('google.SearchResult')
+    buyer = models.ForeignKey(Company, related_name='buyer_company')
+    supplier = models.ForeignKey(Company, related_name='supplier_company')
+    item_list = models.TextField(blank=True)
+
+

@@ -4,16 +4,20 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 
-from models import Company, Risk, RiskItem
+from models import Company, Risk, RiskItem, Relation
 from engagement.models import Project
 import csv
+from google.validAuthentication import ValidateSessionAuthentication
 
-from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer
+from serializers import CompanySerializer, RiskSerializer, RiskItemSerializer, RelationSerializer
 
 
 class RiskViewSet(viewsets.ModelViewSet):
     queryset = Risk.objects.all()
     serializer_class = RiskSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('name',)
+    authentication_classes = (ValidateSessionAuthentication,)
 
     
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -21,6 +25,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
     serializer_class = CompanySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('project',)
+    authentication_classes = (ValidateSessionAuthentication,)
 
     def get_queryset(self):
         project_id = self.request.query_params.get('project', None)
@@ -50,7 +55,13 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class RiskItemViewSet(viewsets.ModelViewSet):
     queryset = RiskItem.objects.all()
     serializer_class = RiskItemSerializer
+    authentication_classes = (ValidateSessionAuthentication,)
+
+
+class RelationViewSet(viewsets.ModelViewSet):
+    queryset = Relation.objects.all()
+    serializer_class = RelationSerializer
+    authentication_classes = (ValidateSessionAuthentication,)

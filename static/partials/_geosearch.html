@@ -4,9 +4,9 @@
 
 
 <ol class="breadcrumb">
-  <li><a href="/#/projects">Projects</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/geo">GeoSearch</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/google">Google Search</a></li>
+  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
 </ol>
 
 <div ng-controller="mapCtrl">
@@ -106,10 +106,11 @@
         <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
           Seems like you haven't uploaded a valid csv file yet.
         </div>
-        <div class="col-sm-3 pull-right">
+        <div class="col-sm-4 pull-right">
           <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
           <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
           <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
+          <a class="btn btn-sm btn-danger" ng-click="deleteAllGeoSearch()">Delete All</a>
         </div>
       </a>
     </div>

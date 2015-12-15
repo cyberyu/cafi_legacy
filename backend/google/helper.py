@@ -5,11 +5,9 @@ from urllib2 import urlparse
 import os
 import uuid
 from dragnet import content_comments_extractor
-import sys
-import re
-reload(sys)
-sys.setdefaultencoding('utf8')
 
+import logging
+logger = logging.getLogger("CAFI")
 
 txt_fmts = ('text/html', 'text/plain', 'application/xhtml+xml', 'application/xml')
 
@@ -22,11 +20,6 @@ def save_file(content, url):
     filename = "%s-%s" %(str(uuid.uuid4())[:8], filename)
     file_path = os.path.join(settings.DOWNLOAD_DIR, filename)
     with open(file_path, 'wb') as f:
-        try:
-            content = content.decode(encoding='unicode-escape',errors='ignore')
-        except UnicodeDecodeError:
-            content = content.encode('utf-8')
-
         f.write(content)
 
     return file_path
@@ -45,8 +38,10 @@ def download(url):
     s = requests.session()
     agent = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1'
     s.headers.update({'User-agent': agent})
+    # `mount` a custom adapter that retries failed connections for HTTP and HTTPS requests.
+    s.mount("http://", requests.adapters.HTTPAdapter(max_retries=3))
+    s.mount("https://", requests.adapters.HTTPAdapter(max_retries=3))
     r = s.get(url)
-    #print url
 
     if r.headers.get('content-type', '').split(';')[0].strip() in txt_fmts:
         path = None
@@ -58,16 +53,11 @@ def download(url):
         text = extract_from_file(r.content)
         raw_html = None
         tmp = url.split('.')
-        if len(tmp) >= 2:
+        if len(tmp) >= 2 and len(tmp[-1])<20: #Checks models.py limit set to 20 for doc_type
             doc_type = tmp[-1]
         else:
-            doc_type = None
-    try:
-        text = text.decode(encoding='unicode-escape',errors='ignore')
-        raw_html = raw_html.decode(encoding='unicode-escape',errors='ignore')
-    except UnicodeDecodeError:
-        text = text.encode('utf-8')
-        raw_html = raw_html.encode('utf-8')
+            logger.debug(tmp)
+            doc_type = "txt" #Issue resolved, set it to txt, cannot be None
 
     data = {'path': path, 'doc_type': doc_type, 'text': text, 'raw_html': raw_html}
 
@@ -83,6 +73,6 @@ if __name__ == '__main__':
     # url = 'http://www.vtk.org/wp-content/uploads/2015/04/file-formats.pdf'
     # url = 'http://hdwallpaperspretty.com/wp-content/gallery/beauty-nature-images/24701-nature-natural-beauty.jpg'
     #url = 'http://docs.python-requests.org/en/latest/'
-    url = 'http://download.microsoft.com/download/3/8/4/384483BA-B7B3-4F2F-9366-E83E4C7562D6/Cyber%20Supply%20Chain%20Risk%20Management%20white%20paper.pdf'
+    url = 'http://stackoverflow.com/questions/13137817/how-to-download-image-using-requests'
 
     print download(url)
