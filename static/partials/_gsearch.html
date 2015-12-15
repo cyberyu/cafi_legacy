@@ -29,10 +29,12 @@
 <div class="row content-container">
   <div class="col-md-3" >
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Existing Searches
-        <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
-        <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
+      <div class="panel-heading col-md-12">
+        <div class="col-md-9"> Existing Searches</div>
+        <div class="col-md-3">
+          <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
+          <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
+        </div>
       </div>
       <div class="panel-body">
         <table class="table table-striped">
@@ -72,13 +74,21 @@
 
   <div class="col-md-9">
     <div class="panel panel-default">
-      <div class="panel-heading">
-      <table style="width:100%">
-      <tr>
-          <td>{{total}} search results: {{displaySearch.string}}</td>
-          <td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="sortOption" ng-init="sortOption='rank'" ng-options="option for option in filterOptions" ng-change="sortOptionChanged(displaySearch)">
-        </select></td>
-      </tr></table>
+      <div class="panel-heading col-md-12">
+        <div class="col-md-11">
+          {{total}} search results: {{displaySearch.string}}
+        </div>
+        <!--<td align="right"><select style="width: 200px;" class="form-control" id="a" ng-model="sortOption" ng-init="sortOption='rank'" ng-options="option for option in filterOptions" ng-change="sortOptionChanged(displaySearch)">-->
+        <!--</select></td>-->
+        <div class="btn-group col-md-1" uib-dropdown>
+          <button id="sort-button" type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+            sort by <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="sort-button">
+            <li role="menuitem"><a href ng-click='sortBy("rank")'>google rank</a></li>
+            <li role="menuitem"><a href ng-click='sortBy("relevance")'>relevance</a></li>
+          </ul>
+        </div>
       </div>
 
       <div class="panel-body">
