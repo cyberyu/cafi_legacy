@@ -44,7 +44,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.getGdocs = function(search, page,option) {
-    console.log($scope.sortOption);
     Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
       //console.log($scope.displaySearchDocs);
@@ -54,8 +53,9 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.sortBy = function(method){
+    console.log($scope.sortOption);
     if(method=='relevance'){
-      $scope.sortOption = $scope.sortOption && $scope.sortOption[0] != '-' ? '-predicted_score': 'predicted_score'
+      $scope.sortOption = $scope.sortOption && $scope.sortOption[10] != '-' ? 'relevance,-predicted_score': 'relevance,predicted_score'
     } else {
       $scope.sortOption = 'rank';
     }
