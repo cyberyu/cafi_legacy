@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.contenttypes.models import ContentType
 
-from models import Risk, Company, Relation
+from models import Risk, Company, Relation, PredefinedSearch
 from models import RiskItem
 from google.models import SearchResult
 from google.serializers import SearchResultSerializer
@@ -18,6 +18,11 @@ class JSONSerializerField(serializers.Field):
 class RiskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Risk
+
+
+class PredefinedSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PredefinedSearch
 
 
 class CompanySerializer(serializers.ModelSerializer):
