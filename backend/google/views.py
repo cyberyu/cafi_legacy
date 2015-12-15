@@ -68,7 +68,7 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     authentication_classes = (ValidateSessionAuthentication,)
 
     def get_queryset(self):
-        queryset = SearchResult.objects.all()
+        queryset = SearchResult.objects.all() #.exclude(relevance='n')
         project = self.request.query_params.get('project', None)
         if project is not None:
             queryset = queryset.filter(search__project=project)
