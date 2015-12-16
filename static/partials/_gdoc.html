@@ -46,7 +46,7 @@
       <span class="label label-danger">Risk Keywords</span><br>
         <span class="risk-words" ng-repeat="p in currentDoc.risks" ng-class="wcls"
               ng-mouseover="wcls= wcls=='risk-clicked'? 'risk-clicked':'risk'" ng-mouseleave="wcls= wcls=='risk-clicked'? 'risk-clicked':''"
-              ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk}}; </span>
+              ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk.name}}; </span>
     </div>
   </div>
 
