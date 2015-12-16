@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'google',
     'risk',
     'core',
+    'feedback',
     # 'tag_store'  # for future use with cr_complaint_analytics_core
 )
 
@@ -128,6 +129,7 @@ ES_INDEX = 'YOUR-ES-INDEX-HERE'
 ES_TYPE = 'YOUR-ES-TYPE-HERE'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend','rest_framework.filters.OrderingFilter','rest_framework.filters.SearchFilter',),
     'DEFAULT_PARSER_CLASSES': (
         # 'rest_framework.parsers.JSONParser',
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',

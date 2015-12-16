@@ -17,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.views import APIView
 import time
+from filters import GeoSearchFilter
 
 import logging
 logger = logging.getLogger("CAFI")
@@ -81,12 +82,17 @@ class SearchResultViewSet(viewsets.ModelViewSet):
         self.serializer_class = SimpleSearchResultSerializer
         return super(SearchResultViewSet, self).list(self, request, *args, **kwargs)
 
+
 class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter,)
     filter_fields = ('project', 'name', 'user')
+    search_fields = ('name', 'address',)
+    ordering_fields = ('name', 'address',)
+    filter_class = GeoSearchFilter
+
     authentication_classes = (ValidateSessionAuthentication,)
 
     def perform_create(self, serializer):

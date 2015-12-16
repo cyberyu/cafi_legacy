@@ -40,11 +40,12 @@
       <div class="col-lg-12">
         <div class="panel panel-default">
           <div class="panel-body">
-            <table class="table table-hover address-table">
+            <table st-table="addresses" class="table table-hover address-table">
               <thead>
+              <!--tr><th><input type="text" ng-model="searchAll" ng-change="findAll(searchAll)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Everthing"></th><th></th></tr-->
               <tr>
-                <th>Entity Name</th>
-                <th>Address</th>
+                <th><a ng-click="sortEntity('name')" >Entity Name</a><input type="text" ng-model="searchName" ng-change="findEntity(searchName)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Name"></th>
+                <th><a ng-click="sortAddress('address')" >Address</a><input type="text" ng-model="searchAddress" ng-change="findAddress(searchAddress)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Address"></th>
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Action</th>
