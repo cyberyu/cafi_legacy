@@ -18,6 +18,8 @@ class Risk(models.Model):
     name = models.CharField(max_length=100)
     search_string = models.TextField(blank=True)
     description = models.TextField(blank=True)
+    type = models.IntegerField(choices=((1, 'major risk'), (2, 'sub risk')), default=1)
+    parent = models.ForeignKey('self', blank=True, null=True, default=None, related_name='subrisks')
 
     def __unicode__(self):
         return self.name
@@ -38,13 +40,12 @@ class Company(models.Model):
 
 
 class RiskItem(models.Model):
-    #RiskItem(content_type=article, risk=r)
-
-    risk = models.ForeignKey(Risk)
+    risk = models.ForeignKey(Risk, related_name='risk_items')
+    # risk_type = models.IntegerField(choices=((1, 'primary'), (2, 'secondary'), (3,'tertiary')))
+    subrisk = models.ForeignKey(Risk, related_name='subrisk_items', blank=True, null=True)
     project = models.ForeignKey('engagement.Project')
     from_company = models.ForeignKey(Company, related_name='from_company')
     to_company = models.ForeignKey(Company, related_name='to_company', null=True)
-    # article = models.ForeignKey('google.SearchResult', related_name='article')
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()

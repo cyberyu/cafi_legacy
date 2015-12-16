@@ -1,4 +1,4 @@
-projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, Gdoc, Risk) {
+projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, $q, Gdoc, Risk) {
 
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
@@ -79,71 +79,61 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.displayMode = "list";
   };
 
-  //$scope.listRelations(); //have to creation a supply chain backend relation
-
-  function createTag(companyId) {
-    var oneLabel = {
-      project: $scope.currentProject.id,
-      object_id: $scope.currentDoc.id,
-      fromCompany: companyId,
-      toCompany: $scope.selectedToCompany,
-      risk:$scope.selectedRisk,
-      content_type: "searchresult"
-    };
-    $http.post('/api/risk_items', oneLabel)
-      .success(function(data) {
-        $scope.riskitems.push(data);
-        $scope.tags = [];
-        for (var i = 0; i < $scope.riskitems.length; i++) {
-          if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
-            $scope.tags.push( $scope.riskitems[i].risk + " Risk from " +  $scope.riskitems[i].fromCompany + " to " + $scope.riskitems[i].toCompany)
-          }
-        }
-      });
-  }
-
-  function createTag1(companyId) {
-    //$scope.tags = [];
-    $scope.tags.push( "Company Created: " + companyId);
-  }
-
-
   $scope.selectedBuyerCompany = null;
   $scope.selectedSupplierCompany = null;
-  $scope.majorRisk = null;
-  $scope.secondaryRisk = null;
-  $scope.tertiaryRisk = null;
-
+  $scope.newRisk = {};
 
   $scope.labelRiskSubmit = function () {
-    //WIP
-    console.log("Major,Secondary ..Risk API is to be created");
-  };
-
-  $scope.labelSubmit = function () {
-    for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
-      if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany) {
-        var selectedFromCompanyID = $scope.predefinedCompanies[i].id;
-        break;
-      }
-    }
-    var oneCompany = {
-      name:$scope.selectedFromCompany,
-      variations: [$scope.selectedFromCompany],
-      project:$scope.currentProject.id
-    };
+    var one, two;
 
     if($scope.noResults){
-      $http.post('/api/companies', oneCompany)
+      var oneCompany = {
+        name: $scope.newRisk.selectedFromCompany,
+        variations: [$scope.newRisk.selectedFromCompany],
+        project:$scope.currentProject.id
+      };
+
+      var one = $http.post('/api/companies', oneCompany)
         .success(function(postedCompany){
-          createTag(postedCompany.id);
+          $scope.newRisk.selectedFromCompany = postedCompany;
           $scope.predefinedCompanies.push(postedCompany);
-          console.log($scope.predefinedCompanies);
       });
-    } else {
-        createTag(selectedFromCompanyID)
     }
+
+    if($scope.noSubRiskResults){
+      var oneSubRisk = {
+        name: $scope.newRisk.subRisk,
+        type: 2,
+        parent: $scope.newRisk.majorRisk.id
+      };
+
+      var two = $http.post('/api/risks', oneSubRisk)
+        .success(function(data){
+          $scope.newRisk.subRisk = data;
+          $scope.subRisks.push(data);
+        });
+    }
+
+    $q.all([one, two]).then(function(){
+      var oneLabel = {
+        project: $scope.currentProject.id,
+        object_id: $scope.currentDoc.id,
+        fromCompany: $scope.newRisk.selectedFromCompany.id,
+        toCompany: $scope.selectedToCompany,
+        risk: $scope.newRisk.majorRisk.id,
+        subrisk: $scope.newRisk.subRisk.id,
+        risk_type: 1,
+        content_type: "searchresult"
+      };
+
+      $http.post('/api/risk_items', oneLabel)
+        .success(function(data) {
+          $scope.currentDoc.risks.push(data);
+          $scope.newRisk = {};
+        });
+    });
   };
+
   $scope.companySubmit = function () {
     for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
       if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany1) {

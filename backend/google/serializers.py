@@ -14,10 +14,19 @@ class SearchSerializer(serializers.ModelSerializer):
 
 class RiskObjectRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        return {"id": value.risk.id,
-                "risk": value.risk.name,
-                "from": value.from_company.name}
-
+        if value.subrisk:
+            return {"id": value.risk.id,
+                    "risk": {"id": value.risk.id, "name": value.risk.name},
+                    "subrisk": {"id": value.subrisk.id, "name": value.subrisk.name},
+                    "from": {"id": value.from_company.id, "name": value.from_company.name},
+                    # "to": {"id": value.to_company.id, "name": value.to_company.name}
+                    }
+        else:
+            return {"id": value.risk.id,
+                    "risk": {"id": value.risk.id, "name": value.risk.name},
+                    "from": {"id": value.from_company.id, "name": value.from_company.name},
+                    # "to": {"id": value.to_company.id, "name": value.to_company.name}
+                    }
 
 class SimpleSearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
