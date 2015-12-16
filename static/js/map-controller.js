@@ -23,8 +23,13 @@ projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, ui
   });
 
   $scope.locateOnMap = function(address){
-    //$scope.marker.coords.latitude = address.lat;
-    //$scope.marker.coords.longitude = address.lng;
+
+    marker = {
+          id: address.id,
+          coords: { "latitude": address.lat, "longitude": address.lng},
+          info: address.name + ': ' + address.address
+        };
+    $scope.markers.push(marker);
     $scope.markers.map(function(marker){
       marker.icon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
     });

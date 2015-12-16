@@ -100,6 +100,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
       }
       $scope.addAddressBool = false;
       $scope.geoRefresh();
+
     }
 
   };
