@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'google',
     'risk',
     'core',
-    'feedback',
     # 'tag_store'  # for future use with cr_complaint_analytics_core
 )
 
