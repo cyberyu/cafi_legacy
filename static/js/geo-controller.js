@@ -7,7 +7,40 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
 
-  console.log($scope.project_id)
+  console.log($scope.project_id);
+
+  $scope.findEntity = function(name){
+    option = {'page':$scope.currentPage,'name':name};
+    //console.log(option);
+    $scope.getAddresses(option);
+
+  };
+
+  $scope.findAddress = function(address){
+    option = {'page':$scope.currentPage,'address':address};
+    //console.log(option);
+    $scope.getAddresses(option);
+
+  };
+
+  $scope.findAll = function(search){
+    option = {'page':$scope.currentPage,'search':search};
+    //console.log(option);
+    $scope.getAddresses(option);
+
+  };
+
+  $scope.sortEntity = function(method) {
+    $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-name': 'name';
+    option = {'page':$scope.currentPage,'ordering':$scope.sortOption};
+    $scope.getAddresses(option);
+  };
+
+  $scope.sortAddress = function(method) {
+    $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-address': 'address';
+    option = {'page':$scope.currentPage,'ordering':$scope.sortOption};
+    $scope.getAddresses(option);
+  };
 
   $scope.uploadFiles = function(file, errFiles) {
     $scope.f = file;
