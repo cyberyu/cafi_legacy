@@ -10,35 +10,36 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
   console.log($scope.project_id);
 
   $scope.findEntity = function(name){
-    option = {'page':$scope.currentPage,'name':name};
+    $scope.filterName = name;
+    option = {'page':$scope.currentPage,'name':$scope.filterName,'address':$scope.filterAddress};
     //console.log(option);
     $scope.getAddresses(option);
 
   };
 
   $scope.findAddress = function(address){
-    option = {'page':$scope.currentPage,'address':address};
+    $scope.filterAddress = address;
+    option = {'page':$scope.currentPage,'address':scope.filterAddress,'name':$scope.filterName};
     //console.log(option);
     $scope.getAddresses(option);
 
   };
 
-  $scope.findAll = function(search){
+  /*$scope.findAll = function(search){
     option = {'page':$scope.currentPage,'search':search};
     //console.log(option);
     $scope.getAddresses(option);
-
-  };
+  };*/
 
   $scope.sortEntity = function(method) {
     $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-name': 'name';
-    option = {'page':$scope.currentPage,'ordering':$scope.sortOption};
+    option = {'page':$scope.currentPage,'ordering':$scope.sortOption,'name':$scope.filterName,'address':$scope.filterAddress};
     $scope.getAddresses(option);
   };
 
   $scope.sortAddress = function(method) {
     $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-address': 'address';
-    option = {'page':$scope.currentPage,'ordering':$scope.sortOption};
+    option = {'page':$scope.currentPage,'ordering':$scope.sortOption,'name':$scope.filterName,'address':$scope.filterAddress};
     $scope.getAddresses(option);
   };
 
