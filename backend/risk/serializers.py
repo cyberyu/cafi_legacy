@@ -69,15 +69,16 @@ class RiskItemSerializer(serializers.ModelSerializer):
         else:
             to_company = ''
 
-        return {
-            'project': obj.project.id,
-            'from_company': obj.from_company.name,
-            'risk': obj.risk.name,
-            'object_id': obj.object_id,
-            'content_type': obj.content_type.id,
-            'id': obj.id,
-            'to_company': to_company,
+        data = {
+            "id": obj.id,
+            "risk": {"id": obj.risk.id, "name":obj.risk.name},
+            "from": {"id": obj.from_company.id, "name":obj.from_company.name}
         }
+
+        if obj.subrisk:
+            data['subrisk'] = {"id": obj.subrisk.id, "name":obj.subrisk.name}
+
+        return data
 
 
 class RelationSerializer(serializers.ModelSerializer):

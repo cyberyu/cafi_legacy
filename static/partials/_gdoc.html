@@ -43,10 +43,10 @@
     </div>
     <hr>
     <div>
-        <span class="label label-danger">Risk Keywords</span><br>
+      <span class="label label-danger">Risk Keywords</span><br>
         <span class="risk-words" ng-repeat="p in currentDoc.risks" ng-class="wcls"
-        ng-mouseover="wcls= wcls=='risk-clicked'? 'risk-clicked':'risk'" ng-mouseleave="wcls= wcls=='risk-clicked'? 'risk-clicked':''"
-        ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk}}; </span>
+              ng-mouseover="wcls= wcls=='risk-clicked'? 'risk-clicked':'risk'" ng-mouseleave="wcls= wcls=='risk-clicked'? 'risk-clicked':''"
+              ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk.name}}; </span>
     </div>
   </div>
 
@@ -57,190 +57,183 @@
     <p><em><small>Collected at {{currentDoc.createdAt| date:'dd-MMMM-yyyy HH:mm Z' }}</small></em></p>
     <div highlight keywords="{{currentDoc.keywords}}" text="{{currentDoc.text}}" highlight-class="keywords"></div>
     <!--<p ng-repeat="p in currentDoc.text.split('\n') track by $index">-->
-      <!--<span ng-bind-html="p"> </span>-->
+    <!--<span ng-bind-html="p"> </span>-->
     <!--</p>-->
   </div>
 
   <div class="col-lg-3 right-panel" id="gdoc-label-box" >
-      <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
-        <span ng-if="!currentDoc.reviewLater">Save for later review</span>
-        <span ng-if="currentDoc.reviewLater">Remove from later review</span>
-      </button>
+    <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
+      <span ng-if="!currentDoc.reviewLater">Save for later review</span>
+      <span ng-if="currentDoc.reviewLater">Remove from later review</span>
+    </button>
     <table class="table table-striped">
-    <thead>
-    <tr>
+      <thead>
+      <tr>
         <th><label class="control-label">Relevant?</label></th>
         <th><label class="control-label" ng-show="currentDoc.predictedScore != null">Prediction</label></th>
-    </tr></thead>
-    <tbody>
-    <tr>
-    <td>
-    <div class="label-div" >
-        <input type="radio" name="yes" ng-checked="currentDoc.relevance=='y'" value="y" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> Y
-        <input type="radio" name="maybe" ng-checked="currentDoc.relevance=='m'" value="m" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> M
-        <input type="radio" name="no" ng-checked="currentDoc.relevance=='n'" value="n" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> N
-    </div>
-    </td>
-    <td>
-      <div ng-show="currentDoc.predictedScore != null">
-              <div ng-if="currentDoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
-              <div ng-if="currentDoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
-              <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">Relevance:{{currentDoc.predictedScore| number:3}}</span></h5></div>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td>
+          <div class="label-div" >
+            <input type="radio" name="yes" ng-checked="currentDoc.relevance=='y'" value="y" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> Y
+            <input type="radio" name="maybe" ng-checked="currentDoc.relevance=='m'" value="m" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> M
+            <input type="radio" name="no" ng-checked="currentDoc.relevance=='n'" value="n" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> N
+          </div>
+        </td>
+        <td>
+          <div ng-show="currentDoc.predictedScore != null">
+            <div ng-if="currentDoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
+            <div ng-if="currentDoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
+            <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">Relevance:{{currentDoc.predictedScore| number:3}}</span></h5></div>
 
-      </div>
-    </td>
-    </tr>
-    </tbody>
+          </div>
+        </td>
+      </tr>
+      </tbody>
     </table>
     <hr>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Supply Chain Relation</strong>
+      </div>
+      <div class="panel-body">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Supplier</th>
+            <th>Item</th>
+          </tr>
+          </thead>
+          <tr ng-repeat="relation in relations | filter:query | orderBy:orderProp">
+            <td>{{relation.buyer}}</td>
+            <td>{{relation.supplier}}</td>
+            <td>{{address.items}}</td>
+            <td><a class="btn btn-default btn-circle" ng-click="editOrCreateRelation(relation)" uib-tooltip="Edit Supply Chain Relation"><i class="fa fa-pencil"></i></a>
+              <a class="btn btn-default btn-circle" ng-click="deleteRelation(relation)" uib-tooltip="Delete Supply Chain Relation"><i class="fa fa-minus"></i></a></td>
+          </tr>
+        </table>
+        <a ng-click="editOrCreateRelation()" class="btn btn-default btn-circle" uib-tooltip="Add a Buyer-Supplier Relation"><i class="fa fa-plus"></i></a>
+      </div>
+    </div>
+    <div ng-show="displayMode == 'edit'">
       <div class="panel panel-default">
-            <div class="panel-heading">
-                <strong>Supply Chain Relation</strong>
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Buyer</th>
-                        <th>Supplier</th>
-                        <th>Item</th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="relation in relations | filter:query | orderBy:orderProp">
-                        <td>{{relation.buyer}}</td>
-                        <td>{{relation.supplier}}</td>
-                        <td>{{address.items}}</td>
-                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateRelation(relation)" uib-tooltip="Edit Supply Chain Relation"><i class="fa fa-pencil"></i></a>
-                            <a class="btn btn-default btn-circle" ng-click="deleteRelation(relation)" uib-tooltip="Delete Supply Chain Relation"><i class="fa fa-minus"></i></a></td>
-                    </tr>
-                </table>
-                <a ng-click="editOrCreateRelation()" class="btn btn-default btn-circle" uib-tooltip="Add a Buyer-Supplier Relation"><i class="fa fa-plus"></i></a>
-            </div>
-        </div>
-        <div ng-show="displayMode == 'edit'">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col-sm-12">
-                    <form class="form-horizontal" role="form" ng-submit="saveEdit(currentRelation)">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Buyer </label>
-                            <div class="col-sm-offset-1 col-sm-9">
-                                <select class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org">
-                                    <option value="">--</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="client" class="col-sm-2 control-label">Supplier </label>
-
-                            <div class="col-sm-offset-1 col-sm-9">
-                                <select class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org">
-                                <option value="">--</option>
-                            </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="client" class="col-sm-2 control-label">Item </label>
-
-                            <div class="col-sm-offset-1 col-sm-9">
-                                <input type="text" ng-model="currentProject.client" class="form-control" id="client" placeholder="Items/Components"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-offset-2 col-xs-10">
-                                <input type="submit" class="btn btn-primary" value="Save"/>
-                                <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
-                            </div>
-                        </div>
-                    </form>
+        <div class="panel-body">
+          <div class="col-sm-12">
+            <form class="form-horizontal" role="form" ng-submit="saveEdit(currentRelation)">
+              <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Buyer </label>
+                <div class="col-sm-offset-1 col-sm-9">
+                  <select class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org">
+                    <option value="">--</option>
+                  </select>
                 </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <hr>
-      <div class="panel panel-default">
-            <div class="panel-heading">
-                <strong>Risk Tagging</strong>
-            </div>
-            <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <label> Add Company: </label>
-                        <input type="text" ng-model="selectedFromCompany1" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-                                class="form-control" typeahead-no-results="noResults">
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th>Major Risk</th>
-                        <th>Sub Risk</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><span class="label label-success" uib-tooltip="Primary Risk">P</span></td>
-                        <td>
-                            <div>
-                            <select class="form-control" id="a" ng-model="majorRisk" ng-options="option for option in major_risk" >
-                              <option value="">--</option>
-                            </select>
-                            </div>
-                        </td>
-                        <td><input type="text" ng-model="subRisk1" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-                           class="form-control" typeahead-no-results="noResults"></td>
-                    </tr>
-                    <tr ng-show="majorRisk!=null">
-                        <td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>
-                        <td>
-                            <select  class="form-control" id="a" ng-model="secondaryRisk" ng-options="option for option in major_risk| filter:shouldShow" >
-                                <option value="">--</option>
-                            </select>
-                        </td>
-                        <td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-                           class="form-control" typeahead-no-results="noResults"></td>
-                    </tr>
-                    <tr ng-show="majorRisk!=null && secondaryRisk!=null">
-                        <td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>
-                        <td>
-                            <select class="form-control" id="a" ng-model="TertiaryRisk" ng-options="option for option in major_risk| filter:shouldShow1">
-                                <option value="">--</option>
-                            </select>
-                        </td>
-                        <td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"
-                           class="form-control" typeahead-no-results="noResults"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <a ng-click="labelRiskSubmit()" class="btn btn-default btn-circle" uib-tooltip="Submit Risk Tagging"><i class="fa fa-plus"></i></a>
-            </div>
-        </div>
-    <hr>
+              </div>
+              <div class="form-group">
+                <label for="client" class="col-sm-2 control-label">Supplier </label>
 
-    <form class="label-div">
-      <div class="form-group  form-group-sm">
-        <label class="control-label" for="a">Risk: </label>
-        <div>
-          <select class="form-control" id="a" ng-model="selectedRisk">
-            <option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>
-          </select>
+                <div class="col-sm-offset-1 col-sm-9">
+                  <select class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org">
+                    <option value="">--</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="client" class="col-sm-2 control-label">Item </label>
+
+                <div class="col-sm-offset-1 col-sm-9">
+                  <input type="text" ng-model="currentProject.client" class="form-control" id="client" placeholder="Items/Components"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-10">
+                  <input type="submit" class="btn btn-primary" value="Save"/>
+                  <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-      <div class="form-group form-group-sm">
-        <label>From: </label>
-        <input type="text" ng-model="selectedFromCompany" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults">
-        <!--<select  class="form-control " ng-model="selectedFromCompany">-->
-          <!--<option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>-->
-        <!--</select>-->
-      </div>
-      <a ng-click="labelSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>
-    </form>
-
-
-    <div class="tags clearfix" ng-repeat="tag in tags">
-      <div class="tag">{{tag}}</div>
     </div>
+    <hr>
+
+    <h5 style="color: red">Risk Tagging</h5>
+    <div ng-repeat="risk in currentDoc.risks">
+      <li>
+        <span class="risk_from">{{risk.from.name}}</span>
+        <span class="risk_major"> / {{risk.risk.name}}</span>
+        <span ng-if="risk.subrisk" class="risk_sub"> / {{risk.subrisk.name}}</span>
+      </li>
+    </div>
+
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                     class="form-control" typeahead-no-results="noResults" placeholder="From Company">
+            </tr>
+            <tr>
+              <select class="form-control" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
+                <option value="">Select Major Risk</option>
+              </select>
+            </tr>
+            <tr>
+              <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
+                         class="form-control" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
+            </tr>
+            <tr>
+              <a href ng-click="labelRiskSubmit()" class="pull-right"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+            </tr>
+          </tbody>
+        </table>
+            <!--<tr ng-show="majorRisk!=null">-->
+              <!--<td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>-->
+              <!--<td>-->
+                <!--<select  class="form-control" ng-model="secondaryRisk" ng-options="option for option in major_risk| filter:shouldShow" >-->
+                  <!--<option value="">&#45;&#45;</option>-->
+                <!--</select>-->
+              <!--</td>-->
+              <!--<td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"-->
+                         <!--class="form-control" typeahead-no-results="noResults"></td>-->
+            <!--</tr>-->
+            <!--<tr ng-show="majorRisk!=null && secondaryRisk!=null">-->
+              <!--<td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>-->
+              <!--<td>-->
+                <!--<select class="form-control" ng-model="TertiaryRisk" ng-options="option for option in major_risk| filter:shouldShow1">-->
+                  <!--<option value="">&#45;&#45;</option>-->
+                <!--</select>-->
+              <!--</td>-->
+              <!--<td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"-->
+                         <!--class="form-control" typeahead-no-results="noResults"></td>-->
+            <!--</tr>-->
+    <hr>
+
+    <!--<form class="label-div">-->
+      <!--<div class="form-group  form-group-sm">-->
+        <!--<label class="control-label" for="a">Risk: </label>-->
+        <!--<div>-->
+          <!--<select class="form-control" id="a" ng-model="selectedRisk">-->
+            <!--<option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>-->
+          <!--</select>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="form-group form-group-sm">-->
+        <!--<label>From: </label>-->
+        <!--<input type="text" ng-model="selectedFromCompany" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"-->
+               <!--class="form-control" typeahead-no-results="noResults">-->
+        <!--&lt;!&ndash;<select  class="form-control " ng-model="selectedFromCompany">&ndash;&gt;-->
+        <!--&lt;!&ndash;<option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>&ndash;&gt;-->
+        <!--&lt;!&ndash;</select>&ndash;&gt;-->
+      <!--</div>-->
+      <!--<a ng-click="labelSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>-->
+    <!--</form>-->
+
+
+    <!--<div class="tags clearfix" ng-repeat="tag in tags">-->
+      <!--<div class="tag">{{tag}}</div>-->
+    <!--</div>-->
   </div>
 </div>
 
@@ -248,13 +241,13 @@
   <!--<button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>-->
   <button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
 </div>
-  <!--<ul>-->
-    <!--<li ng-repeat="item in items">-->
-      <!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
-    <!--</li>-->
-  <!--</ul>-->
-  <!--Selected: <b>{{ selected.item }}</b>-->
+<!--<ul>-->
+<!--<li ng-repeat="item in items">-->
+<!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--Selected: <b>{{ selected.item }}</b>-->
 <!--<div class="modal-footer">-->
-  <!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
-  <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
+<!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
+<!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
 <!--</div>-->
