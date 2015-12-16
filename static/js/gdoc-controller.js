@@ -87,18 +87,18 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       object_id: $scope.currentDoc.id,
       fromCompany: companyId,
       toCompany: $scope.selectedToCompany,
-      risk:$scope.selectedRisk,
+      risk: $scope.majorRisk,
+      subrisk: $scope.subRiskID,
+      risk_type: 1,
       content_type: "searchresult"
     };
+
     $http.post('/api/risk_items', oneLabel)
       .success(function(data) {
-        $scope.riskitems.push(data);
-        $scope.tags = [];
-        for (var i = 0; i < $scope.riskitems.length; i++) {
-          if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
-            $scope.tags.push( $scope.riskitems[i].risk + " Risk from " +  $scope.riskitems[i].fromCompany + " to " + $scope.riskitems[i].toCompany)
-          }
-        }
+        $scope.currentDoc.risks.push(data);
+        $scope.selectedFromCompany = null;
+        $scope.majorRisk = null;
+        $scope.subRisk = null;
       });
   }
 
@@ -107,23 +107,17 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.tags.push( "Company Created: " + companyId);
   }
 
-
   $scope.selectedBuyerCompany = null;
   $scope.selectedSupplierCompany = null;
   $scope.majorRisk = null;
   $scope.secondaryRisk = null;
   $scope.tertiaryRisk = null;
 
-
   $scope.labelRiskSubmit = function () {
-    //WIP
-    console.log("Major,Secondary ..Risk API is to be created");
-  };
-
-  $scope.labelSubmit = function () {
+    var selectedFromCompanyID;
     for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
       if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany) {
-        var selectedFromCompanyID = $scope.predefinedCompanies[i].id;
+        selectedFromCompanyID = $scope.predefinedCompanies[i].id;
         break;
       }
     }
@@ -132,18 +126,34 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       variations: [$scope.selectedFromCompany],
       project:$scope.currentProject.id
     };
+    console.log($scope.selectedFromCompany);
+    console.log($scope.predefinedCompanies);
+    console.log(oneCompany);
 
     if($scope.noResults){
       $http.post('/api/companies', oneCompany)
         .success(function(postedCompany){
-          createTag(postedCompany.id);
+          selectedFromCompanyID = postedCompany.id;
           $scope.predefinedCompanies.push(postedCompany);
-          console.log($scope.predefinedCompanies);
       });
-    } else {
-        createTag(selectedFromCompanyID)
     }
+
+    var oneSubRisk = {
+      name: $scope.subRisk,
+      type: 2,
+      parent: $scope.majorRisk
+    };
+    if($scope.noSubRiskResults){
+      $http.post('/api/risks', oneSubRisk)
+        .success(function(data){
+          $scope.subRiskId = data.id;
+          $scope.subRisks.push(data);
+        });
+    }
+
+    createTag(selectedFromCompanyID)
   };
+
   $scope.companySubmit = function () {
     for (var i = 0; i < $scope.predefinedCompanies.length; i++) {
       if ($scope.predefinedCompanies[i].name == $scope.selectedFromCompany1) {

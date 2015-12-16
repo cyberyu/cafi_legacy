@@ -288,6 +288,8 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.listSearches(1);
   //$scope.getReviewLater(1);
   //$scope.getGdocs($scope.displaySearch, 1);
+  $scope.majorRisks = Risk.query({'type':1});
+  $scope.subRisks = Risk.query({'type':2});
 });
 
 

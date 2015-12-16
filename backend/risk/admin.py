@@ -14,3 +14,4 @@ class PredefinedSearchAdmin(admin.ModelAdmin):
 admin.site.register(Risk, RiskAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(PredefinedSearch, PredefinedSearchAdmin)
+admin.site.register(RiskItem)
