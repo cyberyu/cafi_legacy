@@ -161,24 +161,26 @@
 
     <h5 style="color: red">Risk Tagging</h5>
     <div ng-repeat="risk in currentDoc.risks">
-      <span class="risk_from">{{risk.from.name}}</span><br>
-      <span class="risk_major">{{risk.risk.name}}</span><span ng-if="risk.subrisk" class="risk_sub">/{{risk.subrisk.name}}</span>
+      <li>
+        <span class="risk_from">{{risk.from.name}}</span>
+        <span class="risk_major"> / {{risk.risk.name}}</span>
+        <span ng-if="risk.subrisk" class="risk_sub"> / {{risk.subrisk.name}}</span>
+      </li>
     </div>
 
         <table class="table table-striped">
           <tbody>
             <tr>
-              <input type="text" ng-model="selectedFromCompany" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+              <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
                      class="form-control" typeahead-no-results="noResults" placeholder="From Company">
             </tr>
             <tr>
-              <select class="form-control" ng-model="majorRisk">
-                <option value="">Major risk</option>
-                <option ng-repeat="option in majorRisks" value="{{option.id}}">{{option.name}}</option>
+              <select class="form-control" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
+                <option value="">Select Major Risk</option>
               </select>
             </tr>
             <tr>
-              <input type="text" ng-model="subRisk" uib-typeahead="item.name for item in subRisks | filter:$viewValue | limitTo:8"
+              <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
                          class="form-control" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
             </tr>
             <tr>
