@@ -60,10 +60,12 @@ cafiApp.factory('myHttpInterceptor', ['$q','$location', '$rootScope', function (
           return response;
         },
         responseError: function (response) {
-          $rootScope.needLogin = true;
-          $location.path('/');
-          //$rootScope.$apply();
-          return $q.reject(response);
+          if(response.status==401) {
+            $rootScope.needLogin = true;
+            $location.path('/');
+            //$rootScope.$apply();
+            return $q.reject(response);
+          }
         }
     };
 }]);
