@@ -77,7 +77,12 @@ angular.module('projectServices').factory('PredefinedSearch', function ($resourc
 
 angular.module('projectServices').factory('RiskItem', function ($resource) {
   return $resource('/api/risk_items/:riskItemId', {riskItemId: '@id'}, {
-    update: {method: 'PUT'},
+    update: {method: 'PUT'}
+  });
+});
 
+angular.module('projectServices').factory('Relation', function ($resource) {
+  return $resource('/api/relations/:id', {id: '@id'}, {
+    update: {method: 'PUT'}
   });
 });

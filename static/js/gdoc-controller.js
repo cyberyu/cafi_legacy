@@ -1,4 +1,5 @@
-projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, $q, Gdoc, Risk) {
+projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibModal, currentDoc, $http, $q,
+                                                    Gdoc, Risk, Relation, Company) {
 
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
@@ -27,12 +28,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.nextID = null;
   }
   //Code for trial of pool
-  $scope.displayMode = "list";
-  $scope.currentRelation = null;
-
-  $scope.listRelations = function () {
-    $scope.relations = Relation.query();
-  };
+  //$scope.relations = Relation.query({evidence: currentDoc.id});
 
   $scope.deleteRelation = function (relation) {
     if (popupService.showPopup('Really delete this Supply Chain?')) {
@@ -45,21 +41,54 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.editOrCreateRelation = function (relation) {
     $scope.currentRelation =
       relation ? angular.copy(relation) : {};
-    $scope.displayMode = "edit";
   };
 
-  $scope.createRelation = function (relation) {
-    new Relation(relation).$save().then(function(newRelation) {
-      $scope.relations.push(newRelation);
-      $scope.displayMode = "list";
+  $scope.createCompany = function(name){
+    var oneCompany = {
+      name: name,
+      variations: [name],
+      project:$scope.currentProject.id
+    };
+
+    return Company.save(oneCompany);
+  };
+
+  $scope.createRelation = function () {
+    var one, two;
+    if($scope.noBuyerResults) {
+      one = $scope.createCompany($scope.newRelation.buyer).$promise.then(function(postedCompany){
+        $scope.predefinedCompanies.push(postedCompany);
+        $scope.newRelation.buyer = postedCompany;
+      });
+    }
+
+    if($scope.noSupplierResults) {
+      two = $scope.createCompany($scope.newRelation.supplier).$promise.then(function(postedCompany){
+        $scope.predefinedCompanies.push(postedCompany);
+        $scope.newRelation.supplier = postedCompany;
+      });
+    }
+
+    $q.all([one, two]).then(function() {
+      var relation = {
+        evidence: $scope.currentDoc.id,
+        buyer: $scope.newRelation.buyer.id,
+        supplier: $scope.newRelation.supplier.id,
+        items: $scope.newRelation.items
+      };
+
+      Relation.save(relation).$promise.then(function (newRelation) {
+        $scope.currentDoc.relations.push(newRelation);
+        $scope.newRelation = {};
+      });
     });
   };
 
-  $scope.saveEdit = function (newRelation) {
-    if (angular.isDefined(newRelation.id)) {
-      $scope.updateRelation(newRelation);
+  $scope.saveEditRelation = function () {
+    if (angular.isDefined($scope.newRelation.id)) {
+      $scope.updateRelation($scope.newRelation);
     } else {
-      $scope.createRelation(newRelation);
+      $scope.createRelation();
     }
   };
 
@@ -70,7 +99,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
           $scope.relations[i] = relation;
           break;
         } }
-      $scope.displayMode = "list";
     });
   };
 

@@ -4,7 +4,6 @@ from django.contrib.contenttypes.models import ContentType
 from models import Risk, Company, Relation, PredefinedSearch
 from models import RiskItem
 from google.models import SearchResult
-from google.serializers import SearchResultSerializer
 
 
 class JSONSerializerField(serializers.Field):
@@ -71,12 +70,12 @@ class RiskItemSerializer(serializers.ModelSerializer):
 
         data = {
             "id": obj.id,
-            "risk": {"id": obj.risk.id, "name":obj.risk.name},
-            "from": {"id": obj.from_company.id, "name":obj.from_company.name}
+            "risk": {"id": obj.risk.id, "name": obj.risk.name},
+            "from": {"id": obj.from_company.id, "name": obj.from_company.name}
         }
 
         if obj.subrisk:
-            data['subrisk'] = {"id": obj.subrisk.id, "name":obj.subrisk.name}
+            data['subrisk'] = {"id": obj.subrisk.id, "name": obj.subrisk.name}
 
         return data
 
@@ -84,3 +83,13 @@ class RiskItemSerializer(serializers.ModelSerializer):
 class RelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relation
+
+    def to_representation(self, obj):
+        data = {
+            "id": obj.id,
+            "buyer": {"id": obj.buyer.id, "name": obj.buyer.name},
+            "supplier": {"id": obj.supplier.id, "name": obj.supplier.name},
+            "evidence": {"id": obj.evidence.id, "title": obj.evidence.title, "url": obj.evidence.url},
+            "items": obj.items
+        }
+        return data

@@ -73,3 +73,5 @@ class RelationViewSet(viewsets.ModelViewSet):
     queryset = Relation.objects.all()
     serializer_class = RelationSerializer
     authentication_classes = (ValidateSessionAuthentication,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('evidence', 'buyer', 'supplier')
