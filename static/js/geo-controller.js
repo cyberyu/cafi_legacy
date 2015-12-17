@@ -7,8 +7,6 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
   $scope.currentProject = {};
   $scope.currentProject.id = $routeParams.id;
 
-  console.log($scope.project_id);
-
   $scope.findEntity = function(name){
     $scope.filterName = name;
     option = {'page':$scope.currentPage,'name':$scope.filterName,'address':$scope.filterAddress};
