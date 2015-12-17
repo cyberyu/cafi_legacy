@@ -36,7 +36,8 @@
       <span class="label label-warning">Person</span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
             ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
-            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
+            ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}};
+      </span>
     </div>
     <div>
       <span class="label label-info">Product</span><br>
@@ -46,7 +47,8 @@
       <span class="label label-danger">Risk Keywords</span><br>
         <span class="risk-words" ng-repeat="p in currentDoc.risks" ng-class="wcls"
               ng-mouseover="wcls= wcls=='risk-clicked'? 'risk-clicked':'risk'" ng-mouseleave="wcls= wcls=='risk-clicked'? 'risk-clicked':''"
-              ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk.name}}; </span>
+              ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk.name}};
+        </span>
     </div>
   </div>
 
@@ -93,70 +95,18 @@
       </tbody>
     </table>
     <hr>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>Supply Chain Relation</strong>
-      </div>
-      <div class="panel-body">
-        <table class="table table-hover">
-          <thead>
-          <tr>
-            <th>Buyer</th>
-            <th>Supplier</th>
-            <th>Item</th>
-          </tr>
-          </thead>
-          <tr ng-repeat="relation in relations | filter:query | orderBy:orderProp">
-            <td>{{relation.buyer}}</td>
-            <td>{{relation.supplier}}</td>
-            <td>{{address.items}}</td>
-            <td><a class="btn btn-default btn-circle" ng-click="editOrCreateRelation(relation)" uib-tooltip="Edit Supply Chain Relation"><i class="fa fa-pencil"></i></a>
-              <a class="btn btn-default btn-circle" ng-click="deleteRelation(relation)" uib-tooltip="Delete Supply Chain Relation"><i class="fa fa-minus"></i></a></td>
-          </tr>
-        </table>
-        <a ng-click="editOrCreateRelation()" class="btn btn-default btn-circle" uib-tooltip="Add a Buyer-Supplier Relation"><i class="fa fa-plus"></i></a>
-      </div>
-    </div>
-    <div ng-show="displayMode == 'edit'">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div class="col-sm-12">
-            <form class="form-horizontal" role="form" ng-submit="saveEdit(currentRelation)">
-              <div class="form-group">
-                <label for="name" class="col-sm-2 control-label">Buyer </label>
-                <div class="col-sm-offset-1 col-sm-9">
-                  <select class="form-control" ng-model="selectedBuyerCompany" ng-options="option for option in currentDoc.nerwords.org">
-                    <option value="">--</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="client" class="col-sm-2 control-label">Supplier </label>
 
-                <div class="col-sm-offset-1 col-sm-9">
-                  <select class="form-control" ng-model="selectedSupplierCompany" ng-options="option for option in currentDoc.nerwords.org">
-                    <option value="">--</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="client" class="col-sm-2 control-label">Item </label>
-
-                <div class="col-sm-offset-1 col-sm-9">
-                  <input type="text" ng-model="currentProject.client" class="form-control" id="client" placeholder="Items/Components"/>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-xs-offset-2 col-xs-10">
-                  <input type="submit" class="btn btn-primary" value="Save"/>
-                  <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+    <h5 style="color: red">Business Relationship</h5>
+    <div ng-repeat="relation in currentDoc.relations">
+      <li> {{relation.buyer.name}}/{{relation.supplier.name}}/{{relation.items}}</li>
     </div>
+    <input type="text" ng-model="newRelation.buyer" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+           class="form-control" typeahead-no-results="noBuyerResults" placeholder="Buyer">
+    <input type="text" ng-model="newRelation.supplier" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+           class="form-control" typeahead-no-results="noSupplierResults" placeholder="Supplier">
+    <input type="text" ng-model="newRelation.items" class="form-control" id="client" placeholder="Items/Components"/>
+    <a href ng-click="saveEditRelation()" class="pull-right"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+
     <hr>
 
     <h5 style="color: red">Risk Tagging</h5>

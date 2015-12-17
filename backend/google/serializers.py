@@ -3,7 +3,7 @@ from models import Search, SearchResult, GeoSearch
 from google.keywords.texthilight import Highlighter
 from google.CustomSearchAPI.searchParser import SearchQueryParser
 from google.ner.cafi_netagger import CAFI_NETagger
-
+from risk.serializers import RelationSerializer
 
 class SearchSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.id')
@@ -57,6 +57,7 @@ class JSONSerializerField(serializers.Field):
 
 class SearchResultSerializer(SimpleSearchResultSerializer):
     risks = RiskObjectRelatedField(read_only=True, many=True)
+    relations = serializers.SerializerMethodField()
     keywords = serializers.SerializerMethodField()
     # nerwords = serializers.SerializerMethodField()
     nerwords = JSONSerializerField(required=False)
@@ -67,6 +68,9 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
     def get_keywords(self, obj):
         parser = SearchQueryParser()
         return parser.Parse(obj.search.string)
+
+    def get_relations(self, obj):
+        return RelationSerializer(obj.relations, many=True).data
 
     # def get_nerwords(self, obj):
     #     nt = CAFI_NETagger()  # intialize the tagger

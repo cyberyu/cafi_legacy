@@ -56,9 +56,9 @@ class RiskItem(models.Model):
 
 
 class Relation(models.Model):
-    evidence = models.ForeignKey('google.SearchResult')
-    buyer = models.ForeignKey(Company, related_name='buyer_company')
-    supplier = models.ForeignKey(Company, related_name='supplier_company')
-    item_list = models.TextField(blank=True)
+    evidence = models.ForeignKey('google.SearchResult', related_name='relations')
+    buyer = models.ForeignKey(Company, related_name='buyer_relations')
+    supplier = models.ForeignKey(Company, related_name='supplier_relations')
+    items = models.TextField(blank=True)
 
 
