@@ -9,6 +9,5 @@ class GeoSearchFilter(django_filters.FilterSet):
     address = django_filters.CharFilter(name="address", lookup_type=("icontains"))
     class Meta:
         model = GeoSearch
-        fields = ['name', 'address']
 
 

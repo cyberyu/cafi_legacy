@@ -88,7 +88,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter,)
-    filter_fields = ('project', 'name', 'user')
+    filter_fields = ('project', 'name', 'user',)
     search_fields = ('name', 'address',)
     ordering_fields = ('name', 'address',)
     filter_class = GeoSearchFilter

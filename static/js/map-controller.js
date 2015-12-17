@@ -22,14 +22,36 @@ projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, ui
     });
   });
 
+  $scope.deleteAllMarkers= function(){
+    $scope.markers=[];
+  };
+
+  $scope.deleteMarker =function(address){
+    for (var i = $scope.markers.length - 1; i >= 0; i--) {
+      if ($scope.markers[i].id === address.id) {
+        $scope.markers.splice(i, 1);
+      }
+    }
+  };
+
   $scope.locateOnMap = function(address){
 
-    marker = {
+    var flag=0;
+    for (var i = $scope.markers.length - 1; i >= 0; i--) {
+      if ($scope.markers[i].id === address.id) {
+        flag=1;
+      }
+    }
+    if(flag===0){
+      marker = {
           id: address.id,
           coords: { "latitude": address.lat, "longitude": address.lng},
           info: address.name + ': ' + address.address
         };
-    $scope.markers.push(marker);
+      $scope.markers.push(marker);
+      console.log("Marker Created");
+    }
+
     $scope.markers.map(function(marker){
       marker.icon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
     });
