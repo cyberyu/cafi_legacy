@@ -44,12 +44,19 @@
               <thead>
               <!--tr><th><input type="text" ng-model="searchAll" ng-change="findAll(searchAll)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Everthing"></th><th></th></tr-->
               <tr>
-                <th><a ng-click="sortEntity('name')" >Entity Name</a><input type="text" ng-model="searchName" ng-change="findEntity(searchName)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Name"></th>
-                <th><a ng-click="sortAddress('address')" >Address</a><input type="text" ng-model="searchAddress" ng-change="findAddress(searchAddress)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Address"></th>
+                <th><a ng-click="sortEntity('name')">Entity Name</a></th>
+                <th><a ng-click="sortAddress('address')" >Address</a></th>
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Action</th>
                 <!--<th><a class="btn btn-default btn-circle" ng-click="loadAddresses(addresses)" ><i class="fa fa-location-arrow"></i></a></th>-->
+              </tr>
+              <tr>
+                <th><input type="text" ng-model="searchName" ng-change="findEntity(searchName)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Name"></th>
+                <th><input type="text" ng-model="searchAddress" ng-change="findAddress(searchAddress)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Address"></th>
+                <th></th>
+                <th></th>
+                <th></th>
               </tr>
               </thead>
               <tr ng-repeat="address in addresses" ng-class="getAddressClass(address)">
