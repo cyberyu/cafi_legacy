@@ -16,6 +16,8 @@
                     <tr>
                         <th>Project</th>
                         <th>Client</th>
+                        <th>Supplier Network</th>
+                        <th>Risks</th>
                         <!--<th>Created At</th>-->
                         <!--<th>ID</th>-->
                         <th>Action</th>
@@ -24,6 +26,8 @@
                     <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
                         <td><a href="#/projects/{{project.id}}">{{project.name}}</a></td>
                         <td>{{project.client}}</td>
+                        <td><a href="#/projects/{{project.id}}/relations">view</a></td>
+                        <td><a href="#/projects/{{project.id}}/risks">view</a></td>
                         <!--<td>{{project.createdAt}}</td>-->
                         <!--<td>{{project.id}}</td>-->
                         <td><a class="btn btn-default btn-circle" ng-click="editOrCreateProject(project)" uib-tooltip="Edit project"><i class="fa fa-pencil"></i></a>

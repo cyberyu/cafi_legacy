@@ -3,6 +3,10 @@ from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
+from rest_framework_csv import renderers as csv_r
+from django.http import HttpResponse
+from djqscsv import render_to_csv_response
+from collections import OrderedDict
 from models import Company, Risk, RiskItem, Relation, PredefinedSearch
 from engagement.models import Project
 import csv
@@ -68,6 +72,35 @@ class RiskItemViewSet(viewsets.ModelViewSet):
     serializer_class = RiskItemSerializer
     authentication_classes = (ValidateSessionAuthentication,)
 
+    @detail_route(methods=['GET'])
+    def download(self, request, *args, **kwargs):
+
+        project_id = self.kwargs['pk']
+        qs = RiskItem.objects.filter(project__id=project_id)
+        data = RiskItemSerializer(qs, many=True).data
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="risks-%s.csv"' % project_id
+
+        results = []
+        for item in data:
+            new_item = OrderedDict([
+                ("From company", item["from"]["name"]),
+                ("Risk", item["risk"]["name"]),
+                ("Sub risk", item.get('subrisk', {}).get('name', None)),
+                ("source.title", item.get("source", {}).get("title", None)),
+                ("source.url", item.get("source", {}).get("url", None)),
+                ("external source", item.get('ex_evidence', None))
+            ])
+            results.append(new_item)
+
+        writer = csv.writer(response)
+        if len(results) > 0:
+            writer.writerow(results[0].keys())
+        for row in results:
+            writer.writerow(row.values())
+
+        return response
 
 class RelationViewSet(viewsets.ModelViewSet):
     queryset = Relation.objects.all()
@@ -75,3 +108,33 @@ class RelationViewSet(viewsets.ModelViewSet):
     authentication_classes = (ValidateSessionAuthentication,)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('evidence', 'buyer', 'supplier')
+
+    @detail_route(methods=['GET'])
+    def download(self, request, *args, **kwargs):
+
+        project_id = self.kwargs['pk']
+        qs = Relation.objects.filter(project__id=project_id)
+        data = RelationSerializer(qs, many=True).data
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="relations-%s.csv"' % project_id
+
+        results = []
+        for item in data:
+            new_item = OrderedDict([
+                ("buyer", item["buyer"]["name"]),
+                ("supplier", item["supplier"]["name"]),
+                ("items", item["items"]),
+                ("source.title", item.get("evidence", {}).get("title", None)),
+                ("source.url", item.get("evidence", {}).get("url", None)),
+                ("external source", item.get('ex_evidence', None))
+            ])
+            results.append(new_item)
+
+        writer = csv.writer(response)
+        if len(results) > 0:
+            writer.writerow(results[0].keys())
+        for row in results:
+            writer.writerow(row.values())
+
+        return response

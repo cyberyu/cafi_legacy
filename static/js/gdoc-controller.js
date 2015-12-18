@@ -74,7 +74,8 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
         evidence: $scope.currentDoc.id,
         buyer: $scope.newRelation.buyer.id,
         supplier: $scope.newRelation.supplier.id,
-        items: $scope.newRelation.items
+        items: $scope.newRelation.items,
+        project: $scope.currentProject.id
       };
 
       Relation.save(relation).$promise.then(function (newRelation) {

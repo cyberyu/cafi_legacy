@@ -1,0 +1,58 @@
+<ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/relations"><span class="glyphicon glyphicon-th"></span> Suppliers </a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/risks"><span class="glyphicon glyphicon-fire"></span> Risks </a></li>
+</ol>
+
+<div class="row">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-8">
+    <div>
+      <a class="btn btn-sm btn-primary" href="/api/relations/{{currentProject.id}}/download.csv">Download</a>
+    </div>
+    <table class="table table-hover table-striped">
+      <thead>
+      <tr>
+        <th> Buyer </th>
+        <th> Supplier </th>
+        <th> Items</th>
+        <th> Source </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="relation in Relations">
+        <td>{{relation.buyer.name}}</td>
+        <td>{{relation.supplier.name}}</td>
+        <td>{{relation.items}}</td>
+        <td>
+          <a ng-if="relation.evidence" ng-href="{{relation.evidence.url}}">{{relation.evidence.title}}</a>
+          <div ng-if="relation.exEvidence">
+            <a ng-if="relation.exEvidence.startsWith('http')" ng-href="{{relation.exEvidence}}">link</a>
+            <span ng-if="!relation.exEvidence.startsWith('http')">{{relation.exEvidence}}</span>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <form class="form-inline">
+      <div class="form-group">
+        <input type="text" ng-model="newRelation.buyer" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noBuyerResults" placeholder="Buyer">
+      </div>
+      <div class="form-group">
+          <input type="text" ng-model="newRelation.supplier" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                 class="form-control" typeahead-no-results="noSupplierResults" placeholder="Supplier">
+      </div>
+      <div class="form-group">
+        <input type="text" ng-model="newRelation.items" class="form-control" id="client" placeholder="Items/Components"/>
+      </div>
+      <div class="form-group">
+        <input type="text" ng-model="exEvidence" class="form-control" placeholder="source">
+      </div>
+      <a href ng-click="createRelation()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+    </form>
+  </div>
+  <div class="col-lg-2"></div>
+</div>

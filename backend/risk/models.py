@@ -47,18 +47,22 @@ class RiskItem(models.Model):
     from_company = models.ForeignKey(Company, related_name='from_company')
     to_company = models.ForeignKey(Company, related_name='to_company', null=True)
 
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    ex_evidence = models.TextField(blank=True)
 
     def __unicode__(self):
         return "%s : %s : %s" % (self.risk.name, self.from_company.name, self.project.client)
 
 
 class Relation(models.Model):
-    evidence = models.ForeignKey('google.SearchResult', related_name='relations')
+    evidence = models.ForeignKey('google.SearchResult', related_name='relations', blank=True, null=True)
+    ex_evidence = models.TextField(blank=True)
     buyer = models.ForeignKey(Company, related_name='buyer_relations')
     supplier = models.ForeignKey(Company, related_name='supplier_relations')
     items = models.TextField(blank=True)
+    project = models.ForeignKey('engagement.Project')
 
 
