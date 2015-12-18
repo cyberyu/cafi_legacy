@@ -9,6 +9,9 @@
 <div class="row">
   <div class="col-lg-2"></div>
   <div class="col-lg-8">
+    <div>
+      <a class="btn btn-sm btn-primary" href="/api/relations/{{currentProject.id}}/download.csv">Download</a>
+    </div>
     <table class="table table-hover table-striped">
       <thead>
       <tr>
@@ -24,7 +27,7 @@
         <td>{{relation.supplier.name}}</td>
         <td>{{relation.items}}</td>
         <td>
-          <a ng-if="relation.evidence" ng-href="{{relation.evidence.url}}">link</a>
+          <a ng-if="relation.evidence" ng-href="{{relation.evidence.url}}">{{relation.evidence.title}}</a>
           <div ng-if="relation.exEvidence">
             <a ng-if="relation.exEvidence.startsWith('http')" ng-href="{{relation.exEvidence}}">link</a>
             <span ng-if="!relation.exEvidence.startsWith('http')">{{relation.exEvidence}}</span>
