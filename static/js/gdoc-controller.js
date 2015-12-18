@@ -222,8 +222,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
 
   $scope.openNextGdoc = function (n) {
     $scope.currentID+=n;
-    console.log($scope.displaySearchDocs);
-    console.log($scope.displayedGdocs);
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
         break;
