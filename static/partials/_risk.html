@@ -1,0 +1,57 @@
+<ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/relations"><span class="glyphicon glyphicon-th"></span> Suppliers </a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/risks"><span class="glyphicon glyphicon-fire"></span> Risks </a></li>
+</ol>
+
+<div class="row">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-8">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th> From Company </th>
+          <th> Risk</th>
+          <th> Sub risk</th>
+          <th> Source </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="risk in Risks">
+          <td>{{risk.from.name}}</td>
+          <td>{{risk.risk.name}}</td>
+          <td>{{risk.subrisk.name}}</td>
+          <td>
+            <a ng-if="risk.source" ng-href="{{risk.source.url}}">{{risk.source.title}}</a>
+            <div ng-if="risk.exEvidence">
+              <a ng-if="risk.exEvidence.startsWith('http')" ng-href="{{risk.exEvidence}}">link</a>
+              <span ng-if="!risk.exEvidence.startsWith('http')">{{risk.exEvidence}}</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <form class="form-inline">
+      <div class="form-group">
+        <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noResults" placeholder="From Company">
+      </div>
+      <div class="form-group">
+        <select class="form-control" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
+          <option value="">Select Major Risk</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
+               class="form-control" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
+      </div>
+      <div class="form-group">
+        <input type="text" ng-model="exEvidence" class="form-control" placeholder="source">
+      </div>
+      <a href ng-click="labelRiskSubmit()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+    </form>
+  </div>
+  <div class="col-lg-2"></div>
+</div>

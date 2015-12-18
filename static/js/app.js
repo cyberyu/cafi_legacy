@@ -45,6 +45,12 @@ cafiApp.config(['$routeProvider',
     }).when('/projects/:id', {
       controller: 'ProjectBoardCtrl',
       templateUrl: '/static/partials/project_board.html'
+    }).when('/projects/:id/risks', {
+      controller: 'RiskCtrl',
+      templateUrl: '/static/partials/_risk.html'
+    }).when('/projects/:id/relations', {
+      controller: 'RelationCtrl',
+      templateUrl: '/static/partials/_relation.html'
     }).otherwise({
       redirectTo: '/projects'
     })
