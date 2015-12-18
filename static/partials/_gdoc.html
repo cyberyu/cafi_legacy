@@ -4,13 +4,13 @@
       <small>From Search: {{displaySearch.string}} </small>
     </div>
     <div class="col-md-3">
-      <div class="col-lg-4" ng-show="currentDoc.id>1">
+      <div class="col-lg-4">
         <a ng-click="openNextGdoc(-1)" class="btn btn-default" ><i class="fa fa-arrow-left"></i></a>
       </div>
         <div class="col-lg-4">
-          <span ng-show="gdocPager.total" class="btn btn-default" ng-disabled="true">{{ currentDoc.id }}/{{ gdocPager.total }} </span>
+          <span ng-show="gdocPager.total" class="btn btn-default" ng-disabled="true">{{ "WIP" }}/{{ gdocPager.total }} </span>
         </div>
-      <div class="col-lg-4" ng-show="currentDoc.id<gdocPager.total">
+      <div class="col-lg-4">
         <a ng-click="openNextGdoc(1)" class="btn btn-default"><i class="fa fa-arrow-right"></i></a>
       </div>
     </div>
