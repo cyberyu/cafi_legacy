@@ -5,13 +5,13 @@
     </div>
     <div class="col-md-3">
       <div class="col-lg-4">
-        <a ng-click="openNextGdoc(-1)" class="btn btn-default" ><i class="fa fa-arrow-left"></i></a>
+        <a ng-click="openNextGdoc(-1)" class="btn btn-default" ng-show="currentID>1" ><i class="fa fa-arrow-left"></i></a>
       </div>
         <div class="col-lg-4">
-          <span ng-show="gdocPager.total" class="btn btn-default" ng-disabled="true">{{ "WIP" }}/{{ gdocPager.total }} </span>
+          <span ng-show="gdocPager.total" class="btn btn-default" ng-disabled="true"><strong>{{currentID}}/{{ gdocPager.total }}</strong></span>
         </div>
       <div class="col-lg-4">
-        <a ng-click="openNextGdoc(1)" class="btn btn-default"><i class="fa fa-arrow-right"></i></a>
+        <a ng-click="openNextGdoc(1)" class="btn btn-default" ng-show="currentID<gdocPager.total"><i class="fa fa-arrow-right"></i></a>
       </div>
     </div>
   </div>
