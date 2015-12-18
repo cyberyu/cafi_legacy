@@ -23,7 +23,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       break;
     }
   }
-  console.log($scope.currentID);
   if (i < $scope.displayedGdocs.length -1){
     $scope.nextID = $scope.displayedGdocs[i+1].id;
   }else{
@@ -221,7 +220,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   };
 
   $scope.openNextGdoc = function (n) {
-    $scope.currentID+=n;
+    $scope.currentID += n;
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
         break;
