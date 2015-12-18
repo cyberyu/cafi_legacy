@@ -19,7 +19,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   }
   for (var i = 0; i < $scope.displayedGdocs.length; i++) {
     if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
-      $scope.currentID = i + 1;
+      $scope.currentID = ($scope.gdocPager.currentPage - 1)*20 + (i + 1);
       break;
     }
   }
