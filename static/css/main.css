@@ -379,7 +379,7 @@ word-wrap: break-word;
 }
 
 #gdoc-label-box {
-    margin-top: 40px;
+    margin-top: 10px;
     /*background: gainsboro;*/
     height: 100%;
     min-height: 100%;
@@ -438,3 +438,17 @@ word-wrap: break-word;
 .risk-words {
     font-size: 11px;
 }
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+/*.tag {*/
+    /*font-size: 10px;*/
+/*}*/
+.table-tag > tbody > tr > td, .table-tag > thead > tr >th {
+    line-height: 1;
+    padding: 2px;
+    font-size: 11px;
+}
+
