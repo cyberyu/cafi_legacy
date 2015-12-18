@@ -67,153 +67,132 @@
   </div>
 
   <div class="col-lg-3 right-panel" id="gdoc-label-box" >
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th><label class="control-label">Review</label></th>
-        <th><label class="control-label">Relevant</label></th>
-        <th><label class="control-label" ng-show="currentDoc.predictedScore != null">Prediction</label></th>
-      </tr></thead>
-      <tbody>
-      <tr>
-        <td>
-          <button type="button" class="btn btn-info btn-sm" ng-click="toggleSave4later(currentDoc)" >
-            <span ng-if="!currentDoc.reviewLater" class="glyphicon glyphicon-floppy-saved" uib-tooltip="Save for later review"></span>
-            <span ng-if="currentDoc.reviewLater" class="glyphicon glyphicon-floppy-remove" uib-tooltip="Remove from later review"></span>
-          </button>
-        </td>
-        <td>
-          <div class="btn-group" uib-dropdown>
-            <span id="relevance-button"
-                    type="button"
-                    ng-class="{'label-danger': currentDoc.relevance=='n', '': currentDoc.relevance==null, 'label-warning': currentDoc.relevance=='m', 'label-success': currentDoc.relevance=='y'}"
+    <div class="">
+      <button ng-if="!currentDoc.reviewLater" type="button" class="btn btn-info btn-sm" ng-click="toggleSave4later(currentDoc)"
+              uib-tooltip="Save for later review">
+        <span class="glyphicon glyphicon-floppy-save" ></span>
+      </button>
+      <button ng-if="currentDoc.reviewLater" type="button" class="btn btn-info btn-sm" ng-click="toggleSave4later(currentDoc)"
+              uib-tooltip="Remove from later review">
+        <span class="glyphicon glyphicon-floppy-remove" ></span>
+      </button>
+
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-sm btn-default">relevance</button>
+        <div class="btn-group" role="group" uib-dropdown>
+              <span id="relevance-button" type="button"
+                    ng-class="{'label-danger': currentDoc.relevance=='n',
+                               '': currentDoc.relevance==null,
+                               'label-warning': currentDoc.relevance=='m',
+                               'label-success': currentDoc.relevance=='y'}"
                     class="btn btn-primary btn-sm" uib-dropdown-toggle>
-              <span ng-if="currentDoc.relevance">{{currentDoc.relevance|uppercase}} </span>
-              <span ng-if="!currentDoc.relevance" uib-tooltip="relevance unknown">U</span>
-              <span class="caret"></span>
-            </span>
-            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="relevance-button">
-              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'y')">yes</a></li>
-              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'m')">maybe</a></li>
-              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'n')">no</a></li>
-            </ul>
-          </div>
-        </td>
-        <td>
-          <div ng-show="currentDoc.predictedScore != null">
-            <div ng-if="currentDoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
-            <div ng-if="currentDoc.predictedScore>1"><h4><span class="label label-success">{{1}}</span></h4></div>
-            <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">{{currentDoc.predictedScore| number:3}}</span></h4></div>
-
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <hr>
-
-    <h5 style="color: red">Business Relationship</h5>
-    <div ng-repeat="relation in currentDoc.relations">
-      <li> {{relation.buyer.name}}/{{relation.supplier.name}}/{{relation.items}}</li>
-    </div>
-    <input type="text" ng-model="newRelation.buyer" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-           class="form-control" typeahead-no-results="noBuyerResults" placeholder="Buyer">
-    <input type="text" ng-model="newRelation.supplier" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-           class="form-control" typeahead-no-results="noSupplierResults" placeholder="Supplier">
-    <input type="text" ng-model="newRelation.items" class="form-control" id="client" placeholder="Items/Components"/>
-    <a href ng-click="saveEditRelation()" class="pull-right"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-
-    <hr>
-
-    <h5 style="color: red">Risk Tagging</h5>
-    <div ng-repeat="risk in currentDoc.risks">
-      <li>
-        <span class="risk_from">{{risk.from.name}}</span>
-        <span class="risk_major"> / {{risk.risk.name}}</span>
-        <span ng-if="risk.subrisk" class="risk_sub"> / {{risk.subrisk.name}}</span>
-      </li>
+                <span ng-if="currentDoc.relevance">{{currentDoc.relevance|uppercase}} </span>
+                <span ng-if="!currentDoc.relevance" uib-tooltip="relevance unknown">U</span>
+                <span class="caret"></span>
+              </span>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="relevance-button">
+            <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'y')">yes</a></li>
+            <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'m')">maybe</a></li>
+            <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'n')">no</a></li>
+          </ul>
+        </div>
+        <button ng-if="currentDoc.predictedScore" class="btn btn-sm btn-default">{{currentDoc.predictedScore | number:2}}</button>
+      </div>
     </div>
 
-        <table class="table table-striped">
-          <tbody>
-            <tr>
-              <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-                     class="form-control" typeahead-no-results="noResults" placeholder="From Company">
-            </tr>
-            <tr>
-              <select class="form-control" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
-                <option value="">Select Major Risk</option>
-              </select>
-            </tr>
-            <tr>
-              <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
-                         class="form-control" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
-            </tr>
-            <tr>
-              <a href ng-click="labelRiskSubmit()" class="pull-right"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-            </tr>
-          </tbody>
-        </table>
-            <!--<tr ng-show="majorRisk!=null">-->
-              <!--<td><span class="label label-primary" uib-tooltip="Secondary Risk">S</span></td>-->
-              <!--<td>-->
-                <!--<select  class="form-control" ng-model="secondaryRisk" ng-options="option for option in major_risk| filter:shouldShow" >-->
-                  <!--<option value="">&#45;&#45;</option>-->
-                <!--</select>-->
-              <!--</td>-->
-              <!--<td><input type="text" ng-model="subRisk2" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"-->
-                         <!--class="form-control" typeahead-no-results="noResults"></td>-->
-            <!--</tr>-->
-            <!--<tr ng-show="majorRisk!=null && secondaryRisk!=null">-->
-              <!--<td><span class="label label-warning" uib-tooltip="Tertiary Risk">T</span></td>-->
-              <!--<td>-->
-                <!--<select class="form-control" ng-model="TertiaryRisk" ng-options="option for option in major_risk| filter:shouldShow1">-->
-                  <!--<option value="">&#45;&#45;</option>-->
-                <!--</select>-->
-              <!--</td>-->
-              <!--<td><input type="text" ng-model="subRisk3" uib-typeahead="item.name for item in predefinedsubRisk | filter:$viewValue | limitTo:8"-->
-                         <!--class="form-control" typeahead-no-results="noResults"></td>-->
-            <!--</tr>-->
-    <hr>
 
-    <!--<form class="label-div">-->
-      <!--<div class="form-group  form-group-sm">-->
-        <!--<label class="control-label" for="a">Risk: </label>-->
-        <!--<div>-->
-          <!--<select class="form-control" id="a" ng-model="selectedRisk">-->
-            <!--<option ng-repeat="option in predefinedRisks" value="{{option.id}}">{{option.name}}</option>-->
-          <!--</select>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="form-group form-group-sm">-->
-        <!--<label>From: </label>-->
-        <!--<input type="text" ng-model="selectedFromCompany" uib-typeahead="company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"-->
-               <!--class="form-control" typeahead-no-results="noResults">-->
-        <!--&lt;!&ndash;<select  class="form-control " ng-model="selectedFromCompany">&ndash;&gt;-->
-        <!--&lt;!&ndash;<option ng-repeat="option in predefinedCompanies" value="{{option.id}}">{{option.name}}</option>&ndash;&gt;-->
-        <!--&lt;!&ndash;</select>&ndash;&gt;-->
-      <!--</div>-->
-      <!--<a ng-click="labelSubmit()" class="btn btn-default btn-circle pull-right"><i class="fa fa-plus"></i></a>-->
-    <!--</form>-->
+    <div id="relation-tag" class="row ">
+      <hr>
+      <div class="col-lg-12">
+      <table class="table table-striped table-tag">
+        <thead>
+        <tr>
+          <th>Buyer</th>
+          <th>Supplier</th>
+          <th>Items</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="relation in currentDoc.relations">
+          <td>
+            <span class="tag buyer">{{relation.buyer.name}}</span>
+          </td>
+          <td>
+            <span class="tag supplier">{{relation.supplier.name}}</span>
+          </td>
+          <td>
+            <span class="tag items">{{relation.items}}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
 
+      <form>
+        <div class="form-group col-lg-12">
+          <input type="text" ng-model="newRelation.buyer" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                 class="form-control input-sm" typeahead-no-results="noBuyerResults" placeholder="Buyer">
+        </div>
+        <div class="form-group col-lg-12">
+          <input type="text" ng-model="newRelation.supplier" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                 class="form-control input-sm" typeahead-no-results="noSupplierResults" placeholder="Supplier">
+        </div>
+        <div class="form-group">
+          <div class="col-lg-9">
+            <input type="text" ng-model="newRelation.items" class="form-control input-sm" id="client" placeholder="Items/Components"/>
+          </div>
+          <div class="col-lg-3">
+            <a href ng-click="saveEditRelation()" class="pull-right btn btn-sm btn-primary">Add</a>
+          </div>
+        </div>
+      </form>
+    </div>
 
-    <!--<div class="tags clearfix" ng-repeat="tag in tags">-->
-      <!--<div class="tag">{{tag}}</div>-->
-    <!--</div>-->
+    <div id="risk-tag" class="row ">
+      <hr>
+      <div class="col-lg-12">
+      <table class="table table-striped table-tag">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Risk</th>
+            <th>Subrisk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="risk in currentDoc.risks">
+            <td>{{risk.from.name}}</td>
+            <td>{{risk.risk.name}}</td>
+            <td>{{risk.subrisk.name}}</td>
+          </tr>
+        </tbody>
+      </table></div>
+
+      <form>
+        <div class="form-group col-lg-12">
+          <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
+                 class="form-control input-sm" typeahead-no-results="noResults" placeholder="From Company">
+        </div>
+        <div class="form-group col-lg-12">
+          <select class="form-control input-sm" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
+            <option value="">Select Major Risk</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-9">
+            <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
+                   class="form-control input-sm" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
+          </div>
+          <div class="col-lg-3">
+            <a href ng-click="labelRiskSubmit()" class="pull-right btn btn-sm btn-primary">Add</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
   </div>
 </div>
 
 <div class="modal-footer">
-  <!--<button class="btn btn-primary" type="button" ng-click="saveEdit(currentDoc)">Save</button>-->
   <button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
 </div>
-<!--<ul>-->
-<!--<li ng-repeat="item in items">-->
-<!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--Selected: <b>{{ selected.item }}</b>-->
-<!--<div class="modal-footer">-->
-<!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
-<!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
-<!--</div>-->
