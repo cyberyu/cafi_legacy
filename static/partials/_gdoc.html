@@ -96,7 +96,7 @@
             <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'n')">no</a></li>
           </ul>
         </div>
-        <button class="btn btn-sm" ng-if="currentDoc.predictedScore" ng-class="{'btn-default': currentDoc.predictedScore<0.1, 'btn-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'btn-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'btn-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'btn-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'btn-success': currentDoc.predictedScore>=0.8}">{{currentDoc.predictedScore| number:2}}</button>
+        <button class="btn btn-sm" ng-if="currentDoc.predictedScore" ng-class="{'btn-default': currentDoc.predictedScore < 0.1, 'btn-danger': currentDoc.predictedScore >= 0.10 && currentDoc.predictedScore < 0.3, 'btn-warning': currentDoc.predictedScore >= 0.3 && currentDoc.predictedScore < 0.5, 'btn-info': currentDoc.predictedScore >= 0.5 && currentDoc.predictedScore < 0.6,'btn-primary': currentDoc.predictedScore >= 0.6 && currentDoc.predictedScore < 0.8, 'btn-success': currentDoc.predictedScore >= 0.8}">{{currentDoc.predictedScore| number:2}}</button>
         <!--button ng-if="currentDoc.predictedScore" class="btn btn-sm btn-default">{{currentDoc.predictedScore | number:2}}</button-->
       </div>
     </div>
