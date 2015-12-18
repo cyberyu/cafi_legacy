@@ -219,25 +219,49 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $scope.currentDoc.risk.push(w);*/
   };
 
+
   $scope.openNextGdoc = function (n) {
-    $scope.currentID += n;
+
+    var flag = 0;
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+        $scope.currentID = ($scope.gdocPager.currentPage - 1)*20 + (i + 1);
         break;
       }
     }
-    if (i < $scope.displayedGdocs.length-1){
+    if ((i < $scope.displayedGdocs.length-1 && !(i === 0 && n === -1)) || (i === $scope.displayedGdocs.length-1 && n === -1)){
       $scope.nextID = $scope.displayedGdocs[i+n].id;
     }else{
-      $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage+1);
-      $scope.nextID = $scope.displaySearchDocs[0];
+      flag = 1;
+      Gdoc.query({"search": $scope.displaySearch.id, "page": $scope.gdocPager.currentPage + n, "ordering":$scope.sortOption}).$promise.then(function (data) {
+        $scope.displaySearchDocs = data.results;
+        $scope.gdocPager.total = data.count;
+        $scope.gdocPager.currentPage = $scope.gdocPager.currentPage + n;
+        if(n === -1){
+          $scope.nextID = $scope.displaySearchDocs[$scope.displaySearchDocs.length - 1].id;
+        }else{
+          $scope.nextID = $scope.displaySearchDocs[0].id;
+        }
+
+        $scope.displayedGdocs = $scope.displaySearchDocs;
+        Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
+          $scope.currentDoc = data;
+          $scope.tags = [];
+        });
+        $scope.currentID += n;
+        $scope.selectedBuyerCompany = null;
+        $scope.selectedSupplierCompany = null;
+      });
     }
-    Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
-      $scope.currentDoc = data;
-      $scope.tags = [];
-    });
-    $scope.selectedBuyerCompany = null;
-    $scope.selectedSupplierCompany = null;
+    if(flag === 0) {
+      Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function (data) {
+        $scope.currentDoc = data;
+        $scope.tags = [];
+      });
+      $scope.selectedBuyerCompany = null;
+      $scope.selectedSupplierCompany = null;
+      $scope.currentID += n;
+    }
   };
 
   $scope.ok = function () {
