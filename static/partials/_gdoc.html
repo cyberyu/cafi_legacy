@@ -1,13 +1,16 @@
 <div class="modal-header">
   <div class = "row">
-    <div class="col-md-10">
+    <div class="col-md-9">
       <small>From Search: {{displaySearch.string}} </small>
     </div>
-    <div class="col-md-2">
-      <div class="col-lg-6">
-        <a ng-click="openNextGdoc(-1)" class="btn btn-default"><i class="fa fa-arrow-left"></i></a>
+    <div class="col-md-3">
+      <div class="col-lg-4">
+        <a ng-click="openNextGdoc(-1)" class="btn btn-default" ><i class="fa fa-arrow-left"></i></a>
       </div>
-      <div class="col-lg-6">
+        <div class="col-lg-4">
+          <span ng-show="gdocPager.total" class="btn btn-default" ng-disabled="true">{{ "WIP" }}/{{ gdocPager.total }} </span>
+        </div>
+      <div class="col-lg-4">
         <a ng-click="openNextGdoc(1)" class="btn btn-default"><i class="fa fa-arrow-right"></i></a>
       </div>
     </div>
@@ -64,30 +67,43 @@
   </div>
 
   <div class="col-lg-3 right-panel" id="gdoc-label-box" >
-    <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
-      <span ng-if="!currentDoc.reviewLater">Save for later review</span>
-      <span ng-if="currentDoc.reviewLater">Remove from later review</span>
-    </button>
     <table class="table table-striped">
       <thead>
       <tr>
-        <th><label class="control-label">Relevant?</label></th>
+        <th><label class="control-label">Review</label></th>
+        <th><label class="control-label">Relevant</label></th>
         <th><label class="control-label" ng-show="currentDoc.predictedScore != null">Prediction</label></th>
       </tr></thead>
       <tbody>
       <tr>
         <td>
-          <div class="label-div" >
-            <input type="radio" name="yes" ng-checked="currentDoc.relevance=='y'" value="y" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> Y
-            <input type="radio" name="maybe" ng-checked="currentDoc.relevance=='m'" value="m" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> M
-            <input type="radio" name="no" ng-checked="currentDoc.relevance=='n'" value="n" ng-model="currentDoc.relevance" ng-click="updateRelevance(currentDoc)"> N
+          <button type="button" class="btn btn-info btn-sm" ng-click="toggleSave4later(currentDoc)" >
+            <span ng-if="!currentDoc.reviewLater" class="glyphicon glyphicon-floppy-saved" uib-tooltip="Save for later review"></span>
+            <span ng-if="currentDoc.reviewLater" class="glyphicon glyphicon-floppy-remove" uib-tooltip="Remove from later review"></span>
+          </button>
+        </td>
+        <td>
+          <div class="btn-group" uib-dropdown>
+            <span id="relevance-button"
+                    type="button"
+                    ng-class="{'label-danger': currentDoc.relevance=='n', '': currentDoc.relevance==null, 'label-warning': currentDoc.relevance=='m', 'label-success': currentDoc.relevance=='y'}"
+                    class="btn btn-primary btn-sm" uib-dropdown-toggle>
+              <span ng-if="currentDoc.relevance">{{currentDoc.relevance|uppercase}} </span>
+              <span ng-if="!currentDoc.relevance" uib-tooltip="relevance unknown">U</span>
+              <span class="caret"></span>
+            </span>
+            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="relevance-button">
+              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'y')">yes</a></li>
+              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'m')">maybe</a></li>
+              <li role="menuitem"><a href ng-click="updateRelevance(currentDoc,'n')">no</a></li>
+            </ul>
           </div>
         </td>
         <td>
           <div ng-show="currentDoc.predictedScore != null">
-            <div ng-if="currentDoc.predictedScore<0"><h5><span class="label label-default">Relevance:{{0}}</span></h5></div>
-            <div ng-if="currentDoc.predictedScore>1"><h5><span class="label label-success">Relevance:{{1}}</span></h5></div>
-            <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h5><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">Relevance:{{currentDoc.predictedScore| number:3}}</span></h5></div>
+            <div ng-if="currentDoc.predictedScore<0"><h4><span class="label label-default">{{0}}</span></h4></div>
+            <div ng-if="currentDoc.predictedScore>1"><h4><span class="label label-success">{{1}}</span></h4></div>
+            <div ng-if="currentDoc.predictedScore>=0 && currentDoc.predictedScore<=1"><h4><span class="label" ng-class="{'label-default': currentDoc.predictedScore<0.1, 'label-danger': currentDoc.predictedScore>=0.10 && currentDoc.predictedScore<0.3, 'label-warning': currentDoc.predictedScore>=0.3 && currentDoc.predictedScore<0.5, 'label-info': currentDoc.predictedScore>=0.5 && currentDoc.predictedScore<0.6,'label-primary': currentDoc.predictedScore>=0.6 && currentDoc.predictedScore<0.8, 'label-success': currentDoc.predictedScore>=0.8}" ng-show="currentDoc.predictedScore">{{currentDoc.predictedScore| number:3}}</span></h4></div>
 
           </div>
         </td>

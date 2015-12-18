@@ -188,8 +188,12 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   };
 
 
-  $scope.updateRelevance = function (newDoc) {
-    Gdoc.update({'id': newDoc.id, 'relevance': newDoc.relevance})
+  $scope.updateRelevance = function (newDoc,relevance) {
+    Gdoc.update({'id': newDoc.id, 'relevance': relevance}).$promise.then(function(data){
+            $scope.relevance = data.relevance;
+            console.log("gdocId:"+ newDoc.id + "->" + $scope.relevance);
+          });
+    newDoc.relevance = relevance;
   };
 
   $scope.toggleSave4later = function(newDoc){
