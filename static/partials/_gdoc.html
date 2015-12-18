@@ -1,13 +1,16 @@
 <div class="modal-header">
   <div class = "row">
-    <div class="col-md-10">
+    <div class="col-md-9">
       <small>From Search: {{displaySearch.string}} </small>
     </div>
-    <div class="col-md-2">
-      <div class="col-lg-6">
-        <a ng-click="openNextGdoc(-1)" class="btn btn-default"><i class="fa fa-arrow-left"></i></a>
+    <div class="col-md-3">
+      <div class="col-lg-4" ng-show="currentDoc.id>1">
+        <a ng-click="openNextGdoc(-1)" class="btn btn-default" ><i class="fa fa-arrow-left"></i></a>
       </div>
-      <div class="col-lg-6">
+        <div class="col-lg-4">
+          <span ng-show="gdocPager.total" class="btn btn-default" >{{ currentDoc.id }}/{{ gdocPager.total }} </span>
+        </div>
+      <div class="col-lg-4" ng-show="currentDoc.id<gdocPager.total">
         <a ng-click="openNextGdoc(1)" class="btn btn-default"><i class="fa fa-arrow-right"></i></a>
       </div>
     </div>
