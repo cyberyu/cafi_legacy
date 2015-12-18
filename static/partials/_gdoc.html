@@ -77,9 +77,9 @@
       <tbody>
       <tr>
         <td>
-          <button class="btn btn-primary btn-sm" ng-click="toggleSave4later(currentDoc)">
-            <span ng-if="!currentDoc.reviewLater">Save</span>
-            <span ng-if="currentDoc.reviewLater">Remove</span>
+          <button type="button" class="btn btn-info btn-sm" ng-click="toggleSave4later(currentDoc)" >
+            <span ng-if="!currentDoc.reviewLater" class="glyphicon glyphicon-floppy-saved" uib-tooltip="Save for later review"></span>
+            <span ng-if="currentDoc.reviewLater" class="glyphicon glyphicon-floppy-remove" uib-tooltip="Remove from later review"></span>
           </button>
         </td>
         <td>
