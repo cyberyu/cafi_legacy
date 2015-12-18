@@ -46,7 +46,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.getGdocs = function(search, page,option) {
     Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
-      //console.log($scope.displaySearchDocs);
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
     });
@@ -216,10 +215,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
           });
     gdoc.relevance = relevance;
-    /*x = (Gdoc.get({"gdocId": gdoc.id}).$promise.then(function(data){
-            $scope.relevance = data.relevance;
-            console.log($scope.relevance);
-          }));*/
   };
 
   // modal stuff

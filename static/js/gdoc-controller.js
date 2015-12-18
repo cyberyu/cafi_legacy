@@ -19,6 +19,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   }
   for (var i = 0; i < $scope.displayedGdocs.length; i++) {
     if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+      $scope.currentID = i + 1;
       break;
     }
   }
@@ -219,6 +220,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   };
 
   $scope.openNextGdoc = function (n) {
+    $scope.currentID += n;
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
         break;
