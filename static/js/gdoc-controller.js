@@ -3,6 +3,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
 
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
+  $scope.currentID = $scope.currentDoc.id - $scope.displayedGdocs[0].id + 1  ;
 
   $scope.shouldShow = function (item) {
     return item!=$scope.majorRisk;
@@ -219,6 +220,8 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   };
 
   $scope.openNextGdoc = function (n) {
+    $scope.currentID+=n;
+    //console.log($scope.displayedGdocs);
     for (var i = 0; i < $scope.displayedGdocs.length; i++) {
       if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
         break;
