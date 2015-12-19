@@ -46,8 +46,8 @@
               <thead>
               <!--tr><th><input type="text" ng-model="searchAll" ng-change="findAll(searchAll)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Everthing"></th><th></th></tr-->
               <tr>
-                <th><a ng-click="sortEntity('name')">Entity Name</a></th>
-                <th><a ng-click="sortAddress('address')" >Address</a></th>
+                <th><a ng-click="sortEntity('name')" ><span class="glyphicon glyphicon-sort" ></span>Name</a></th>
+                <th><a ng-click="sortAddress('address')" ><span class="glyphicon glyphicon-sort" ></span>Address</a></th>
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Action</th>
@@ -118,7 +118,7 @@
         </div>
         <div class="col-sm-4 pull-right">
           <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
-          <a class="btn btn-sm btn-primary" ng-click="geoRefresh()">Refresh</a>
+          <a class="btn btn-sm btn-primary" ng-click="geoRefresh()"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
           <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
           <a class="btn btn-sm btn-danger" ng-click="deleteAllGeoSearch();deleteAllMarkers()">Delete All</a>
         </div>
