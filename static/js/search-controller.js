@@ -279,6 +279,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   //$scope.review = function(doc){
   //  alert('aa');
   //};
+  $scope.$on('newPage', function(event, data) { $scope.displaySearchDocs=data; });
 
   $scope.isCollapsed = true;
   $scope.listSearches(1);

@@ -4,14 +4,14 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
 
-  for (var i = 0; i < $scope.displayedGdocs.length; i++) {
-    if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+  for (var i = 0; i < $scope.displaySearchDocs.length; i++) {
+    if ($scope.displaySearchDocs[i].id == $scope.currentDoc.id) {
       $scope.currentID = ($scope.gdocPager.currentPage - 1)*20 + (i + 1);
       break;
     }
   }
-  if (i < $scope.displayedGdocs.length -1){
-    $scope.nextID = $scope.displayedGdocs[i+1].id;
+  if (i < $scope.displaySearchDocs.length -1){
+    $scope.nextID = $scope.displaySearchDocs[i+1].id;
   }else{
     $scope.nextID = null;
   }
@@ -210,18 +210,20 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.openNextGdoc = function (n) {
 
     var flag = 0;
-    for (var i = 0; i < $scope.displayedGdocs.length; i++) {
-      if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
+    for (var i = 0; i < $scope.displaySearchDocs.length; i++) {
+      if ($scope.displaySearchDocs[i].id == $scope.currentDoc.id) {
         $scope.currentID = ($scope.gdocPager.currentPage - 1)*20 + (i + 1);
         break;
       }
     }
-    if ((i < $scope.displayedGdocs.length-1 && !(i === 0 && n === -1)) || (i === $scope.displayedGdocs.length-1 && n === -1)){
-      $scope.nextID = $scope.displayedGdocs[i+n].id;
+    if ((i < $scope.displaySearchDocs.length-1 && !(i === 0 && n === -1)) || (i === $scope.displaySearchDocs.length-1 && n === -1)){
+      $scope.nextID = $scope.displaySearchDocs[i+n].id;
     }else{
       flag = 1;
       Gdoc.query({"search": $scope.displaySearch.id, "page": $scope.gdocPager.currentPage + n, "ordering":$scope.sortOption}).$promise.then(function (data) {
         $scope.displaySearchDocs = data.results;
+        $scope.$emit('newPage', data.results);
+
         $scope.gdocPager.total = data.count;
         $scope.gdocPager.currentPage = $scope.gdocPager.currentPage + n;
         if(n === -1){
@@ -230,7 +232,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
           $scope.nextID = $scope.displaySearchDocs[0].id;
         }
 
-        $scope.displayedGdocs = $scope.displaySearchDocs;
         Gdoc.get({"gdocId": $scope.nextID}).$promise.then(function(data){
           $scope.currentDoc = data;
           $scope.tags = [];
