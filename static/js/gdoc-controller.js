@@ -222,6 +222,8 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       flag = 1;
       Gdoc.query({"search": $scope.displaySearch.id, "page": $scope.gdocPager.currentPage + n, "ordering":$scope.sortOption}).$promise.then(function (data) {
         $scope.displaySearchDocs = data.results;
+        $scope.$emit('newPage', data.results);
+
         $scope.gdocPager.total = data.count;
         $scope.gdocPager.currentPage = $scope.gdocPager.currentPage + n;
         if(n === -1){
