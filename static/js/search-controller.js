@@ -51,6 +51,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
+
   $scope.sortBy = function(method){
     if(method=='relevance'){
       $scope.sortOption = !$scope.sortOption || $scope.sortOption[11] != '-' ? '-relevance,-predicted_score': 'relevance,predicted_score'

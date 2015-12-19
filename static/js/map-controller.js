@@ -22,6 +22,23 @@ projectControllers.controller('mapCtrl', function($scope, uiGmapGoogleMapApi, ui
     });
   });
 
+  $scope.updateFilterMarker = function(option1){
+    $scope.markers = [];
+    var options = {"project": $scope.project_id, "size":1000};
+    angular.extend(options, option1);
+    GeoSearch.query(options).$promise.then(function (data) {
+      $scope.allAddresses = data.results;
+      angular.forEach($scope.allAddresses, function(address){
+        marker = {
+          id: address.id,
+          coords: { "latitude": address.lat, "longitude": address.lng},
+          info: address.name + ': ' + address.address
+        };
+        $scope.markers.push(marker);
+      });
+    });
+  };
+
   $scope.deleteAllMarkers= function(){
     $scope.markers=[];
   };

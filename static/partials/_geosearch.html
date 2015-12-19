@@ -54,8 +54,8 @@
                 <!--<th><a class="btn btn-default btn-circle" ng-click="loadAddresses(addresses)" ><i class="fa fa-location-arrow"></i></a></th>-->
               </tr>
               <tr>
-                <th><input type="text" ng-model="searchName" ng-change="findEntity(searchName)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Name"></th>
-                <th><input type="text" ng-model="searchAddress" ng-change="findAddress(searchAddress)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Address"></th>
+                <th><input type="text" ng-model="searchName" ng-change="findEntity(searchName); updateFilterMarker({'name':filterName,'address':filterAddress})" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Name"></th>
+                <th><input type="text" ng-model="searchAddress" ng-change="findAddress(searchAddress); updateFilterMarker({'name':filterName,'address':filterAddress})" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Address"></th>
                 <th></th>
                 <th></th>
                 <th></th>

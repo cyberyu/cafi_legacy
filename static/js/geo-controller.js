@@ -14,7 +14,6 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
     option = {'page':$scope.currentPage,'name':$scope.filterName,'address':$scope.filterAddress};
     //console.log(option);
     $scope.getAddresses(option);
-
   };
 
   $scope.findAddress = function(address){
