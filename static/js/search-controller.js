@@ -43,22 +43,29 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     $rootScope.$emit('openModal', data);
   };
 
-  $scope.getGdocs = function(search, page,option) {
-    Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption}).$promise.then(function (data) {
+  $scope.relevanceCheck='';
+
+  $scope.getGdocs = function(search, page, option) {
+    Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption, "relevance":$scope.relevanceCheck}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
     });
   };
 
+  $scope.filterRelevance = function(option){
+    $scope.relevanceCheck = option;
+    //console.log($scope.relevanceCheck);
+    $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
+  };
 
   $scope.sortBy = function(method){
     if(method=='relevance'){
-      $scope.sortOption = !$scope.sortOption || $scope.sortOption[11] != '-' ? '-relevance,-predicted_score': 'relevance,predicted_score'
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[10] != '-' ? 'relevance,-predicted_score': 'relevance,predicted_score'; // I just want sorting by predicted scores, for the relevance we have dropdown
     } else {
-      $scope.sortOption = 'rank';
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-rank': 'rank';
     }
-    console.log($scope.sortOption);
+    //console.log($scope.sortOption);
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 

@@ -220,7 +220,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
       $scope.nextID = $scope.displaySearchDocs[i+n].id;
     }else{
       flag = 1;
-      Gdoc.query({"search": $scope.displaySearch.id, "page": $scope.gdocPager.currentPage + n, "ordering":$scope.sortOption}).$promise.then(function (data) {
+      Gdoc.query({"search": $scope.displaySearch.id, "page": $scope.gdocPager.currentPage + n, "ordering":$scope.sortOption , "relevance":$scope.relevanceCheck}).$promise.then(function (data) {
         $scope.displaySearchDocs = data.results;
         $scope.$emit('newPage', data.results);
 
