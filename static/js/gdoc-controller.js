@@ -4,19 +4,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.currentDoc = currentDoc;
   $scope.tags = [];
 
-  $scope.shouldShow = function (item) {
-    return item!=$scope.majorRisk;
-  };
-
-  $scope.shouldShow1= function (item) {
-    return item!=$scope.majorRisk && item!=$scope.secondaryRisk;
-  };
-
-  for (var i = 0; i < $scope.riskitems.length; i++) {
-    if ($scope.riskitems[i].objectId == $scope.currentDoc.id) {
-      $scope.tags.push( $scope.riskitems[i].risk + " Risk from " +  $scope.riskitems[i].fromCompany + " to " + $scope.riskitems[i].toCompany)
-    }
-  }
   for (var i = 0; i < $scope.displayedGdocs.length; i++) {
     if ($scope.displayedGdocs[i].id == $scope.currentDoc.id) {
       $scope.currentID = ($scope.gdocPager.currentPage - 1)*20 + (i + 1);
@@ -28,7 +15,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   }else{
     $scope.nextID = null;
   }
-  //Code for trial of pool
+
   //$scope.relations = Relation.query({evidence: currentDoc.id});
 
   $scope.deleteRelation = function (relation) {
@@ -203,21 +190,21 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     });
   };
 
-  $scope.addKeywords = function(w){
-    if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
-    $scope.currentDoc.ner.push(w);
-  };
-
-  $scope.addRisks = function(w){
-    console.log(w.id);
-    Risk.get({riskId: w.id}).$promise.then(function(data){
-      $scope.searchString = data.searchString;
-      console.log($scope.searchString);
-    });
-    //WIP
-    /*if (!$scope.currentDoc.risk) $scope.currentDoc.risk = [];
-    $scope.currentDoc.risk.push(w);*/
-  };
+  //$scope.addKeywords = function(w){
+  //  if (!$scope.currentDoc.ner) $scope.currentDoc.ner = [];
+  //  $scope.currentDoc.ner.push(w);
+  //};
+  //
+  //$scope.addRisks = function(w){
+  //  console.log(w.id);
+  //  Risk.get({riskId: w.id}).$promise.then(function(data){
+  //    $scope.searchString = data.searchString;
+  //    console.log($scope.searchString);
+  //  });
+  //  //WIP
+  //  /*if (!$scope.currentDoc.risk) $scope.currentDoc.risk = [];
+  //  $scope.currentDoc.risk.push(w);*/
+  //};
 
 
   $scope.openNextGdoc = function (n) {
@@ -272,6 +259,6 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
     $modalInstance.dismiss('cancel');
   };
 
-  $scope.major_risk = ["Capacity Constraints", "Financial Distress", "Labor Unrest", "IP Loss", "Conflict Mineral Sourcing", "Import/Export Violations", "Counterfeit/Non-MIL SPEC Parts",
-  "Legal", "Counterfeit","Conflict Minerals", "Financial", "Capacity", "Specialty Metals"];
+  //$scope.major_risk = ["Capacity Constraints", "Financial Distress", "Labor Unrest", "IP Loss", "Conflict Mineral Sourcing", "Import/Export Violations", "Counterfeit/Non-MIL SPEC Parts",
+  //"Legal", "Counterfeit","Conflict Minerals", "Financial", "Capacity", "Specialty Metals"];
 });
