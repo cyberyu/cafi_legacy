@@ -4,6 +4,7 @@ from celery import shared_task
 import random
 import time
 import json
+from swampdragon.pubsub_providers.data_publisher import publish_data
 from django.conf import settings
 import googlemaps
 from googleapiclient.discovery import build
@@ -127,6 +128,9 @@ def do_geo_search(id, address):
             else:
                 obj.status = 'bad'
             obj.save()
+            # swampdragon, tell browser one item finishes
+            c = 'project_%d_geo' % obj.project.id
+            publish_data(c, {"good": 1})
     except Exception, exc:
         raise do_geo_search.retry(exc=exc)
 

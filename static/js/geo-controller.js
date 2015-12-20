@@ -1,13 +1,31 @@
 projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi,
                                                            $routeParams, $http,$timeout, $uibModal,
                                                            $interval, Upload, popupService, Project,
-                                                           Search, Gdoc,GeoSearch,$window){
+                                                           Search, Gdoc,GeoSearch,$window, $dragon){
 
   $scope.project_id = $routeParams.id;
   $scope.currentProject = {};
-  $scope.currentProject.id = $routeParams.id;
 
-  console.log($scope.project_id);
+  $scope.channel = 'project_'+$scope.project_id+'_geo';
+  $scope.taskStatus = {numberGood: 0, numberBad: 0};
+
+  $dragon.onReady(function() {
+    $dragon.subscribe('geo_task', $scope.channel, {project: $scope.project_id}).then(function (response) {
+    });
+  });
+
+  $dragon.onChannelMessage(function(channels, message) {
+    if (indexOf.call(channels, $scope.channel) > -1) {
+      $scope.$apply(function() {
+        if (message.data.good) {
+          $scope.taskStatus.numberGood += 1;
+        } else {
+          $scope.taskStatus.numberBad += 1;
+        }
+        $scope.taskStatus.numberProcessed = $scope.taskStatus.numberGood + $scope.taskStatus.numberBad;
+      });
+    }
+  });
 
   $scope.findEntity = function(name){
     $scope.filterName = name;
@@ -164,10 +182,13 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
   $scope.submitGeoSearch = function(){
     $http.post('/api/geosearch/'+$scope.project_id+'/batch', $scope.addresses).then(function(response){
       $scope.submitDisabled = true;
-      $scope.numberSubmitted = response.data.count > 0 ? response.data.count : 0 ;
-      console.log($scope.numberSubmitted);
+      $scope.taskStatus.numberSubmitted = response.data.count > 0 ? response.data.count : 0 ;
+      if ($scope.taskStatus.numberSubmitted>0) {
+        $scope.hasPendingJob = true;
+      }
     });
   };
+
 
   $scope.geoRefresh = function(page){
     $scope.getAddresses($scope.currentPage);

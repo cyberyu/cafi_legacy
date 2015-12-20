@@ -87,7 +87,7 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter,)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     filter_fields = ('project', 'name', 'user',)
     search_fields = ('name', 'address',)
     ordering_fields = ('name', 'address',)
@@ -96,29 +96,12 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     authentication_classes = (ValidateSessionAuthentication,)
 
     def perform_create(self, serializer):
-        logger.debug("Geo Create")
         geosearch = serializer.save(user=self.request.user)
-        logger.debug("Address :"+ geosearch.address)
-        result = do_geo_search.delay(geosearch.id, geosearch.address)
-
+        do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
-        logger.debug("update: "+ geosearch.address)
-        result = do_geo_search.delay(geosearch.id, geosearch.address)
-        time.sleep(5)
-        if result.ready():
-            print "Task has run"
-            if result.successful():
-                print "Result was: %s" % result.result
-            else:
-                if isinstance(result.result, Exception):
-                    print "Task failed due to raising an exception"
-                    raise result.result
-                else:
-                    print "Task failed without raising exception"
-        else:
-            print "Task has not yet run"
+        do_geo_search.delay(geosearch.id, geosearch.address)
 
     @detail_route(methods=['POST'])
     def batch(self, request, *args, **kwargs):

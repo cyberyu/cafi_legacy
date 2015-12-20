@@ -38,7 +38,8 @@
     "ng-mfb": "latest",
     "ionicons": "latest",
     "ng-tags-input": "latest",
-    "angular-flash-alert": "latest"
+    "angular-flash-alert": "latest",
+    "swampdragon": "latest"
   },
   "resolutions": {
     "angular": "~1.4.0"
