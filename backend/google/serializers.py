@@ -11,7 +11,6 @@ class SearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Search
 
-
 class RiskObjectRelatedField(serializers.RelatedField):
     def to_representation(self, value):
         if value.subrisk:

@@ -67,12 +67,17 @@ class SearchResultViewSet(viewsets.ModelViewSet):
     filter_fields = ('search', 'label', 'review_later', 'relevance', 'search__project')
     ordering_fields = ('rank', 'predicted_score','relevance')
     authentication_classes = (ValidateSessionAuthentication,)
+    #count = SearchResult.objects.filter(relevance='y').count()
 
     def get_queryset(self):
         queryset = SearchResult.objects.all() #.exclude(relevance='n')
         project = self.request.query_params.get('project', None)
+
+
         if project is not None:
             queryset = queryset.filter(search__project=project)
+            #count = SearchResult.objects.filter(relevance__in=['y','n']).count()
+            #count += SearchResult.objects.filter(relevance='n').count()
         return queryset
 
     def perform_create(self, serializer):
@@ -87,12 +92,11 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     queryset = GeoSearch.objects.all()
     serializer_class = GeoSearchSerializer
     pagination_class = ResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter,)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     filter_fields = ('project', 'name', 'user',)
     search_fields = ('name', 'address',)
     ordering_fields = ('name', 'address',)
     filter_class = GeoSearchFilter
-
     authentication_classes = (ValidateSessionAuthentication,)
 
     def perform_create(self, serializer):
