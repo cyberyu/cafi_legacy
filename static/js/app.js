@@ -12,6 +12,7 @@ var cafiApp = angular.module('cafiApp', [
   'ngCookies',
   'ngTagsInput',
   'ng-mfb',
+  'SwampDragonServices',
   'flash',
   'ui.bootstrap',
   'uiGmapgoogle-maps',
