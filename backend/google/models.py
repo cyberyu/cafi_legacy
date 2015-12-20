@@ -13,9 +13,8 @@ from jsonfield import JSONField
 class Search(models.Model):
     STATUS_CHOICES = (
         (0, ''),
-        (1, 'submitted'),
-        (2, 'in process'),
-        (3, 'done'),
+        (1, 'in process'),
+        (2, 'done'),
     )
 
     project = models.ForeignKey(Project, related_name="searches")

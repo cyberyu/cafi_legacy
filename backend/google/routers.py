@@ -1,11 +1,15 @@
 from swampdragon import route_handler
 from swampdragon.route_handler import BaseRouter
-from models import GeoSearch
+from swampdragon.pubsub_providers.data_publisher import publish_data
+from django.conf import settings
+from google.models import Search
+
+cache = settings.CACHE
 
 
 class GeoRouter(BaseRouter):
     route_name = 'geo_task'
-    valid_verbs = ['get_status', 'subscribe']
+    valid_verbs = ['subscribe']
 
     def get_subscription_channels(self, **kwargs):
         channel = 'project_%s_geo' % kwargs.get('project')
@@ -14,10 +18,11 @@ class GeoRouter(BaseRouter):
 
 class SearchRouter(BaseRouter):
     route_name = 'search_task'
-    valid_verbs = ['get_status', 'subscribe']
+    valid_verbs = ['subscribe']
 
     def get_subscription_channels(self, **kwargs):
-        channel = 'project_%s_geo' % kwargs.get('project')
+        channel = 'project_%s_search' % kwargs.get('project')
+        print channel
         return [channel]
 
 route_handler.register(GeoRouter)
