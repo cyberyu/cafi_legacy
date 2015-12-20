@@ -11,6 +11,36 @@ projectControllers.controller('RiskCtrl', function($scope,$rootScope, $routePara
   $scope.Risks = RiskItem.query({"project": $scope.currentProject.id});
   $scope.subRisks = Risk.query({'type':2});
 
+  $scope.sortBy = function(method){
+    if(method=='company') {
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-from_company' : 'from_company';
+    }
+    var option = {'ordering':$scope.sortOption,'from_company':$scope.filterCompany,'risk':$scope.filterRisk, 'subrisk':$scope.filterSubRisk};
+    $scope.getRisk(option);
+  };
+
+  $scope.findBy = function(method,query){
+    if(method=='company'){
+      $scope.filterCompany = query;
+
+    }else if(method=='risk'){
+      $scope.filterRisk = query;
+    }else{
+      $scope.filterSubRisk = query;
+    }
+    var option = {'ordering':$scope.sortOption,'from_company':$scope.filterCompany,'risk':$scope.filterRisk, 'subrisk':$scope.filterSubRisk};
+    //console.log(option);
+    $scope.getRisk(option);
+  };
+
+  $scope.getRisk = function(option) {
+    var options = {"project": $scope.currentProject.id};
+    angular.extend(options, option);
+    RiskItem.query(options).$promise.then(function (data) {
+      $scope.Risks = data;
+    });
+  };
+
   $scope.labelRiskSubmit = function () {
     var one, two;
 

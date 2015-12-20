@@ -25,6 +25,7 @@
           <th><input type="text" ng-model="searchSupplier" ng-change="findBy('supplier',searchSupplier)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Supplier"></th>
           <th><input type="text" ng-model="searchItem" ng-change="findBy('items',searchItem)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Items"></th>
           <th></th>
+        </tr>
       </thead>
       <tbody>
         <tr ng-repeat="relation in Relations">
@@ -41,6 +42,7 @@
         </tr>
       </tbody>
     </table>
+    <hr>
     <form class="form-inline">
       <div class="form-group">
         <input type="text" ng-model="newRelation.buyer" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
