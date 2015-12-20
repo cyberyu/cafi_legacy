@@ -452,3 +452,13 @@ word-wrap: break-word;
     font-size: 11px;
 }
 
+.search-progress {
+    margin-bottom: 0px;
+    height: 10px;
+}
+
+.search-progress > .progress-bar {
+    font-size: 8px;
+    line-height: 10px;
+}
+

@@ -29,6 +29,28 @@ def set_lock(key):
     cache.set(key, 1, px=t)
 
 
+def publish_search_status(search_result):
+    status = {}
+    searches = cache.keys('search.*')
+    for key in searches:
+        sid = int(key.split('.')[-1])
+        value = cache.hgetall(key)
+        status[sid] = {}
+        status[sid]['to_process'] = value.get('to_process', 0)
+        status[sid]['processed'] = value.get('processed', 0)
+        if (status[sid]['to_process'] == status[sid]['processed']
+            and status[sid]['to_process'] and status[sid]['processed']):
+            s = Search.objects.get(pk=sid)
+            s = Search.objects.get(pk=sid)
+            s.status = 2  # mark status as done
+            s.save()
+            cache.delete(key)
+    channel = 'project_%s_search' % search_result.search.project.id
+    print channel, status
+    publish_data(channel, status)
+    return status
+
+
 class GeocodingTest():
     def __init__(self):
         self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
@@ -68,23 +90,23 @@ def do_search(search, num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
-                    logger.debug(obj.url)
-                    logger.debug(obj)
                     obj.save()
+                    cache.hincrby('search.%s' % search.id, 'to_process')
+                    publish_search_status(obj)
                     do_download.delay(obj.id, obj.url)
                 except Exception as e:
-                    search.save()
                     logger.debug(e.traceback.format_exc())
 
             counter = len(response['items'])
             if counter < 10:  # Checks if the results returned are less than actual request of 10
-                search.has_more_results = False # Flag Set no more results
+                search.has_more_results = False  # Flag Set no more results
 
             start_page += 1
             search.last_stop = start_page
             search.save()
         else:
             break
+    return 0
 
 
 @shared_task(default_retry_delay=3, max_retries=3)
@@ -93,7 +115,7 @@ def do_download(id, url):
         data = download(url)
     except Exception as e:
         logger.debug(e.traceback.format_exc())
-        logger.debug("Connection Error :Search id " + str(id))
+        logger.debug("Connection Error: search id %s " % id)
         data = {'path': None, 'doc_type': 'txt', 'text': "Connection Error!", 'raw_html': None}
     obj = SearchResult.objects.get(pk=id)
     obj.raw_file.name = data.get('path')
@@ -103,6 +125,10 @@ def do_download(id, url):
     obj.raw_html = data.get('raw_html')
     obj.get_nerwords()
     obj.save()
+
+    cache.hincrby('search.%s' % obj.search.id, 'processed')
+    publish_search_status(obj)
+    return 0
 
 
 @shared_task(default_retry_delay=3, max_retries=3)

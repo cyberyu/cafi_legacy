@@ -3,7 +3,7 @@
  */
 
 projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiGmapGoogleMapApi, $routeParams,
-                                                           $http, $uibModal, Upload, popupService, $cookies,
+                                                           $http, $uibModal, Upload, popupService, $cookies, $dragon,
                                                            Project, Search, Gdoc,GeoSearch, Company, Risk,
                                                            PredefinedSearch, RiskItem){
 
@@ -30,15 +30,35 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.gsearchOptions = {};
 
   $scope.searches = [];
+  $scope.sortOption=null;
 
   $scope.counter = 0;
   $scope.filterOptions = ["rank", "predicted_score", "-predicted_score"];
   $scope.dataSources = ["Google", "USA Spending", "DataMyne"];
   $scope.currentSource = $scope.dataSources[0];
+
+  //------------------- real time notification ----------------//
+  $scope.channel = 'project_' + $scope.currentProject.id + '_search';
+  $scope.searchStatus = {};
+
+  $dragon.onReady(function() {
+    $dragon.subscribe('search_task', $scope.channel, {project: $scope.currentProject.id}).then(function (response) {
+    });
+  });
+
+  $dragon.onChannelMessage(function(channels, message) {
+    if (indexOf.call(channels, $scope.channel) > -1) {
+      $scope.$apply(function() {
+        $scope.searchStatus = message.data;
+      });
+    }
+  });
+  //-------------------------------------------//
+
   $scope.selectDataSource = function(src){
     $scope.currentSource = src;
   };
-  $scope.sortOption=null;
+
   $scope.openModal = function(data) {
     $rootScope.$emit('openModal', data);
   };
