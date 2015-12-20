@@ -88,24 +88,7 @@
             <tr>
               <!--<th style="width: 30px;"></th>-->
               <th><nobr><a ng-click="sortBy('rank')"><span class="glyphicon glyphicon-sort" ></span>Rank</a></nobr></th>
-              <th>
-                <div class="btn-group col-md-1" uib-dropdown>
-                  <span id="relevance-button"
-                          type="button"
-                          ng-class="{'label-danger': relevanceCheck=='n', '': relevanceCheck==null, 'label-warning': relevanceCheck=='m', 'label-success': relevanceCheck=='y'}"
-                          class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                    <span ng-if="relevanceCheck">{{relevanceCheck|uppercase}} </span>
-                    <span ng-if="!relevanceCheck" uib-tooltip="relevance unknown">U</span>
-                    <span class="caret"></span>
-                  </span>
-                  <ul class="uib-dropdown-menu" role="menu" aria-labelledby="relevance-button">
-                    <li role="menuitem"><a href ng-click="filterRelevance(null)">None</a></li>
-                    <li role="menuitem"><a href ng-click="filterRelevance('y')">yes</a></li>
-                    <li role="menuitem"><a href ng-click="filterRelevance('m')">maybe</a></li>
-                    <li role="menuitem"><a href ng-click="filterRelevance('n')">no</a></li>
-                  </ul>
-                </div>
-              </th>
+              <th> </th>
               <th>Title <!--input st-search="hltitle" placeholder="filter by title" class="input-sm form-control" type="search"/--> </th>
               <th>Snippet <!--input st-search="hlsnippet" placeholder="filter by snippet" class="input-sm form-control" type="search"/--> </th>
               <th></th>
