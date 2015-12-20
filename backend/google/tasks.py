@@ -22,17 +22,19 @@ def get_lock(key):
         time.sleep(0.2)
     return False
 
+
 def set_lock(key):
     t = int(random.random()*100 + 100)
     print "wait a moment %s" % t
     cache.set(key, 1, px=t)
+
 
 class GeocodingTest():
     def __init__(self):
         self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
         self.client = googlemaps.Client(self.key)
 
-    def simple_geocode(self,query):
+    def simple_geocode(self, query):
         results = self.client.geocode(query)
         return results
 
@@ -46,19 +48,16 @@ def do_search(search, num_requests):
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0
     start_page = search.last_stop
-    logger.debug("Google Search: #request:"+ str(num_requests))
+    logger.debug("Google Search: #request: %s" % num_requests)
     # Make an HTTP request object
     for i1 in range(0, num_requests):
-        if search.contain_result == 0:
+        if search.has_more_results:
             # This is the offset from the beginning to start getting the results from
             start_val = 1 + (start_page * 10)
-            # Make an HTTP request object
 
-            request = collection.list(q=search.string,
-                num = 10, #this is the maximum & default anyway
-                start = start_val,
-                cx = search_engine_id
-            )
+            # Make an HTTP request object
+            # 10 is the maximum & default anyway
+            request = collection.list(q=search.string, num=10, start=start_val, cx=search_engine_id )
             response = request.execute()
 
             for i, doc in enumerate(response['items']):
@@ -73,26 +72,20 @@ def do_search(search, num_requests):
                     logger.debug(obj)
                     obj.save()
                     do_download.delay(obj.id, obj.url)
-                except Exception :
+                except Exception:
                     search.save()
                     logger.exception("Exception")
 
             counter = len(response['items'])
-            if counter < 10 : # Checks if the results returned are less than actual request of 10
-                search.contain_result = 1 # Flag Set no more results
-                start_page += 1
-                search.last_stop = start_page
-                search.save()
-                break
-            else:
-                start_page += 1
-                search.last_stop = start_page
-                search.save()
+            if counter < 10: # Checks if the results returned are less than actual request of 10
+                search.has_more_results = False # Flag Set no more results
+
+            start_page += 1
+            search.last_stop = start_page
+            search.save()
         else:
             break
 
-    search.save()
-    return 1
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):

@@ -26,7 +26,7 @@ class Search(models.Model):
     is_relevant = models.BooleanField(default=True)
 
     last_stop = models.IntegerField(default=0)
-    contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
+    has_more_results = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def incr_last_stop(self):
