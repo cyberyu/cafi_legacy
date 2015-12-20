@@ -55,9 +55,9 @@ def do_search(search, num_requests):
             # Make an HTTP request object
 
             request = collection.list(q=search.string,
-                num=10, #this is the maximum & default anyway
-                start=start_val,
-                cx=search_engine_id
+                num = 10, #this is the maximum & default anyway
+                start = start_val,
+                cx = search_engine_id
             )
             response = request.execute()
 
@@ -77,15 +77,15 @@ def do_search(search, num_requests):
                     search.save()
                     logger.exception("Exception")
 
-            counter =  len(response['items'])
+            counter = len(response['items'])
             if counter < 10 : # Checks if the results returned are less than actual request of 10
                 search.contain_result = 1 # Flag Set no more results
-                start_page+=1
+                start_page += 1
                 search.last_stop = start_page
                 search.save()
                 break
             else:
-                start_page+=1
+                start_page += 1
                 search.last_stop = start_page
                 search.save()
         else:
