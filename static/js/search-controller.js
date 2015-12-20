@@ -44,18 +44,35 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   };
 
   $scope.relevanceCheck='';
+  $scope.showBar= 1;
+
+  $scope.labeledCount = function(search){
+    $scope.labelCount=0;
+    Gdoc.query({"search": search.id, "relevance":'y'}).$promise.then(function (data) {
+      $scope.labelCount += data.count;
+      Gdoc.query({"search": search.id, "relevance":'n'}).$promise.then(function (data) {
+        $scope.labelCount += data.count;
+      });
+    });
+
+
+  };
 
   $scope.getGdocs = function(search, page, option) {
     Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption, "relevance":$scope.relevanceCheck}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
+      if($scope.showBar === 1){
+        $scope.totalResult = $scope.gdocPager.total;
+        $scope.labeledCount(search);
+        $scope.showBar=0;
+      }
     });
   };
 
   $scope.filterRelevance = function(option){
     $scope.relevanceCheck = option;
-    //console.log($scope.relevanceCheck);
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
@@ -77,6 +94,12 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.displaySearch = null;
       $scope.reviewLaterActive = true;
     })
+  };
+
+  $scope.pageRefresh = function(search, page){
+
+    $scope.getGdocs(search, page);
+    $scope.labeledCount(search);
   };
 
   $scope.submitSearch = function(){
@@ -114,6 +137,8 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.gdocPager.currentPage = 1;
       $scope.displaySearch = search;
       $scope.reviewLaterActive = false;
+      $scope.totalResult = data.count;
+      $scope.labeledCount(search);
     });
   };
 
@@ -216,13 +241,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.updateRelevance = function (gdoc, relevance) {
-    //console.log(gdoc);
+  $scope.updateRelevance = function (gdoc, relevance, search) {
     Gdoc.update({'id': gdoc.id, 'relevance': relevance}).$promise.then(function(data){
             $scope.relevance = data.relevance;
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
-          });
-
+            $scope.showBar=0;
+            $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage);
+    });
     gdoc.relevance = relevance;
   };
 

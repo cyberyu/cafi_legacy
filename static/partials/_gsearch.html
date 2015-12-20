@@ -77,8 +77,12 @@
   <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-heading col-md-12">
-        <div class="col-md-11">
-          {{gdocPager.total}} Results: {{displaySearch.string}}
+        <div class="col-sm-8">
+          <span class="glyphicon glyphicon-bullhorn"> </span> {{gdocPager.total}} Results: {{displaySearch.string}}
+        </div>
+        <div class="col-sm-4" align="right" ng-show="labelCount >= 0 " ng-click="labeledCount(displaySearch)" uib-tooltip="Count of labeled vs Total">
+          <uib-progressbar class="progress-striped active" max="totalResult" value="labelCount" type="success"><i>{{labelCount}} / {{totalResult}}</i></uib-progressbar>
+          <!--uib-progressbar max="gdocPager.total" value="labelCount"><span style="color:white; white-space:nowrap;">{{labelCount}} / {{gdocPager.total}}</span></uib-progressbar-->
         </div>
       </div>
 
@@ -177,7 +181,7 @@
         <div class="text-center" ng-if="!reviewLaterActive">
           <span>total {{gdocPager.total}} results</span>
           <button class="btn btn-primary btn-small" ng-click="moreSearch(1)"> Get next page</button>
-          <button class="btn btn-primary btn-small" ng-click="getGdocs(displaySearch, gdocPager.currentPage)"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+          <button class="btn btn-primary btn-small" ng-click="pageRefresh(displaySearch, gdocPager.currentPage)"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
         </div>
       </div>
     </div>

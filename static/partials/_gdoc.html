@@ -1,7 +1,7 @@
 <div class="modal-header">
   <div class = "row">
     <div class="col-md-9">
-      <small>From Search: {{displaySearch.string}} </small>
+      <small><span class="glyphicon glyphicon-bullhorn"> </span> From Search: {{displaySearch.string}} </small>
     </div>
     <div class="col-md-3">
       <div class="col-lg-4">
@@ -24,30 +24,30 @@
     <p ng-show ="currentDoc.docType"><strong>Doc type</strong>: {{currentDoc.docType}}</p>
     <hr>
     <div>
-      <span class="label label-primary">Organization</span><br>
+      <span class="label label-primary"><span class="glyphicon glyphicon-tag"> </span> Organization </span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.org" ng-class="wcls"
             ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
     </div>
     <div>
-      <span class="label label-success">Location</span><br>
+      <span class="label label-success"><span class="glyphicon glyphicon-tag"> </span> Location </span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.location" ng-class="wcls"
             ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}}; </span>
     </div>
     <div>
-      <span class="label label-warning">Person</span><br>
+      <span class="label label-warning"><span class="glyphicon glyphicon-tag"> </span> Person</span><br>
       <span class="ner-words" ng-repeat="p in currentDoc.nerwords.person" ng-class="wcls"
             ng-mouseover="wcls= wcls=='ner-clicked'? 'ner-clicked':'ner'" ng-mouseleave="wcls= wcls=='ner-clicked'? 'ner-clicked':''"
             ng-click="wcls='ner-clicked'; addKeywords(p)"> {{p}};
       </span>
     </div>
     <div>
-      <span class="label label-info">Product</span><br>
+      <span class="label label-info"><span class="glyphicon glyphicon-tag"> </span> Product</span><br>
     </div>
     <hr>
     <div>
-      <span class="label label-danger">Risk Keywords</span><br>
+      <span class="label label-danger"><span class="glyphicon glyphicon-tag"> </span> Risk Keywords</span><br>
         <span class="risk-words" ng-repeat="p in currentDoc.risks" ng-class="wcls"
               ng-mouseover="wcls= wcls=='risk-clicked'? 'risk-clicked':'risk'" ng-mouseleave="wcls= wcls=='risk-clicked'? 'risk-clicked':''"
               ng-click="wcls='risk-clicked'; addRisks(p)"> {{p.risk.name}};
