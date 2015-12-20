@@ -179,6 +179,7 @@ projectControllers.controller('gDocCtrl', function ($scope, $modalInstance,$uibM
   $scope.updateRelevance = function (newDoc,relevance) {
     Gdoc.update({'id': newDoc.id, 'relevance': relevance}).$promise.then(function(data){
             $scope.relevance = data.relevance;
+            $scope.$emit('newRel', data);
             console.log("gdocId:"+ newDoc.id + "->" + $scope.relevance);
           });
     newDoc.relevance = relevance;
