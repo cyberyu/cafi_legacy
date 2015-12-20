@@ -222,6 +222,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
             $scope.relevance = data.relevance;
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
           });
+
     gdoc.relevance = relevance;
   };
 
@@ -287,6 +288,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   //  alert('aa');
   //};
   $scope.$on('newPage', function(event, data) { $scope.displaySearchDocs=data; });
+  $scope.$on('newRel', function(event, data) { $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage); });
 
   $scope.isCollapsed = true;
   $scope.listSearches(1);
