@@ -4,7 +4,7 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
                                                            Search, Gdoc,GeoSearch,$window, $dragon){
 
   $scope.project_id = $routeParams.id;
-  $scope.currentProject = {};
+  $scope.currentProject = {id: $scope.project_id};
 
   $scope.channel = 'project_'+$scope.project_id+'_geo';
   $scope.taskStatus = {numberGood: 0, numberBad: 0};
