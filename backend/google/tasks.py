@@ -4,6 +4,7 @@ from celery import shared_task
 import random
 import time
 import json
+from swampdragon.pubsub_providers.data_publisher import publish_data
 from django.conf import settings
 import googlemaps
 from googleapiclient.discovery import build
@@ -21,17 +22,41 @@ def get_lock(key):
         time.sleep(0.2)
     return False
 
+
 def set_lock(key):
     t = int(random.random()*100 + 100)
     print "wait a moment %s" % t
     cache.set(key, 1, px=t)
+
+
+def publish_search_status(search_result):
+    status = {}
+    searches = cache.keys('search.*')
+    for key in searches:
+        sid = int(key.split('.')[-1])
+        value = cache.hgetall(key)
+        status[sid] = {}
+        status[sid]['to_process'] = value.get('to_process', 0)
+        status[sid]['processed'] = value.get('processed', 0)
+        if (status[sid]['to_process'] == status[sid]['processed']
+            and status[sid]['to_process'] and status[sid]['processed']):
+            s = Search.objects.get(pk=sid)
+            s = Search.objects.get(pk=sid)
+            s.status = 2  # mark status as done
+            s.save()
+            cache.delete(key)
+    channel = 'project_%s_search' % search_result.search.project.id
+    print channel, status
+    publish_data(channel, status)
+    return status
+
 
 class GeocodingTest():
     def __init__(self):
         self.key = 'AIzaSyC8viCWyzR_q2MBKLeRZGpc7BHA3NTNimA' #Autocafi Developer Key
         self.client = googlemaps.Client(self.key)
 
-    def simple_geocode(self,query):
+    def simple_geocode(self, query):
         results = self.client.geocode(query)
         return results
 
@@ -45,19 +70,16 @@ def do_search(search, num_requests):
     search_engine_id = '012608441591405123751:clhx3wq8jxk'
     counter = 0
     start_page = search.last_stop
-    logger.debug("Google Search: #request:"+ str(num_requests))
+    logger.debug("Google Search: #request: %s" % num_requests)
     # Make an HTTP request object
     for i1 in range(0, num_requests):
-        if search.contain_result == 0:
+        if search.has_more_results:
             # This is the offset from the beginning to start getting the results from
             start_val = 1 + (start_page * 10)
-            # Make an HTTP request object
 
-            request = collection.list(q=search.string,
-                num=10, #this is the maximum & default anyway
-                start=start_val,
-                cx=search_engine_id
-            )
+            # Make an HTTP request object
+            # 10 is the maximum & default anyway
+            request = collection.list(q=search.string, num=10, start=start_val, cx=search_engine_id )
             response = request.execute()
 
             for i, doc in enumerate(response['items']):
@@ -68,38 +90,32 @@ def do_search(search, num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
-                    logger.debug(obj.url)
-                    logger.debug(obj)
                     obj.save()
+                    cache.hincrby('search.%s' % search.id, 'to_process')
+                    publish_search_status(obj)
                     do_download.delay(obj.id, obj.url)
-                except Exception :
-                    search.save()
-                    logger.exception("Exception")
+                except Exception as e:
+                    logger.debug(e.traceback.format_exc())
 
-            counter =  len(response['items'])
-            if counter < 10 : # Checks if the results returned are less than actual request of 10
-                search.contain_result = 1 # Flag Set no more results
-                start_page+=1
-                search.last_stop = start_page
-                search.save()
-                break
-            else:
-                start_page+=1
-                search.last_stop = start_page
-                search.save()
+            counter = len(response['items'])
+            if counter < 10:  # Checks if the results returned are less than actual request of 10
+                search.has_more_results = False  # Flag Set no more results
+
+            start_page += 1
+            search.last_stop = start_page
+            search.save()
         else:
             break
+    return 0
 
-    search.save()
-    return 1
 
 @shared_task(default_retry_delay=3, max_retries=3)
 def do_download(id, url):
     try:
         data = download(url)
-    except Exception, err:
-        logger.debug(traceback.format_exc())
-        logger.debug("Connection Error :Search id " + str(id))
+    except Exception as e:
+        logger.debug(e.traceback.format_exc())
+        logger.debug("Connection Error: search id %s " % id)
         data = {'path': None, 'doc_type': 'txt', 'text': "Connection Error!", 'raw_html': None}
     obj = SearchResult.objects.get(pk=id)
     obj.raw_file.name = data.get('path')
@@ -109,6 +125,10 @@ def do_download(id, url):
     obj.raw_html = data.get('raw_html')
     obj.get_nerwords()
     obj.save()
+
+    cache.hincrby('search.%s' % obj.search.id, 'processed')
+    publish_search_status(obj)
+    return 0
 
 
 @shared_task(default_retry_delay=3, max_retries=3)
@@ -127,6 +147,9 @@ def do_geo_search(id, address):
             else:
                 obj.status = 'bad'
             obj.save()
+            # swampdragon, tell browser one item finishes
+            c = 'project_%d_geo' % obj.project.id
+            publish_data(c, {"good": 1})
     except Exception, exc:
         raise do_geo_search.retry(exc=exc)
 

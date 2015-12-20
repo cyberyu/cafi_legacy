@@ -22,6 +22,7 @@ from filters import GeoSearchFilter
 import logging
 logger = logging.getLogger("CAFI")
 
+
 class ResultsSetPagination(PageNumberPagination):
     page_size = 20
     page_size_query_param = 'size'
@@ -39,7 +40,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         obj = serializer.save(user=self.request.user)
         user_val = self.request.user
-        logger.debug("Create Search: " +str(user_val))
+        logger.debug("Create Search: " + str(user_val))
         do_search.delay(obj, 3)
 
     @detail_route(methods=['POST'])
@@ -100,29 +101,12 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
     authentication_classes = (ValidateSessionAuthentication,)
 
     def perform_create(self, serializer):
-        logger.debug("Geo Create")
         geosearch = serializer.save(user=self.request.user)
-        logger.debug("Address :"+ geosearch.address)
-        result = do_geo_search.delay(geosearch.id, geosearch.address)
-
+        do_geo_search.delay(geosearch.id, geosearch.address)
 
     def perform_update(self, serializer):
         geosearch = serializer.save()
-        logger.debug("update: "+ geosearch.address)
-        result = do_geo_search.delay(geosearch.id, geosearch.address)
-        time.sleep(5)
-        if result.ready():
-            print "Task has run"
-            if result.successful():
-                print "Result was: %s" % result.result
-            else:
-                if isinstance(result.result, Exception):
-                    print "Task failed due to raising an exception"
-                    raise result.result
-                else:
-                    print "Task failed without raising exception"
-        else:
-            print "Task has not yet run"
+        do_geo_search.delay(geosearch.id, geosearch.address)
 
     @detail_route(methods=['POST'])
     def batch(self, request, *args, **kwargs):
@@ -149,9 +133,9 @@ class GeoSearchViewSet(viewsets.ModelViewSet):
         qs = GeoSearch.objects.filter(project__id=project_id).values('name', 'address', 'lat', 'lng', 'status')
         return render_to_csv_response(qs)
 
+
 class Upload(APIView):
     authentication_classes = (ValidateSessionAuthentication,)
-    #permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         content = {
@@ -175,16 +159,15 @@ class Upload(APIView):
 
 class Relevancefilter(APIView):
     authentication_classes = (ValidateSessionAuthentication,)
-    #permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None):
+    def get(self, request):
         content = {
             'user': unicode(request.user),  # `django.contrib.auth.User` instance.
             'auth': unicode(request.auth),  # None
         }
         return Response(content)
 
-    def post(self, request, format=None):
+    def post(self, request):
         logger.debug("Starting Relevance Filtering")
         do_active_filter.delay()
         return Response({"Hello": "World"}, status=status.HTTP_200_OK)

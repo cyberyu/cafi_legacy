@@ -1,3 +1,4 @@
+{% load static swampdragon_tags %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -84,6 +85,10 @@
     <script src="/static/vendor/angular-paging/dist/paging.js"></script>
     <script src="/static/vendor/angular-flash-alert/dist/angular-flash.min.js"></script>
     <script src="/static/vendor/ngSticky/dist/sticky.min.js"></script>
+    {% swampdragon_settings %}
+    <script src="/static/vendor/swampdragon/dist/swampdragon.min.js"></script>
+    <script src="/static/vendor/swampdragon/dist/datamapper.min.js"></script>
+    <script src="/static/vendor/swampdragon/angular/services.js"></script>
     <script src="/static/js/app.js"></script>
     <script src="/static/js/project-service.js"></script>
     <script src="/static/js/login-controller.js"></script>

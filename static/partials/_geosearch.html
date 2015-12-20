@@ -109,48 +109,29 @@
           <a class="btn btn-primary" ng-click="saveAddressEdit(currentAddress); ok()">Save</a>
         </div>
       </script>
-      <a class="col-lg-10 ">
-        <div ng-if="submitDisabled && numberSubmitted>0" class="alert alert-info">
+      <div class="col-lg-10 ">
+        <div ng-if="submitDisabled && taskStatus.numberSubmitted>0" class="alert alert-info">
           {{numberSubmitted}} items are uploaded and being processing, click refresh button to check the status.
         </div>
-        <div ng-if="submitDisabled && numberSubmitted==0" class="alert alert-danger">
+        <div ng-if="submitDisabled && taskStatus.numberSubmitted==0" class="alert alert-danger">
           Seems like you haven't uploaded a valid csv file yet.
         </div>
-        <div class="col-sm-4 pull-right">
+        <div ng-if="hasPendingJob">
+          <uib-progressbar max="taskStatus.numberSubmitted" value="taskStatus.numberProcessed">
+            <span style="color:white; white-space:nowrap;">
+              {{taskStatus.numberProcessed}} / {{taskStatus.numberSubmitted}}
+            </span>
+          </uib-progressbar>
+        </div>
+        <div class="pull-right">
           <a class="btn btn-sm btn-primary" href="/api/geosearch/{{project_id}}/download">Download</a>
           <a class="btn btn-sm btn-primary" ng-click="geoRefresh()"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
           <a class="btn btn-sm btn-primary" ng-click="submitGeoSearch()">Submit</a>
           <a class="btn btn-sm btn-danger" ng-click="deleteAllGeoSearch();deleteAllMarkers()">Delete All</a>
         </div>
-      </a>
+      </div>
     </div>
   </div>
 
 </div>
 
-
-
-
-<!--<div class="row" ng-show="progressBool && calculateProgressAddress(addresses)<1">-->
-  <!--<div class="col-md-12">-->
-    <!--<progressbar animate="false" value="calculateProgressAddress(addresses)" type="success" max="1"><b>{{calculateProgressAddress(addresses)*100|number:0}}%</b></progressbar>-->
-  <!--</div>-->
-<!--</div>-->
-
-
-
-<!--<div class="row">-->
-  <!--<div class="col-lg-6">-->
-    <!--<div class="panel panel-default">-->
-      <!--<div class="panel-heading">-->
-        <!--Google Map-->
-      <!--</div>-->
-      <!--<div class="panel-body">-->
-        <!--<ui-gmap-google-map center='mapData.map.center' zoom='mapData.map.zoom'>-->
-          <!--<ui-gmap-marker ng-repeat="m in mapData.markers" coords="m" idKey="m.id">-->
-          <!--</ui-gmap-marker>-->
-        <!--</ui-gmap-google-map>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->

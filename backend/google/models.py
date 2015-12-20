@@ -13,9 +13,8 @@ from jsonfield import JSONField
 class Search(models.Model):
     STATUS_CHOICES = (
         (0, ''),
-        (1, 'submitted'),
-        (2, 'in process'),
-        (3, 'done'),
+        (1, 'in process'),
+        (2, 'done'),
     )
 
     project = models.ForeignKey(Project, related_name="searches")
@@ -26,7 +25,7 @@ class Search(models.Model):
     is_relevant = models.BooleanField(default=True)
 
     last_stop = models.IntegerField(default=0)
-    contain_result = models.IntegerField(default=0) # contain_result = 0 for more results, 1 for no results
+    has_more_results = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def incr_last_stop(self):

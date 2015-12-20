@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'djoser',
     'django_nose',
     'djcelery',
+    'swampdragon',
     'engagement',
     'google',
     'risk',
@@ -170,7 +171,10 @@ CELERY_ROUTES = {
     }
 }
 
-from settings.local import *
+############## SWAMPDRAGON ##################
+SWAMP_DRAGON_CONNECTION = ('swampdragon.connections.sockjs_connection.DjangoSubscriberConnection', '/data')
+DRAGON_URL = 'http://localhost:9999/'
+#############################################
 
 LOGGING = {
     'version': 1,
@@ -214,3 +218,5 @@ LOGGING = {
         },
     }
 }
+
+from settings.local import *
