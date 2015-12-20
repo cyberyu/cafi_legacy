@@ -12,14 +12,19 @@
     <div>
       <a class="btn btn-sm btn-primary" href="/api/relations/{{currentProject.id}}/download.csv">Download</a>
     </div>
-    <table class="table table-hover table-striped">
+    <table st-table="Relations" class="table table-hover table-striped">
       <thead>
         <tr>
-          <th> Buyer </th>
-          <th> Supplier </th>
+          <th><a ng-click="sortBy('buyer')" ><span class="glyphicon glyphicon-sort" ></span>Buyer</a> </th>
+          <th><a ng-click="sortBy('supplier')" ><span class="glyphicon glyphicon-sort" ></span>Supplier</a> </th>
           <th> Items</th>
           <th> Source </th>
         </tr>
+        <tr>
+          <th><input type="text" ng-model="searchBuyer" ng-change="findBy('buyer',searchBuyer)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Buyer"></th>
+          <th><input type="text" ng-model="searchSupplier" ng-change="findBy('supplier',searchSupplier)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Supplier"></th>
+          <th><input type="text" ng-model="searchItem" ng-change="findBy('items',searchItem)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Items"></th>
+          <th></th>
       </thead>
       <tbody>
         <tr ng-repeat="relation in Relations">

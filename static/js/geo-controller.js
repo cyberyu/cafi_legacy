@@ -24,12 +24,6 @@ projectControllers.controller('GeoSearchCtrl', function($scope,$rootScope,uiGmap
 
   };
 
-  /*$scope.findAll = function(search){
-    option = {'page':$scope.currentPage,'search':search};
-    //console.log(option);
-    $scope.getAddresses(option);
-  };*/
-
   $scope.sortEntity = function(method) {
     $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-name': 'name';
     option = {'page':$scope.currentPage,'ordering':$scope.sortOption,'name':$scope.filterName,'address':$scope.filterAddress};

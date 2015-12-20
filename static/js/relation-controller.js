@@ -8,6 +8,39 @@ projectControllers.controller('RelationCtrl', function($scope,$rootScope,uiGmapG
   $scope.Relations = Relation.query({"project": $scope.currentProject.id});
   $scope.predefinedCompanies = Company.query();
 
+  $scope.sortBy = function(method){
+    if(method=='buyer'){
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-buyer__name': 'buyer__name';
+    } else {
+      $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-supplier__name': 'supplier__name';
+    }
+    var option = {'ordering':$scope.sortOption,'buyer':$scope.filterBuyer,'supplier':$scope.filterSupplier, 'items':$scope.filterItems};
+    $scope.getRelation(option);
+  };
+
+  $scope.findBy = function(method,query){
+    if(method=='buyer'){
+      $scope.filterBuyer = query;
+
+    }else if(method=='supplier'){
+      $scope.filterSupplier = query;
+    }else{
+      $scope.filterItems = query;
+    }
+    option = {'ordering':$scope.sortOption, 'buyer':$scope.filterBuyer,'supplier':$scope.filterSupplier, 'items':$scope.filterItems};
+    //console.log(option);
+    $scope.getRelation(option);
+  };
+
+  $scope.getRelation = function(option) {
+    var options = {"project": $scope.currentProject.id};
+    angular.extend(options, option);
+    //$scope.Relations = Relation.query(options);
+    Relation.query(options).$promise.then(function (data) {
+      $scope.Relations = data;
+    });
+  };
+
   $scope.createCompany = function(name){
     var oneCompany = {
       name: name,
