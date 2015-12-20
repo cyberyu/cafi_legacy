@@ -46,7 +46,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.relevanceCheck='';
   $scope.showBar= 1;
 
-  $scope.labeledCount = function(search){
+  /*$scope.labeledCount = function(search){
     $scope.labelCount=0;
     Gdoc.query({"search": search.id, "relevance":'y'}).$promise.then(function (data) {
       $scope.labelCount += data.count;
@@ -54,20 +54,18 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
         $scope.labelCount += data.count;
       });
     });
-
-
-  };
+  };*/
 
   $scope.getGdocs = function(search, page, option) {
     Gdoc.query({"search": search.id, "page": page, "ordering":$scope.sortOption, "relevance":$scope.relevanceCheck}).$promise.then(function (data) {
       $scope.displaySearchDocs = data.results;
       $scope.gdocPager.total = data.count;
       $scope.gdocPager.currentPage = page;
-      if($scope.showBar === 1){
+      /*if($scope.showBar === 1){
         $scope.totalResult = $scope.gdocPager.total;
         $scope.labeledCount(search);
         $scope.showBar=0;
-      }
+      }*/
     });
   };
 
@@ -99,7 +97,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
   $scope.pageRefresh = function(search, page){
 
     $scope.getGdocs(search, page);
-    $scope.labeledCount(search);
+    //$scope.labeledCount(search);
   };
 
   $scope.submitSearch = function(){
@@ -138,7 +136,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.displaySearch = search;
       $scope.reviewLaterActive = false;
       $scope.totalResult = data.count;
-      $scope.labeledCount(search);
+      //$scope.labeledCount(search);
     });
   };
 
