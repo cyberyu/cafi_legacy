@@ -46,22 +46,21 @@
     <form class="form-inline">
       <div class="form-group">
         <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noResults" placeholder="From Company">
+               class="form-control input-sm" typeahead-no-results="noResults" placeholder="From Company">
       </div>
       <div class="form-group">
-        <select class="form-control" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
+        <select class="form-control input-sm" ng-model="newRisk.majorRisk" ng-options="item.name for item in majorRisks">
           <option value="">Select Major Risk</option>
         </select>
       </div>
       <div class="form-group">
         <input type="text" ng-model="newRisk.subRisk" uib-typeahead="item as item.name for item in subRisks | filter:$viewValue | limitTo:8"
-               class="form-control" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
+               class="form-control input-sm" typeahead-no-results="noSubRiskResults" placeholder="Sub Risk">
       </div>
       <div class="form-group">
-        <input type="text" ng-model="exEvidence" class="form-control" placeholder="source">
+        <input type="text" ng-model="exEvidence" class="form-control input-sm" placeholder="source">
       </div>
-      <a ng-click="labelRiskSubmit()" class="btn btn-default btn-circle"><i
-            class="fa fa-plus"></i></a>
+      <a ng-click="labelRiskSubmit()" class="btn btn sm btn-primary">Add</a>
     </form>
   </div>
   <!--<div class="col-lg-2"></div>-->
