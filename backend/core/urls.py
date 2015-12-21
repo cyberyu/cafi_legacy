@@ -6,5 +6,5 @@ urlpatterns = patterns('',
     url(r'login/$', 'core.views.user_login', name='login'),
     url(r'logout/$', 'core.views.user_logout', name='logout'),
     url(r'me/$', 'core.views.me', name='me'),
-    url(r'^register/$', 'core.views.register', name='register'),
+    # url(r'^register/$', 'core.views.register', name='register'),
 )

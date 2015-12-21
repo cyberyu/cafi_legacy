@@ -245,8 +245,8 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 
 #header {
   height: 50px;
-  background-color: #3572b0;
-  color: #fff;
+  /*background-color: #2BAD91;*/
+  background: linear-gradient(#355000, #355E3B);
 }
 
 #main_content {
@@ -261,7 +261,8 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 
 
 #login-form {
-  margin-top: 10px;
+    margin-top: 10px;
+    color: whitesmoke;
 }
 
 #registration-form {
