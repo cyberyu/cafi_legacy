@@ -38,8 +38,8 @@
             Action <span class="caret"></span>
           </span>
           <ul class="uib-dropdown-menu" role="menu" aria-labelledby="Filter-button">
-            <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='!onlyMine'>show mine</a></li>
-            <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='onlyMine'>show all</a></li>
+            <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='!onlyMine'>show my searches</a></li>
+            <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='onlyMine'>show all searches</a></li>
           </ul>
         </div>
           <!--button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button-->
@@ -48,11 +48,15 @@
       <div class="panel-body">
         <table class="table table-striped">
           <thead>
+            <th></th>
             <th>
               <input type="text" class="form-control" ng-model="searchQuery" placeholder="Looking for a search?"/>
             </th>
+            <th></th>
           </thead>
+          <tbody>
           <tr ng-class="{warning: reviewLaterActive == true}">
+            <td></td>
             <td>
               <a ng-click="getReviewLater(1)"  class="list-link">
                 <span class="list-link-label small">Items saved</span>
@@ -60,9 +64,10 @@
             </td>
             <td> </td>
           </tr>
-          <tr ng-class="{warning: displaySearch.id == search.id}" ng-repeat="search in searches | filter:searchQuery">
-            <td>
-              <a ng-click="setDisplaySearch(search)" class="list-link">
+          <tr ng-repeat="search in searches | filter:searchQuery">
+            <td class="search-status-marker" ng-style="search.isReviewed? {'background-color':'green'}:{'background-color':'red'} "></td>
+            <td ng-class="{warning: displaySearch.id == search.id}">
+              <a href ng-click="setDisplaySearch(search)" class="list-link">
                 <span class="list-link-label small" uib-tooltip="{{search.createdAt| date:'dd-MMMM-yyyy HH:mm Z' }}">
                   <span class="label label-default"> {{ search.username }}</span>
                   {{search.string}}
@@ -75,12 +80,22 @@
               </uib-progressbar>
             </td>
             <td>
-
-              <a class="btn btn-default btn-circle" ng-click="toggleSearchJunk(search)" uib-tooltip="mark this search as irrelevant">
-                <i class="fa fa-close"></i>
-              </a>
+              <div class="btn-group" uib-dropdown>
+                <span id="" class="pull-right" uib-dropdown-toggle>
+                  <span class="caret"></span>
+                </span>
+                <ul class="uib-dropdown-menu" role="menu" aria-labelledby="Filter-button">
+                  <li role="menuitem" ><a href ng-click='toggleReviewStatus(search)'>
+                    mark as
+                    <span ng-if="!search.isReviewed">reviewed</span>
+                    <span ng-if="search.isReviewed">not reviewed</span>
+                  </a></li>
+                  <li role="menuitem" ng-if="search.isRelevant"><a href ng-click='toggleSearchJunk(search)'>mark as irrelevant</a></li>
+                </ul>
+              </div>
             </td>
           </tr>
+          </tbody>
         </table>
         <nav class="text-center" ng-if="searchPager.total>20">
           <paging class="small" page="searchPager.currentPage" page-size="20" total="searchPager.total" adjacent="{{adjacent}}" dots="{{dots}}"
