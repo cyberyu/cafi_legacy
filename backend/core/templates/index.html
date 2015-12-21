@@ -33,10 +33,11 @@
 
     {% verbatim %}
     <div class="wrapper">
-    <div id="header" class="col-md-12" ng-controller="loginCtrl">
+    <div id="header" class="col-md-12" ng-controller="loginCtrl" >
       <div class="col-md-11">
         <form ng-show="is_login" id="login-form" class="pull-right">
-          Welcome, {{ username }}.  <a href="/logout/">logout</a>
+          Welcome, <span class="glyphicon glyphicon-user"><strong> {{ username }} </strong> </span>
+          <a href="/logout/" style="color:#fff;">logout</a>
         </form>
         <form ng-show="!is_login" id="login-form" class="form-inline pull-right text-right" ng-submit="login()">
           <!-- {% csrf_token %} -->

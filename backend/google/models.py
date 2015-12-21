@@ -31,10 +31,6 @@ class Search(models.Model):
     def incr_last_stop(self):
         self.last_stop+=1
         self.save()
-        # Was trying to increment last_stop here but failed to update with HTTP 500, will try later
-        # As of now done with fetching google docs, safer
-    
-
 
     def __unicode__(self):
       return self.string
@@ -42,7 +38,6 @@ class Search(models.Model):
 
 class SearchResult(models.Model):
     search = models.ForeignKey(Search, related_name="results")
-    # user = models.ForeignKey(User)
     title = models.CharField(max_length=255)
     url = models.URLField(blank=False, max_length=300)
     snippet = models.TextField(blank=True)
@@ -96,7 +91,6 @@ class GeoSearch(models.Model):
 
     class Meta:
         ordering = ['id']
-    #     unique_together = ('name', 'address')
 
     def __unicode__(self):
       return self.address

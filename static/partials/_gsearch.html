@@ -1,9 +1,9 @@
 <ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
-  <li><a href="/#/projects"><span class="glyphicon glyphicon-folder-open"></span> Projects</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><span class="glyphicon glyphicon-globe"></span> GeoSearch</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><span class="glyphicon glyphicon-search"></span> Google Search</a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/relations"><span class="glyphicon glyphicon-th"></span> Suppliers </a></li>
-  <li><a ng-href="/#/projects/{{currentProject.id}}/risks"><span class="glyphicon glyphicon-fire"></span> Risks </a></li>
+  <li><a href="/#/projects"><strong><span class="glyphicon glyphicon-folder-open"></span> Projects</strong></a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/geo"><strong><span class="glyphicon glyphicon-globe"></span> GeoSearch</strong></a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/google"><strong><span class="glyphicon glyphicon-search"></span> Google Search</strong></a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/relations"><strong><span class="glyphicon glyphicon-th"></span> Suppliers </strong></a></li>
+  <li><a ng-href="/#/projects/{{currentProject.id}}/risks"><strong><span class="glyphicon glyphicon-fire"></span> Risks </strong></a></li>
 </ol>
 <!--div ng-dropdown-multiselect="" search-filter="customFilter" options="example15data" selected-model="example15model" extra-settings="example15settings"></div-->
 
@@ -33,10 +33,17 @@
     <div class="panel panel-default">
       <div class="panel-heading col-md-12">
         <div class="col-md-9"> Existing Searches</div>
-        <div class="col-md-3">
-          <button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button>
-          <button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button>
-        </div>
+          <div class="btn-group col-sm-3" uib-dropdown>
+            <button id="Filter-button" type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+              Filter by <span class="caret"></span>
+            </button>
+            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="Filter-button">
+              <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='!onlyMine'>show mine</a></li>
+              <li role="menuitem"><a href ng-click='toggleOnlyMine()' ng-if='onlyMine'>show all</a></li>
+            </ul>
+          </div>
+          <!--button ng-if="!onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show mine</button-->
+          <!--button ng-if="onlyMine" class="btn btn-primary btn-sm pull-right" ng-click="toggleOnlyMine()">show all</button-->
       </div>
       <div class="panel-body">
         <table class="table table-striped">
@@ -118,7 +125,7 @@
                 <!--<a ng-click="review()" class="btn btn-default btn-circle"><i class="fa fa-expand"></i></a>-->
               <!--</td>-->
               <!--<td><br><span class="label" ng-class="{'label-danger': gdoc.relevance=='n'||gdoc.relevance==null, 'label-warning': gdoc.relevance=='m', 'label-success': gdoc.relevance=='y'}" ng-show="gdoc.relevance">{{gdoc.relevance| uppercase}}</span></td>-->
-              <td>{{ gdoc.rank }}</td>
+              <td><span class="btn btn-default" ng-click="openGdoc('gdoc', gdoc)">{{ gdoc.rank }}</span></td>
               <td>
                 <div class="btn-group col-md-1" uib-dropdown>
                   <span id="relevance-button"
