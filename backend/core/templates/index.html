@@ -36,8 +36,9 @@
     <div id="header" class="col-md-12" ng-controller="loginCtrl" >
       <div class="col-md-11">
         <form ng-show="is_login" id="login-form" class="pull-right">
-          Welcome, <span class="glyphicon glyphicon-user"><strong> {{ username }} </strong> </span>
-          <a href="/logout/" style="color:#fff;">logout</a>
+          Welcome, <strong> {{ username }} </strong>
+          <a href="/logout/">
+            <span class="glyphicon glyphicon-log-out" style="color:white" uib-tooltip="logout" tooltip-placement="bottom"></span></a>
         </form>
         <form ng-show="!is_login" id="login-form" class="form-inline pull-right text-right" ng-submit="login()">
           <!-- {% csrf_token %} -->

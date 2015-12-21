@@ -246,7 +246,7 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 #header {
   height: 50px;
   /*background-color: #2BAD91;*/
-  background: linear-gradient(#355000, #355E3B);
+  background: #205081;
 }
 
 #main_content {
