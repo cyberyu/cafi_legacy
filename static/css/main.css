@@ -245,7 +245,8 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 
 #header {
   height: 50px;
-  background-color: #2BAD91;
+  background-color: #3572b0;
+  color: #fff;
 }
 
 #main_content {
