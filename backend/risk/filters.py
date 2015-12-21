@@ -12,6 +12,7 @@ class RelationFilter(django_filters.FilterSet):
     class Meta:
         model = Relation
 
+
 class RiskItemFilter(django_filters.FilterSet):
     risk = django_filters.CharFilter(name="risk__name", lookup_type=("icontains"))
     from_company = django_filters.CharFilter(name="from_company__name", lookup_type=("icontains"))

@@ -68,13 +68,14 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class RiskItemViewSet(viewsets.ModelViewSet):
     queryset = RiskItem.objects.all()
     serializer_class = RiskItemSerializer
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_fields = ('project', 'from_company', 'to_company', 'risk', 'subrisk')
     filter_class = RiskItemFilter
-    ordering_fields = ('from_company', 'risk', 'subrisk', )
+    ordering_fields = ('from_company', 'risk', 'subrisk')
 
     authentication_classes = (ValidateSessionAuthentication,)
 
@@ -108,14 +109,15 @@ class RiskItemViewSet(viewsets.ModelViewSet):
 
         return response
 
+
 class RelationViewSet(viewsets.ModelViewSet):
     queryset = Relation.objects.all()
     serializer_class = RelationSerializer
     authentication_classes = (ValidateSessionAuthentication,)
-    filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter,)
-    filter_fields = ('project', 'evidence', 'buyer', 'supplier',)
+    filter_backends = (filters.DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
+    filter_fields = ('project', 'evidence', 'buyer', 'supplier')
     filter_class = RelationFilter
-    ordering_fields = ('buyer__name', 'supplier__name',)
+    ordering_fields = ('buyer__name', 'supplier__name')
 
     @detail_route(methods=['GET'])
     def download(self, request, *args, **kwargs):

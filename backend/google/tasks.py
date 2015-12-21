@@ -198,10 +198,8 @@ def do_active_filter():
 
     # update database to store the predicted label and relevance score
     myClf.updateDB(conn)
-
-
-
     print "Finished Relevance Filter"
+
 
 if __name__ == '__main__':
     import os, sys
