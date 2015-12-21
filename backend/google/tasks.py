@@ -95,7 +95,7 @@ def do_search(search, num_requests):
                     publish_search_status(obj)
                     do_download.delay(obj.id, obj.url)
                 except Exception as e:
-                    logger.debug(e.traceback.format_exc())
+                    logger.debug(traceback.format_exc())
 
             counter = len(response['items'])
             if counter < 10:  # Checks if the results returned are less than actual request of 10
@@ -114,7 +114,7 @@ def do_download(id, url):
     try:
         data = download(url)
     except Exception as e:
-        logger.debug(e.traceback.format_exc())
+        logger.debug(traceback.format_exc())
         logger.debug("Connection Error: search id %s " % id)
         data = {'path': None, 'doc_type': 'txt', 'text': "Connection Error!", 'raw_html': None}
     obj = SearchResult.objects.get(pk=id)
