@@ -464,3 +464,11 @@ word-wrap: break-word;
     line-height: 10px;
 }
 
+#search-list {
+    padding: 10px 0;
+}
+
+#search-filter-btn {
+    padding: 2px 15px;
+    line-height: 1;
+}
