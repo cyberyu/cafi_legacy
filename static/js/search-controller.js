@@ -75,7 +75,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
 
   $scope.filterRelevance = function(option){
     $scope.relevanceCheck = option;
-    //console.log($scope.relevanceCheck);
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
@@ -85,7 +84,6 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     } else {
       $scope.sortOption = !$scope.sortOption || $scope.sortOption[0] != '-' ? '-rank': 'rank';
     }
-    //console.log($scope.sortOption);
     $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage)
   };
 
@@ -98,7 +96,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.reviewLaterActive = true;
     })
   };
-
+  
   $scope.submitSearch = function(){
     var oneSearch = {
       project: $scope.currentProject.id,
@@ -134,6 +132,7 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
       $scope.gdocPager.currentPage = 1;
       $scope.displaySearch = search;
       $scope.reviewLaterActive = false;
+      $scope.totalResult = data.count;
     });
   };
 
@@ -236,13 +235,12 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     });
   };
 
-  $scope.updateRelevance = function (gdoc, relevance) {
-    //console.log(gdoc);
+  $scope.updateRelevance = function (gdoc, relevance, search) {
     Gdoc.update({'id': gdoc.id, 'relevance': relevance}).$promise.then(function(data){
             $scope.relevance = data.relevance;
             console.log("gdoc id :"+ gdoc.id + "->" + $scope.relevance);
-          });
-
+            $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage);
+    });
     gdoc.relevance = relevance;
   };
 
@@ -300,20 +298,13 @@ projectControllers.controller('GoogleSearchCtrl', function($scope,$rootScope,uiG
     $event.stopPropagation();
     $scope.status.isopen = !$scope.status.isopen;
   };
-  //$scope.cancel = function () {
-  //  $scope.modalInstance.dismiss('cancel');
-  //};
-  //
-  //$scope.review = function(doc){
-  //  alert('aa');
-  //};
+
   $scope.$on('newPage', function(event, data) { $scope.displaySearchDocs=data; });
   $scope.$on('newRel', function(event, data) { $scope.getGdocs($scope.displaySearch, $scope.gdocPager.currentPage); });
 
   $scope.isCollapsed = true;
   $scope.listSearches(1);
-  //$scope.getReviewLater(1);
-  //$scope.getGdocs($scope.displaySearch, 1);
+
   $scope.majorRisks = Risk.query({'type':1});
   $scope.subRisks = Risk.query({'type':2});
 });

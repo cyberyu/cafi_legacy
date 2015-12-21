@@ -28,6 +28,7 @@ class RiskObjectRelatedField(serializers.RelatedField):
                     # "to": {"id": value.to_company.id, "name": value.to_company.name}
                     }
 
+
 class SimpleSearchResultSerializer(serializers.ModelSerializer):
     hltitle = serializers.SerializerMethodField()
     hlsnippet = serializers.SerializerMethodField()
@@ -72,12 +73,6 @@ class SearchResultSerializer(SimpleSearchResultSerializer):
     def get_relations(self, obj):
         return RelationSerializer(obj.relations, many=True).data
 
-    # def get_nerwords(self, obj):
-    #     nt = CAFI_NETagger()  # intialize the tagger
-    #     nt.get_ne_tags_all(obj.text)  # tag the text
-    #     return {"person": set(nt.get_ne_tags_PERSON()),
-    #             "org": set(nt.get_ne_tags_ORGANIZATION()),
-    #             "location": set(nt.get_ne_tags_LOCATION())}
 
 class GeoSearchSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.pk')

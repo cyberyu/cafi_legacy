@@ -1,72 +1,82 @@
 <div class="row">
-    <div class="col-md-12">
-        <h1 class="page-header">Welcome to AUTO CAFI!</h1>
-    </div>
-    <!-- /.col-md-12 -->
+  <div class="col-md-12">
+    <h2 class="page-header">Welcome to AUTO CAFI!</h2>
+  </div>
+  <!-- /.col-md-12 -->
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Project List
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Project</th>
-                        <th>Client</th>
-                        <th>Supplier Network</th>
-                        <th>Risks</th>
-                        <!--<th>Created At</th>-->
-                        <!--<th>ID</th>-->
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
-                        <td><a href="#/projects/{{project.id}}">{{project.name}}</a></td>
-                        <td>{{project.client}}</td>
-                        <td><a href="#/projects/{{project.id}}/relations">view</a></td>
-                        <td><a href="#/projects/{{project.id}}/risks">view</a></td>
-                        <!--<td>{{project.createdAt}}</td>-->
-                        <!--<td>{{project.id}}</td>-->
-                        <td><a class="btn btn-default btn-circle" ng-click="editOrCreateProject(project)" uib-tooltip="Edit project"><i class="fa fa-pencil"></i></a>
-                            <a class="btn btn-default btn-circle" ng-click="deleteProject(project)" uib-tooltip="Delete project"><i class="fa fa-minus"></i></a></td>
-                    </tr>
-                </table>
-                <a ng-click="editOrCreateProject()" class="btn btn-default btn-circle" uib-tooltip="Add a project"><i class="fa fa-plus"></i></a>
-            </div>
-        </div>
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong></strong><span class="glyphicon glyphicon-list"> </span> Project List</strong>
+      </div>
+      <div class="panel-body">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Project</th>
+            <th>Client</th>
+            <th>Supplier Network</th>
+            <th>Risks</th>
+            <!--<th>Created At</th>-->
+            <!--<th>ID</th>-->
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tr ng-repeat="project in projects | filter:query | orderBy:orderProp">
+            <td><span class="glyphicon glyphicon-bookmark"></span></td>
+            <td><a href="#/projects/{{ project.id }}">{{ project.name }}</a></td>
+            <td>{{ project.client }}</td>
+            <td><a href="#/projects/{{ project.id }}/relations">view</a></td>
+            <td><a href="#/projects/{{ project.id }}/risks">view</a></td>
+            <!--<td>{{project.createdAt}}</td>-->
+            <!--<td>{{project.id}}</td>-->
+            <td>
+              <nobr><a class="btn btn-default btn-circle" ng-click="editOrCreateProject(project)"
+                       uib-tooltip="Edit project"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-default btn-circle" ng-click="deleteProject(project)" uib-tooltip="Delete project"><i
+                    class="fa fa-minus"></i></a></nobr>
+            </td>
+          </tr>
+        </table>
+        <a ng-click="editOrCreateProject()" class="btn btn-default btn-circle" uib-tooltip="Add a project"><i
+            class="fa fa-plus"></i></a>
+      </div>
     </div>
-    <div class="col-md-4" ng-show="displayMode == 'edit'">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col-md-10">
-                    <form class="form-horizontal" role="form" ng-submit="saveEdit(currentProject)">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Project Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="currentProject.name" class="form-control" id="title" placeholder="Project Name Here"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="client" class="col-sm-2 control-label">Client Name</label>
+  </div>
+  <div class="col-md-4" ng-show="displayMode == 'edit'">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="col-md-10">
+          <form class="form-horizontal" role="form" ng-submit="saveEdit(currentProject)">
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">Project Name</label>
 
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="currentProject.client" class="form-control" id="client" placeholder="Who is the client"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <input type="submit" class="btn btn-primary" value="Save"/>
-                                <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+              <div class="col-sm-10">
+                <input type="text" ng-model="currentProject.name" class="form-control" id="title"
+                       placeholder="Project Name Here"/>
+              </div>
             </div>
+            <div class="form-group">
+              <label for="client" class="col-sm-2 control-label">Client Name</label>
+
+              <div class="col-sm-10">
+                <input type="text" ng-model="currentProject.client" class="form-control" id="client"
+                       placeholder="Who is the client"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" value="Save"/>
+                <a class="btn btn-primary btn-danger" ng-click="cancelEdit()">Cancel</a>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 

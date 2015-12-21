@@ -12,13 +12,19 @@
     <div>
       <a class="btn btn-sm btn-primary" href="/api/risk_items/{{currentProject.id}}/download.csv">Download</a>
     </div>
-    <table class="table table-hover table-striped">
+    <table st-table="Risks" class="table table-hover table-striped">
       <thead>
         <tr>
-          <th> From Company </th>
-          <th> Risk</th>
-          <th> Sub risk</th>
-          <th> Source </th>
+          <th><a ng-click="sortBy('company')" ><span class="glyphicon glyphicon-sort" ></span>From Company</a></th>
+          <th>Risk</th>
+          <th>Sub risk</th>
+          <th>Source </th>
+        </tr>
+        <tr>
+          <th><input type="text" ng-model="searchCompany" ng-change="findBy('company',searchCompany)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Company"></th>
+          <th><input type="text" ng-model="searchRisk" ng-change="findBy('risk',searchRisk)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by Risk"></th>
+          <th><input type="text" ng-model="searchSubRisk" ng-change="findBy('subrisk',searchSubRisk)" class="input-sm form-control" ng-model-options='{ debounce: 500 }' placeholder="filter by SubRisk"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +42,7 @@
         </tr>
       </tbody>
     </table>
+    <hr>
     <form class="form-inline">
       <div class="form-group">
         <input type="text" ng-model="newRisk.selectedFromCompany" uib-typeahead="company as company.name for company in predefinedCompanies | filter:$viewValue | limitTo:8"
