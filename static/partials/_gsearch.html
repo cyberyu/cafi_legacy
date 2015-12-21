@@ -175,7 +175,7 @@
         <div class="text-center" ng-if="!reviewLaterActive">
           <span>total {{gdocPager.total}} results</span>
           <button class="btn btn-primary btn-small" ng-click="moreSearch(1)"> Get next page</button>
-          <button class="btn btn-primary btn-small" ng-click="pageRefresh(displaySearch, gdocPager.currentPage)"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+          <button class="btn btn-primary btn-small" ng-click="getGdocs(displaySearch, gdocPager.currentPage)"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
         </div>
       </div>
     </div>
