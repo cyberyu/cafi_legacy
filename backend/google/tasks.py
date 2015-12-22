@@ -90,6 +90,8 @@ def do_search(search, num_requests):
                     obj.snippet = doc.get('snippet')
                     obj.url = doc.get('link')
                     obj.rank = start_val + i
+                    obj.ifduplicated = False
+                    obj.duplicatedto = None
                     obj.save()
                     cache.hincrby('search.%s' % search.id, 'to_process')
                     publish_search_status(obj)
