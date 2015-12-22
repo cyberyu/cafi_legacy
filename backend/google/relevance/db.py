@@ -12,10 +12,13 @@ import os
 import sys
 import shutil
 import logging
+from collections import defaultdict
+from operator import itemgetter
 
 
 _DBTABLE_ = 'google_searchresult'
-_DBFIELDS_ = ['id', 'tile', 'snippet', 'text', 'relevance', 'predicted_relevance', 'predicted_score']
+_DBFIELDS_ = ['id', 'title', 'snippet', 'text', 'relevance', 'predicted_relevance', 'predicted_score','ifduplicated', 'duplicatedto', 'created_at']
+             #  0     1         2         3          4              5                      6               7                8             9
 _RELEVANCE_LABEL_POS_ = 'y'
 _RELEVANCE_LABEL_NEG_ = 'n'
 
@@ -34,6 +37,14 @@ def remove_control_characters(s):
 
     #return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
     return ''.join([i if 31 < ord(i) <127 else ' ' for i in s])
+
+
+def list_duplicates(seq):
+    tally = defaultdict(list)
+    for i,item in enumerate(seq):
+        tally[item].append(i)
+    return ((key,locs) for key,locs in tally.items()
+                            if len(locs)>1)
 
 
 
@@ -204,6 +215,7 @@ def readDB(conn, **kwargs):
     return({"docs": docs, "labels": label, "srids":srids})
 
 
+
 def updateDB(conn, **kwargs):
     """
     Update the Google Search Results table after the test data has been predicted with relevance labels and relevance scores.
@@ -232,16 +244,16 @@ def updateDB(conn, **kwargs):
     value = kwargs.pop('value',None)
     type = kwargs.pop('type', None)
 
-    logging.info('prepare to update database column of %s with %s ids and %s values', 'predictionLabel' if type is 'label' else type, len(idlist), len(value)) 
+    #logging.info('prepare to update database column of %s with %s ids and %s values', 'predictionLabel' if type is 'label' else type, len(idlist), len(value))
     if(idlist is not None):
         logging.debug('record ids to be updated are: ' + ','.join(map(str,idlist)))
     if(value is not None):
         logging.debug('record values to be updated are: ' + ','.join(map(str,value)))
-    
+
     if ((idlist is not None) and (value is not None) and (len(idlist)==len(value))) :
 
         logging.info('start to update %s in database', 'predictionLabel' if type is 'label' else type)
-        
+
         cursor = conn.cursor()
         if (type=='label'):
             # reset to NULL before update
@@ -255,12 +267,44 @@ def updateDB(conn, **kwargs):
         elif (type=='relevanceFlag'):
             #cursor.executemany("UPDATE tblsearchresults set relevanceflag=%s WHERE srid=%s", zip(value, idlist))
             cursor.executemany("UPDATE %s set %s=%s WHERE %s=%s" %(_DBTABLE_, _DBFIELDS_[4], '%s', _DBFIELDS_[0], '%s'), zip(value, idlist))
+        elif (type=='deduplication'):
+
+            cursor.execute("SELECT %s from %s WHERE %s in %s order by %s asc limit 1" \
+                           %(_DBFIELDS_[0], _DBTABLE_, _DBFIELDS_[0], str(tuple(idlist)), _DBFIELDS_[9]))
+
+            records = cursor.fetchall()
+            # get the earliest document as the core
+            coreid = [item[0] for item in records]
+            #update the duplication flag
+            cursor.execute("UPDATE %s set %s=TRUE WHERE %s in %s AND %s <> %s" \
+                               %(_DBTABLE_, _DBFIELDS_[7], _DBFIELDS_[0], str(tuple(idlist)), _DBFIELDS_[0], coreid[0]))
+            #update the duplicated to document id
+            cursor.execute("UPDATE %s set %s=%s WHERE %s in %s AND %s <> %s" \
+                               %(_DBTABLE_, _DBFIELDS_[8], coreid[0], _DBFIELDS_[0], str(tuple(idlist)), _DBFIELDS_[0], coreid[0]))
+
         conn.commit()
         cursor.close()
-        logging.info('finish updating %s with %s records in database', type, len(value))                        
+        logging.info('finish updating %s with %s records in database', type, len(value))
 
     else:
         logging.warning('Not update database due to either unmatched length or zero length of id & value')
+
+
+def updateDuplicationFlags(conn, docids, clusterids):
+
+    if (len(docids)==len(clusterids)):
+        # find out the document ids that are duplicated (share the same cluster ids)
+
+        for dup in sorted(list_duplicates(clusterids)):
+            # geting the duplicated docs cluster by cluster
+            # for the same cluster, only keep the oldest document, and mark others as duplicated and the duplicated_to filed pointed to the oldest document
+            clusterid, doc_index_list = dup
+            #get the document id list
+            doc_id_list =  itemgetter(*doc_index_list)(docids)
+            updateDB(conn, type='deduplication', idlist=doc_id_list, value=doc_id_list)
+    else:
+        logging.warning('The deduplication module returns unmatched lengths of document id list and cluster membership list')
+
 
 
 def ingestDB(conn, dir, label, **kwargs):

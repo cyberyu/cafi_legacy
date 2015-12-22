@@ -10,7 +10,7 @@ import googlemaps
 from googleapiclient.discovery import build
 from google.models import Search, SearchResult, GeoSearch
 from google.helper import download
-from google.relevance import classifierAPI
+from google.relevance import classifierAPI, clustering
 import psycopg2
 import logging
 logger = logging.getLogger("CAFI")
@@ -201,6 +201,31 @@ def do_active_filter():
     print "Finished Relevance Filter"
 
 
+@shared_task(default_retry_delay=3, max_retries=3)
+def do_deduplication():
+    print "Start Deduplication Filter"
+
+    conn = psycopg2.connect(settings.CONN_STRING)
+
+    tf=["text", "title", "snippet"]
+
+    myClf = classifierAPI.Classifier(Tfidf=True, Nwords=1000)
+
+    myClf.readDB(conn, tf)
+
+    myClf.buildFeature()
+
+    Xtfidf = myClf.features
+
+    srids = myClf.srids
+
+    clusterids = clustering.text_clustering(Xtfidf, method='network', distMetric='cosine', cutval=0.9)
+
+    myClf.updateDuplicationFlags(conn, srids, clusterids)
+
+    print "Finished Deduplication Filter"
+
+
 if __name__ == '__main__':
     import os, sys
     PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../backend')
@@ -212,8 +237,9 @@ if __name__ == '__main__':
     from django.core.wsgi import get_wsgi_application
     get_wsgi_application()
 
-    project = Project(client="xx", name="bbbb")
-    project.save()
-    search = Search(project=project, string='olympic')
-    search.save()
-    do_search(search, 'olympics')
+    # project = Project(client="xx", name="bbbb")
+    # project.save()
+    # search = Search(project=project, string='olympic')
+    # search.save()
+    # do_search(search, 'olympics')
+    do_deduplication()

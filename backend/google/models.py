@@ -61,7 +61,7 @@ class SearchResult(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    ifduplicated = models.BinaryField(default=False, null=True)
+    ifduplicated = models.BooleanField(default=False, null=False)
     duplicatedto = models.IntegerField(null=True)
 
 

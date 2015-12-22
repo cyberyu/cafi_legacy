@@ -263,6 +263,10 @@ class Classifier:
         db.updateDB(dbconnection, value = self.AllUpdate_Score, idlist = self.AllUpdate_Id, type = 'relevanceScore', dbtable=db._DBTABLE_, dbfields=db._DBFIELDS_)
         db.updateDB(dbconnection, value = self.AllUpdate_Label, idlist = self.id_test, type = 'label', dbtable=db._DBTABLE_, dbfields=db._DBFIELDS_)
 
+
+
+    def updateDBDuplication(self, dbconnection,docids, clusterids):
+        db.updateDuplicationFlags(dbconnection,docids, clusterids)
             
 
     def projectNewData(self, newData, featureObj): 
