@@ -15,14 +15,16 @@ class Search(models.Model):
         (0, ''),
         (1, 'in process'),
         (2, 'done'),
+        (3, 'reviewed')
     )
 
     project = models.ForeignKey(Project, related_name="searches")
     user = models.ForeignKey(User)
-    string = models.CharField(max_length=1024) # search string
+    string = models.CharField(max_length=1024)  # search string
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
 
     is_relevant = models.BooleanField(default=True)
+    is_reviewed = models.BooleanField(default=False)
 
     last_stop = models.IntegerField(default=0)
     has_more_results = models.BooleanField(default=True)

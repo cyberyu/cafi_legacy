@@ -261,7 +261,7 @@ body  .list-body-container ul li a:hover, body  .list-body-container ul li a:foc
 
 
 #login-form {
-    margin-top: 10px;
+    margin-top: 15px;
     color: whitesmoke;
 }
 
@@ -472,3 +472,12 @@ word-wrap: break-word;
     padding: 2px 15px;
     line-height: 1;
 }
+
+table > tbody > tr > td.search-status-marker {
+    width:1px;
+    max-width:1px;
+    height:100%;
+    /*background-color: red;*/
+    padding: 0px;
+}
+
